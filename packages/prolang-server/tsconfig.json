@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "module": "commonjs",
+    "target": "es2017",
+    "watch": true
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ]
+}
