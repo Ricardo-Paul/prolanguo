@@ -4,29 +4,28 @@ exports.Server = void 0;
 const chalk = require("chalk");
 const express = require("express");
 class Server {
-    constructor() {
+    displayMessage(message) {
+        console.log(`${chalk.bold.white.bgBlue(`${message}`)}`);
     }
-    ;
-    // set up sevices we'll need
-    async setup() {
+    setup() {
         return new Promise(async (resolve, reject) => {
             try {
-                console.log('Setting things up');
-                resolve();
+                resolve(this.displayMessage("All services are set, ready to go."));
             }
             catch (error) {
                 reject(error);
             }
         });
     }
-    // start the express App
+    // public by default
     start() {
         console.log("Starting the App");
         const app = express();
         app.listen(8082, () => {
             // TODO: use a logger instead
-            console.log(`Server is listening on port ${chalk.bold.white.bgBlue(' 8082 ')}`);
+            console.log(`Server is listening on port ${this.displayMessage(' 8082 ')}`);
         });
     }
 }
 exports.Server = Server;
+//# sourceMappingURL=Server.js.map

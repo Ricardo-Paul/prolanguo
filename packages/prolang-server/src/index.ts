@@ -4,7 +4,8 @@ const server = new Server();
 
 server.setup()
 .then(
-  (): void => {
+  (value): void => {
+    console.log(value);
     server.start()
   }
 ).catch(
