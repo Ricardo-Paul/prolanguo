@@ -49,23 +49,31 @@ class SignUpRequestResolver{
 
 
 export class SignUpController extends ApiController<SignUpRequest, SignUpResponse>{
-  // TODO: add type annotations to options
-public options(): any{
-  return {
-    paths: ['/sign-up'],
-    allowedMethod: 'post',
-    authStrategies: null,
-    requestResolver: new SignUpRequestResolver(8)
+  // TODO: add type annotations to options()
+  public options(): any{
+    return {
+      paths: ['/sign-up'],
+      allowedMethod: 'post',
+      authStrategies: null,
+      requestResolver: new SignUpRequestResolver(8)
+    }
   }
-}
 
   // TODO: add type annotation to req and res
   public async handleRequest(req: any, res: any): Promise<void>{
-    console.log(`Capture values from ${req.body}`)
-    console.log(`Doing async stuff with the DB`)
-    console.log(`Returning a response`);
-    res.json({
-      resonpse: "Response returned"
-    })
+      return new Promise((resolve, reject) => {
+        try{
+          console.log(`Capture values from ${req}`)
+          console.log(`Doing async stuff with the DB`)
+          console.log(`Returning a response`);
+          res.send({
+            resonpse: "Response returned"
+          })
+          resolve();
+        } catch(err){
+          reject(err)
+        }
+      })
   }
+
 }
