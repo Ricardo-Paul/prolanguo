@@ -1,0 +1,22 @@
+{
+  "name": "@prolanguo/prolanguo-server",
+  "version": "1.0.0",
+  "description": "Prolang Server",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prolanguo/prolanguo-common": "1.0.0",
+    "chalk": "^4.1.2",
+    "express": "^4.17.1",
+    "joi": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "nodemon": "^2.0.12"
+  }
+}
