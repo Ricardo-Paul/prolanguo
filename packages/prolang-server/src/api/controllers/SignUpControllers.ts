@@ -1,6 +1,8 @@
 import { ApiController } from "./ApiController";
 import { SignUpRequest } from "@prolang/prolang-common/interfaces";
 import * as Joi from "joi";
+import { Request } from "express";
+import { RequestResolver } from "../ApiRequest";
 
 enum UserMemberShip {
   REGULAR = 'REGULAR',
@@ -33,27 +35,27 @@ interface SignUpResponse{
 
 
 
-class SignUpRequestResolver{
+class SignUpRequestResolver extends RequestResolver<SignUpRequest>{
   protected rules: any; // add type annotation to rules
   constructor(passwordMinLength: number){
+    super()
     this.rules = {
       query: Joi.string().strip(),
       body: {
         email: Joi.string().email(),
-        password: Joi.string().min(passwordMinLength)
-      }
+        password: Joi.string().min(passwordMinLength),
+      },
+      mytestObject: "Hey tesing here"
     }
   }
 }
-
-
 
 export class SignUpController extends ApiController<SignUpRequest, SignUpResponse>{
   // TODO: add type annotations to options()
   public options(): any{
     return {
       paths: ['/sign-up'],
-      allowedMethod: 'post',
+      allowedMethod: 'get', //changed to get for testing purpose
       authStrategies: null,
       requestResolver: new SignUpRequestResolver(8)
     }
@@ -66,14 +68,15 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
           console.log(`Capture values from ${req}`)
           console.log(`Doing async stuff with the DB`)
           console.log(`Returning a response`);
-          res.send({
-            resonpse: "Response returned"
+          res.json({
+            message: "Json API implemented"
           })
+          // res.json() is not a function
+          // we are using our own instance - ApiRequest - instead of the express req object
           resolve();
         } catch(err){
           reject(err)
         }
       })
   }
-
 }

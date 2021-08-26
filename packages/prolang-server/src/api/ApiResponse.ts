@@ -6,4 +6,8 @@ export class ApiResponse<T>{
   constructor(res: Response){
     this.res = res;
   }
+
+  json(obj: { currentUser: object, accessToken: string}){
+    return this.res.json(obj)
+  }
 }
