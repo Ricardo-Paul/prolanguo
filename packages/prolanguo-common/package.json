@@ -1,6 +1,6 @@
 {
   "name": "@prolanguo/prolanguo-common",
-  "version": "1.0.0",
+  "version": "0.0.1-alpha.0",
   "description": "Prolang Common",
   "main": "dist/index.js",
   "scripts": {
@@ -9,4 +9,3 @@
   "author": "",
   "license": "ISC"
 }
- 
