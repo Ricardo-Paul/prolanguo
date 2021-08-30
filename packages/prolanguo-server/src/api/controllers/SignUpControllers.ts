@@ -37,7 +37,7 @@ class SignUpRequestResolver extends RequestResolver<SignUpRequest>{
   constructor(passwordMinLength: number){
     super();
     this.rules = {
-      query: Joi.string().strip(),
+      // query: Joi.string().strip(),
       body: {
         email: Joi.string().email(),
         password: Joi.string().min(passwordMinLength),
@@ -52,7 +52,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
   public options(): any{
     return {
       paths: ['/sign-up'],
-      allowedMethod: 'post', //changed to get for testing purpose
+      allowedMethod: 'post',
       authStrategies: null,
       requestResolver: new SignUpRequestResolver(8)
     }
@@ -62,9 +62,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
   public async handleRequest(req: any, res: any): Promise<void> {
       return new Promise((resolve, reject) => {
         try{
-          console.log(`Capture values from ${req}`)
-          console.log(`Doing async stuff with the DB`)
-          console.log(`Returning Json API rsponse`);
+          console.log("Request body from signup", req.body)
           res.json({
             message: "Json API implemented"
           })

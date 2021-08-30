@@ -33,6 +33,8 @@ export class Server{
   public start(): void{
       console.log("Starting the App")
       const app = express();
+      app.use(express.urlencoded({ extended: true }))
+      app.use(express.json())
 
       // enforce type
       const controllers: any[] = this.apiControllerFactory.makeControllers();
