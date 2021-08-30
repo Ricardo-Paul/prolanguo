@@ -5,7 +5,6 @@ import { ApiRouterFactory } from "./api/ApiRouterFactory";
 
 
 export class Server{
-
   // class used as Interface
   private apiControllerFactory: ApiControllerFactory;
   private apiRouterFactory: ApiRouterFactory
@@ -45,10 +44,10 @@ export class Server{
         res.send("testing request")
       });
 
-      app.listen(8082, 
+      app.listen(8000, 
         (): void => {
           // TODO: use a logger instead
-          console.log(`Server is listening on port 8082`)
+          console.log(`Server is listening on port 8000`)
         }
       )
     }

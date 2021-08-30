@@ -1,9 +1,11 @@
 import { Request } from "@prolanguo/prolanguo-common/interfaces";
 import * as express from "express";
-import { AbstractResolver } from "@prolanguo/prolanguo-resolver/"
 
-//RequesResolver extends Abstract resolver (now has the resolve() method)
-export abstract class RequestResolver<T extends Request> extends AbstractResolver<Pick<T, 'query' | 'body'>>{}
+// TODO: import properly
+import { RequestResolver } from "@prolanguo/prolanguo-common/src/resolvers/request/RequestResolver";
+
+
+//RequestResolver extends Abstract resolver (now has the resolve() method)
 
 // SignUpResolver in between
 export class ApiRequest<T extends Request> {
@@ -11,7 +13,6 @@ export class ApiRequest<T extends Request> {
   requestResolver: null | RequestResolver<T>
 
   // TODO: add type annotation for requestResolver
-  // does requestResolver now has the props defined in abstractResolver?
   constructor(req: express.Request, requestResolver: null | RequestResolver<T>){
     this.req = req;
     this.requestResolver = requestResolver;
@@ -19,9 +20,8 @@ export class ApiRequest<T extends Request> {
 
   public getResolver(): any{
     if(this.requestResolver !== null){
-      console.log("Resolving");
       this.requestResolver.resolve(this.req, true).body;
-      console.log("THE BODY :", this.req.body, this.req.url)
+      console.log("BODY AND QUERY :", this.req.body, this.req.query )
       this.requestResolver.testAbstractResolver();
     }
   }

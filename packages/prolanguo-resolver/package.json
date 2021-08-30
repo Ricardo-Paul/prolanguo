@@ -10,7 +10,6 @@
   "author": "Ricardo Paul <ricardopaul459@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@prolanguo/prolanguo-common": "^1.1.0",
     "joi": "^17.4.2"
   }
 }
