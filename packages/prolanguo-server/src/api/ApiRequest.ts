@@ -20,9 +20,9 @@ export class ApiRequest<T extends Request> {
   public getResolver(): any{
     if(this.requestResolver !== null){
       console.log("Resolving");
-      this.requestResolver.resolve(this.req, true);
+      this.requestResolver.resolve(this.req, true).body;
+      console.log("THE BODY :", this.req.body, this.req.url)
       this.requestResolver.testAbstractResolver();
     }
   }
 }
-
