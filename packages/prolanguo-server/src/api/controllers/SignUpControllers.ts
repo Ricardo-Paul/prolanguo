@@ -1,7 +1,9 @@
 import { ApiController } from "./ApiController";
+
+// TODO: import properly
+// import { SignUpRequestResolver } from "@prolanguo/prolanguo-common/src/resolvers/request/SignUpRequestResolver";
 import { SignUpRequest } from "@prolanguo/prolanguo-common/interfaces";
-import * as Joi from "joi";
-import { RequestResolver } from "../ApiRequest";
+import { SignUpRequestResolver } from "@prolanguo/prolanguo-common/resolvers";
 
 enum UserMemberShip {
   REGULAR = 'REGULAR',
@@ -9,12 +11,12 @@ enum UserMemberShip {
   SUBSCRIBED_PREMIUM = 'SUBSCRIBED_PREMIUM'
 }
 
-enum UserStatus{
+enum UserStatus {
   ACTIVE = 'ACTIVE',
   DISABLED = 'DISABLED'
 }
 
-interface User{
+interface User {
   readonly userId: string;
   readonly email: string;
   readonly userStatus: UserStatus;
@@ -32,20 +34,6 @@ interface SignUpResponse{
   readonly accessToken: string;
 }
 
-class SignUpRequestResolver extends RequestResolver<SignUpRequest>{
-  protected rules: any; // override abstractResolver rules
-  constructor(passwordMinLength: number){
-    super();
-    this.rules = {
-      // query: Joi.string().strip(),
-      body: {
-        email: Joi.string().email(),
-        password: Joi.string().min(passwordMinLength),
-      },
-      mytestObject: "Hey tesing here"
-    }
-  }
-}
 
 export class SignUpController extends ApiController<SignUpRequest, SignUpResponse>{
   // TODO: add type annotations to options()
@@ -60,9 +48,9 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
 
   // TODO: add type annotation to req and res
   public async handleRequest(req: any, res: any): Promise<void> {
+    console.log("Handling signup request")
       return new Promise((resolve, reject) => {
         try{
-          console.log("Request body from signup", req.body)
           res.json({
             message: "Json API implemented"
           })

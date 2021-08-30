@@ -1,4 +1,3 @@
-import { Request } from "@prolanguo/prolanguo-common/interfaces";
 import * as Joi from "joi";
 
 interface Resolver<T> {
@@ -13,7 +12,6 @@ export abstract class AbstractResolver<T extends object> implements Resolver<T> 
   // an error key will be part of the return value
   // returns the same key with entered data
   resolve(data: any, stripUnknown: boolean): T {
-    console.log("DATA receieved by resolve() ", data.body)
     return Joi.attempt(data, Joi.object(this.rules)
     .options({
       stripUnknown: {

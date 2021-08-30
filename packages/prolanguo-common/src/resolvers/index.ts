@@ -1,0 +1,1 @@
+export { SignUpRequestResolver } from "./request/SignUpRequestResolver"
