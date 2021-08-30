@@ -33,7 +33,7 @@ interface SignUpResponse{
 }
 
 class SignUpRequestResolver extends RequestResolver<SignUpRequest>{
-  protected rules: any; // add type annotation to rules
+  protected rules: any; // override abstractResolver rules
   constructor(passwordMinLength: number){
     super();
     this.rules = {
@@ -52,19 +52,19 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
   public options(): any{
     return {
       paths: ['/sign-up'],
-      allowedMethod: 'get', //changed to get for testing purpose
+      allowedMethod: 'post', //changed to get for testing purpose
       authStrategies: null,
       requestResolver: new SignUpRequestResolver(8)
     }
   }
 
   // TODO: add type annotation to req and res
-  public async handleRequest(req: any, res: any): Promise<void>{
+  public async handleRequest(req: any, res: any): Promise<void> {
       return new Promise((resolve, reject) => {
         try{
           console.log(`Capture values from ${req}`)
           console.log(`Doing async stuff with the DB`)
-          console.log(`Returning a response`);
+          console.log(`Returning Json API rsponse`);
           res.json({
             message: "Json API implemented"
           })
