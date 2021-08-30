@@ -19,15 +19,15 @@ export class ApiRouterFactory{
       options.paths.forEach((path: string) => {
         // request Handler
         const requestHandler = function(_req: express.Request, _res: express.Response): Promise<void>{
-          const req = new ApiRequest<any>(_req, options.requestResolver);
-          const res = new ApiResponse<any>(_res);
+          const req = new ApiRequest<any>(_req, options.requestResolver); //send req for validation
+          const res = new ApiResponse<any>(_res); // create a wrapper around res
 
-          console.log("ApiRequest object : ", req)
-          console.log("requestResolver properties :::", req.getResolver())
+          //Call ApiRequest method for testing
+          req.getResolver();
 
           return new Promise(async (resolve, reject) => {
             try{
-              // perform requset validation check
+              // perform request validation check
               await controller.handleRequest(req, res);
               resolve()
             } catch(err){

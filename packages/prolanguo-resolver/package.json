@@ -1,0 +1,16 @@
+{
+  "name": "@prolanguo/prolanguo-resolver",
+  "version": "1.0.0",
+  "description": "package for data validation on top of Joi",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-resolver": "echo 'Test run for @prolanguo resolver'"
+  },
+  "author": "Ricardo Paul <ricardopaul459@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@prolanguo/prolanguo-common": "^0.0.1-alpha.0",
+    "joi": "^17.4.2"
+  }
+}
