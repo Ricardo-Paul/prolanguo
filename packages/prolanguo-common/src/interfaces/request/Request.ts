@@ -1,3 +1,4 @@
+
 export interface Request {
   readonly path: string;
   readonly method: 'get' | 'post';

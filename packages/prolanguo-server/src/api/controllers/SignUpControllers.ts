@@ -1,9 +1,8 @@
 import { ApiController } from "./ApiController";
-
-// TODO: import properly
-// import { SignUpRequestResolver } from "@prolanguo/prolanguo-common/src/resolvers/request/SignUpRequestResolver";
 import { SignUpRequest } from "@prolanguo/prolanguo-common/interfaces";
 import { SignUpRequestResolver } from "@prolanguo/prolanguo-common/resolvers";
+import { ControllerOptions } from "../../interfaces/ControllerOptions";
+
 
 enum UserMemberShip {
   REGULAR = 'REGULAR',
@@ -29,15 +28,14 @@ interface User {
   // readonly extraData: readonly UserExtraDataItem[]; //to implement
 }
 
-interface SignUpResponse{
+interface SignUpResponse {
   readonly currentUser: User;
   readonly accessToken: string;
 }
 
-
 export class SignUpController extends ApiController<SignUpRequest, SignUpResponse>{
   // TODO: add type annotations to options()
-  public options(): any{
+  public options(): ControllerOptions<SignUpRequest>{
     return {
       paths: ['/sign-up'],
       allowedMethod: 'post',
