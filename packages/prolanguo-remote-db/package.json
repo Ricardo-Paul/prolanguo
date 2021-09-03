@@ -1,0 +1,18 @@
+{
+  "name": "@prolanguo/prolanguo-remote-db",
+  "version": "1.0.0",
+  "description": "remote database for prolanguo",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ricardo Paul",
+  "license": "ISC",
+  "dependencies": {
+    "joi": "^17.4.2",
+    "knex": "^0.95.10",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "mysql": "^2.18.1"
+  }
+}

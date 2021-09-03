@@ -1,8 +1,13 @@
+import { DatabaseFacade } from "@prolanguo/prolanguo-remote-db";
 import { SignUpController } from "./controllers/SignUpControllers";
 
-export class ApiControllerFactory {
 
-  constructor(){}
+export class ApiControllerFactory {
+  private database: DatabaseFacade;
+
+  constructor(database: DatabaseFacade){
+    this.database = database
+  }
 
   public makeControllers(): any[]{
     return [
@@ -13,8 +18,11 @@ export class ApiControllerFactory {
   // TODO: readonly type annotations for return value
   private makeDefaultControllers(): any{
     const controllers: any[] = [
-      new SignUpController()
+      new SignUpController(
+        this.database
+      )
     ]
     return controllers
   }
+
 }

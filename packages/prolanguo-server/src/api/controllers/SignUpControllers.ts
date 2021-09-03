@@ -2,7 +2,12 @@ import { ApiController } from "./ApiController";
 import { SignUpRequest } from "@prolanguo/prolanguo-common/interfaces";
 import { SignUpRequestResolver } from "@prolanguo/prolanguo-common/resolvers";
 import { ControllerOptions } from "../../interfaces/ControllerOptions";
+import { ApiRequest } from "../ApiRequest";
 
+
+// database stuff
+import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
+import { ApiResponse } from "../ApiResponse";
 
 enum UserMemberShip {
   REGULAR = 'REGULAR',
@@ -33,9 +38,15 @@ interface SignUpResponse {
   readonly accessToken: string;
 }
 
-export class SignUpController extends ApiController<SignUpRequest, SignUpResponse>{
-  // TODO: add type annotations to options()
-  public options(): ControllerOptions<SignUpRequest>{
+export class SignUpController extends ApiController<SignUpRequest, SignUpResponse> {
+
+  private database: DatabaseFacade;
+  constructor(database: DatabaseFacade){
+    super()
+    this.database = database
+  }
+
+  public options(): ControllerOptions<SignUpRequest> {
     return {
       paths: ['/sign-up'],
       allowedMethod: 'post',
@@ -45,19 +56,8 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
   }
 
   // TODO: add type annotation to req and res
-  public async handleRequest(req: any, res: any): Promise<void> {
+  public async handleRequest(req: ApiRequest<SignUpRequest>, res: ApiResponse<SignUpResponse>): Promise<void> {
     console.log("Handling signup request")
-      return new Promise((resolve, reject) => {
-        try{
-          res.json({
-            message: "Json API implemented"
-          })
-          // res.json() is not a function
-          // we are using our own instance - ApiRequest - instead of the express req object
-          resolve();
-        } catch(err){
-          reject(err)
-        }
-      })
+    const db = this.database.getDb("auth");
   }
 }
