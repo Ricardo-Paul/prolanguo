@@ -1,16 +1,31 @@
 import chalk = require("chalk");
 import * as express from "express";
+import { DatabaseFacade } from "@prolanguo/prolanguo-remote-db";
 import { ApiControllerFactory } from "./api/ApiControllerFactory";
 import { ApiRouterFactory } from "./api/ApiRouterFactory";
 
+// move config to env var
+const dbConfig = {
+  host: 'localhost',
+  port: 8080,
+  databaseName: 'dummy db name',
+  user: 'dummy user',
+  password: 'dummy password',
+  connectionLimit: 500
+}
 
 export class Server{
   // class used as Interface
   private apiControllerFactory: ApiControllerFactory;
-  private apiRouterFactory: ApiRouterFactory
+  private apiRouterFactory: ApiRouterFactory;
+  private database: DatabaseFacade;
 
   constructor(){
-    this.apiControllerFactory = new ApiControllerFactory();
+    this.database = new DatabaseFacade(dbConfig)
+
+    this.apiControllerFactory = new ApiControllerFactory(
+      this.database
+    );
     this.apiRouterFactory = new ApiRouterFactory();
   }
 
