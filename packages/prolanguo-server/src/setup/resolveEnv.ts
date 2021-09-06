@@ -1,5 +1,9 @@
 import * as _ from 'lodash';
+import * as Joi from "joi";
+import { Env } from '../interfaces/Env'
 
+
+// returns the value passed if not null or undefined
 function assertExists<V>(value: V, message?: string): NonNullable<V>{
   if(value !== null && typeof value !== 'undefined'){
     return value as NonNullable<V>
@@ -10,11 +14,33 @@ function assertExists<V>(value: V, message?: string): NonNullable<V>{
   }
 }
 
-export function resolveEnv() {
+function resolve(data: object, rules: object){
+  Joi.attempt(data, Joi.object(rules).options({
+    stripUnknown: {
+      arrays: true,
+      objects: true
+    },
+    presence: "required" //everything in rules is required
+  }))
+}
+
+const rules = {
+  AUTH_DATABASE_CONFIG: Joi.object(),
+}
+
+export function resolveEnv(){
   const AUTH_DATABASE_CONFIG = preprocessAuthDbConfig(
     assertExists(process.env.AUTH_DATABASE_CONFIG, "AUTH_DATABASE_CONFIG is missing from env file")
   );
   const ALL_SHARD_DATABASE_CONFIG = preprocessAllShardDbConfig();
+
+  const env = {
+    // ...process.env, //return all system env vars
+    AUTH_DATABASE_CONFIG
+  }
+
+  console.log("env values", resolve(env, rules))
+  return env
 }
 
 // transform semi-colon separated values into object
@@ -26,9 +52,8 @@ function preprocessAuthDbConfig(authDatabaseConfig: string): object{
 
  const values = _.map(match[0].split(";"), _.trim)
  const [host, port, databaseName, user, password, connectionLimit] = values
- const authConfigObject = { host, port, databaseName, user, password, connectionLimit}
 
- return authConfigObject
+ return { host, port, databaseName, user, password, connectionLimit: Number(connectionLimit)}
 }
 
 function preprocessAllShardDbConfig(){
