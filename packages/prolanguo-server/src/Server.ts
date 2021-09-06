@@ -1,40 +1,34 @@
 import chalk = require("chalk");
 import * as express from "express";
-import { DatabaseFacade } from "@prolanguo/prolanguo-remote-db";
+import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { ApiControllerFactory } from "./api/ApiControllerFactory";
 import { ApiRouterFactory } from "./api/ApiRouterFactory";
 import { resolveEnv } from "./setup/resolveEnv";
-
-
-const dotenv = require('dotenv');
-dotenv.config();
-
-// move config to env var
-const dbConfig = {
-  host: process.env.HOST,
-  port: process.env.PORT,
-  database: process.env.DATABASE,
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  connectionLimit: 20
-}
-
 
 export class Server{
   // class used as Interface
   private apiControllerFactory: ApiControllerFactory;
   private apiRouterFactory: ApiRouterFactory;
   private database: DatabaseFacade;
-  // private env;
-
-
-
+  private userModel: UserModel;
+  private env;
 
   constructor(){
-    // this.database = new DatabaseFacade(dbConfig)
+    this.env = resolveEnv();
+    this.database = new DatabaseFacade({
+      host: 'localhost',
+      port: 8000,
+      databaseName: 'prolanguo_auth',
+      user: 'root',
+      password: 'ricardo00',
+      connectionLimit: 20
+    });
+    
+    this.userModel = new UserModel
 
     this.apiControllerFactory = new ApiControllerFactory(
-      this.database
+      this.database,
+      this.userModel
     );
     this.apiRouterFactory = new ApiRouterFactory();
   }
@@ -46,7 +40,11 @@ export class Server{
   public setup(){
     return new Promise(async (resolve, reject): Promise<void> => {
       try{
-        resolve(this.displayMessage("All services are set, ready to go."))
+        this.displayMessage("Setting up database services :");
+        await this.database.checkAuthDatabaseTables();
+        this.database.checkShardDatabaseTalbes();
+
+        resolve("")
       }catch(error){
         reject(error)
       }
@@ -75,7 +73,6 @@ export class Server{
           console.log(`Server is listening on port 8000`);
           // console.log("CONFIG ::", dbConfig, );
           console.log("Calling resolve Env" ,resolveEnv())
-
         }
       )
     }
