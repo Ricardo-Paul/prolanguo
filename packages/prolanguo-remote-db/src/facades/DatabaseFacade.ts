@@ -11,7 +11,7 @@ export class DatabaseFacade {
   // private shardDatabaseFacade: ShardDatabaseFacade;
 
   constructor(authDbConfig: AuthDbConfig){
-    this.authDatabaseFacade = new AuthDatabaseFacade(authDbConfig)
+    this.authDatabaseFacade = new AuthDatabaseFacade(authDbConfig) 
   }
 
   public getDb(authOrShardId: 'auth' | number): Knex{
@@ -22,4 +22,12 @@ export class DatabaseFacade {
       return this.authDatabaseFacade.getDb()
     }
   } 
+
+  public async checkAuthDatabaseTables(){
+    this.authDatabaseFacade.checkAuthDatabaseTables()
+  }
+
+  public checkShardDatabaseTalbes(){
+    console.log(`No implementation yet for shard db`)
+  }
 }
