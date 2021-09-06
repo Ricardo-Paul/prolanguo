@@ -3,25 +3,35 @@ import * as express from "express";
 import { DatabaseFacade } from "@prolanguo/prolanguo-remote-db";
 import { ApiControllerFactory } from "./api/ApiControllerFactory";
 import { ApiRouterFactory } from "./api/ApiRouterFactory";
+import { resolveEnv } from "./setup/resolveEnv";
+
+
+const dotenv = require('dotenv');
+dotenv.config();
 
 // move config to env var
 const dbConfig = {
-  host: 'localhost',
-  port: 8080,
-  databaseName: 'dummy db name',
-  user: 'dummy user',
-  password: 'dummy password',
-  connectionLimit: 500
+  host: process.env.HOST,
+  port: process.env.PORT,
+  database: process.env.DATABASE,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  connectionLimit: 20
 }
+
 
 export class Server{
   // class used as Interface
   private apiControllerFactory: ApiControllerFactory;
   private apiRouterFactory: ApiRouterFactory;
   private database: DatabaseFacade;
+  // private env;
+
+
+
 
   constructor(){
-    this.database = new DatabaseFacade(dbConfig)
+    // this.database = new DatabaseFacade(dbConfig)
 
     this.apiControllerFactory = new ApiControllerFactory(
       this.database
@@ -62,7 +72,10 @@ export class Server{
       app.listen(8000, 
         (): void => {
           // TODO: use a logger instead
-          console.log(`Server is listening on port 8000`)
+          console.log(`Server is listening on port 8000`);
+          // console.log("CONFIG ::", dbConfig, );
+          console.log("Calling resolve Env" ,resolveEnv())
+
         }
       )
     }
