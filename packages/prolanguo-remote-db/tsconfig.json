@@ -17,5 +17,5 @@
   "compileOnSave": true,
   "include": [
     "src"
-  ]
+, "../prolanguo-resolver/src/setup"  ]
 } 
