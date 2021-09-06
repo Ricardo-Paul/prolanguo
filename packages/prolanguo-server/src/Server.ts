@@ -15,14 +15,7 @@ export class Server{
 
   constructor(){
     this.env = resolveEnv();
-    this.database = new DatabaseFacade({
-      host: 'localhost',
-      port: 8000,
-      databaseName: 'prolanguo_auth',
-      user: 'root',
-      password: 'ricardo00',
-      connectionLimit: 20
-    });
+    this.database = new DatabaseFacade(this.env.AUTH_DATABASE_CONFIG);
     
     this.userModel = new UserModel
 
