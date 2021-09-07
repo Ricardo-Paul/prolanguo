@@ -33,7 +33,7 @@ export class Server{
   public setup(){
     return new Promise(async (resolve, reject): Promise<void> => {
       try{
-        this.displayMessage("Setting up database services :");
+        this.displayMessage("Setting up database services (server) :");
         await this.database.checkAuthDatabaseTables();
         this.database.checkShardDatabaseTalbes();
 

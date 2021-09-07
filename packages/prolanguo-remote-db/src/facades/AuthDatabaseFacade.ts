@@ -1,9 +1,8 @@
 import knex, { Knex } from "knex";
-import { AuthDbConfig } from "../interfaces/AuthDbConfig"
+import { AuthDbConfig } from "../interfaces/AuthDbConfig";
 import * as chalk from "chalk";
 import { AuthDatabaseMigrationRunner } from "../database-migrations/AuthDatabaseMigrationRunner";
 import { TableName } from "../enums/tableName";
-
 
 function displayMessage(message: string): void{
   console.log(`${chalk.bold.white.bgBlue(`${ message }`)}`)
@@ -13,7 +12,6 @@ export class AuthDatabaseFacade {
   private authDb: Knex;
   private authDbConfig: AuthDbConfig;
 
-  // TODO: remove credentials before commiting
   constructor(authDbConfig: AuthDbConfig){
     console.log("AuthDB Facace constructor");
 
@@ -35,10 +33,9 @@ export class AuthDatabaseFacade {
       },
       debug: true
     });
-
   };
 
-  public getDb(): Knex{
+  public getDb(): Knex {
     return this.authDb
   }
 
