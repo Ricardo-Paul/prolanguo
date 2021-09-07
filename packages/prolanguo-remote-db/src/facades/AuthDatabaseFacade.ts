@@ -2,7 +2,6 @@ import knex, { Knex } from "knex";
 import { AuthDbConfig } from "../interfaces/AuthDbConfig";
 import * as chalk from "chalk";
 import { AuthDatabaseMigrationRunner } from "../database-migrations/AuthDatabaseMigrationRunner";
-import { TableName } from "../enums/tableName";
 
 function displayMessage(message: string): void{
   console.log(`${chalk.bold.white.bgBlue(`${ message }`)}`)
