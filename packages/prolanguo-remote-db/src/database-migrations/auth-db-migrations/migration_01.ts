@@ -1,4 +1,4 @@
-import knex, { Knex } from "knex";
+import { Knex } from "knex";
 import { TableName } from "../../enums/tableName";
 
 export async function migration_01(tx: Knex.Transaction): Promise<void> {
@@ -9,7 +9,7 @@ export async function migration_01(tx: Knex.Transaction): Promise<void> {
 // Table name: prolanguo_user (TableName.USER)
 function createUserTableIfNotExists(db: Knex.Transaction): Knex.Raw {
   console.log(`Creating table: prolanguo_user (migration_01)`)
-  
+
   return db.raw(`
     CREATE TABLE IF NOT EXISTS ${TableName.USER} (
       userId VARCHAR(60) PRIMARY KEY NOT NULL,

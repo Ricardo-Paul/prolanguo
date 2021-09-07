@@ -16,7 +16,7 @@ import { migration_03 } from "./auth-db-migrations/migration_03";
 export class AuthDatabaseMigrationRunner {
   private migrations: readonly [number, (tx: Knex.Transaction) => void][] = [
     [1, migration_01],
-    // [2, migration_02],
+    [2, migration_02],
     // [3, migration_03]
   ];
   private authDb: Knex;
