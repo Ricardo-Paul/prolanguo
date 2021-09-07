@@ -16,8 +16,8 @@ import { migration_03 } from "./auth-db-migrations/migration_03";
 export class AuthDatabaseMigrationRunner {
   private migrations: readonly [number, (tx: Knex.Transaction) => void][] = [
     [1, migration_01],
-    [2, migration_02],
-    [3, migration_03]
+    // [2, migration_02],
+    // [3, migration_03]
   ];
   private authDb: Knex;
 
@@ -36,8 +36,9 @@ export class AuthDatabaseMigrationRunner {
     for (const [version, migrationScript] of this.migrations){
       if(currentVersion < version){
         await this.authDb.transaction(async (tx): Promise<void> => {
-          // await migrationScript(tx)
+          await migrationScript(tx)
           await this.updateDatabaseVersion(tx, version)
+          // update the db for each migration run
           // the last version number will be the db version
         })
       }
