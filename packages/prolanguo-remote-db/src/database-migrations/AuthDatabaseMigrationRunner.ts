@@ -1,23 +1,22 @@
-import knex, { Knex } from "knex";
+import { Knex } from "knex";
+import * as Joi from "joi";
 import { TableName } from "../enums/tableName";
 import { migration_01 } from "./auth-db-migrations/migration_01";
 import { migration_02 } from "./auth-db-migrations/migration_02";
 import { migration_03 } from "./auth-db-migrations/migration_03";
-
- async function pre_migration(db: Knex.Transaction, dbInfoTableName: string): Promise<void> {
-  return db.raw(`
-  CREATE TABLE IF NOT EXISTS ${dbInfoTableName} (
-    name VARCHAR(60) PRIMARY KEY NOT NULL,
-    value VARCHAR(191) NOT NULL
-  ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-  `);
-}
+import { migration_04 } from "./auth-db-migrations/migration_04";
+import { migration_05 } from "./auth-db-migrations/migration_05";
+import { migration_06 } from "./auth-db-migrations/migration_06";
+import { pre_migration } from "./auth-db-migrations/pre_migration";
 
 export class AuthDatabaseMigrationRunner {
   private migrations: readonly [number, (tx: Knex.Transaction) => void][] = [
     [1, migration_01],
     [2, migration_02],
-    // [3, migration_03]
+    [3, migration_03],
+    [4, migration_04],
+    [5, migration_05],
+    [6, migration_06]
   ];
   private authDb: Knex;
 
@@ -28,7 +27,7 @@ export class AuthDatabaseMigrationRunner {
   public async run(){
     console.log('Running Auth Database Premigration');
     await this.preMigration();
-    
+
     const currentVersion = await this.getDatabaseVersion();
     console.log("Current version :", currentVersion, "(AuthDbMigrationRunner)")
 
@@ -48,8 +47,8 @@ export class AuthDatabaseMigrationRunner {
   private getDatabaseVersion(): Promise<number> {
     return new Promise(async (resolve, reject) => {
       try{
-        const results = await this.authDb
-        // select all columns from prolanguo_auth_db_info
+        const results = await 
+          this.authDb
           .select()
           .from(TableName.AUTH_DB_INFO)
           .where('name', 'databaseVersion');
@@ -58,9 +57,13 @@ export class AuthDatabaseMigrationRunner {
           if(results.length === 0){
             resolve(0)
           }else {
-            // return the db version stored in the value column/field
+            // coerce databaseVersion to a number with Joi
+            const versionNumber = Joi.attempt(results[0].value, Joi.number())
+            resolve(
+              versionNumber
+            );
+            console.log("Version Number :", versionNumber);
           }
-
       }catch(err){
         reject(err)
       }
@@ -79,7 +82,7 @@ export class AuthDatabaseMigrationRunner {
 
         const { sql, bindings } = res;
         // REPLACE is like UPDATE but it will first remove the whole row
-        // if the primary key matches (in our case: name)
+        // if the primary key matches (in our case PK name)
         const REPLACE_ROW = sql.replace('insert', 'replace');
         await db.raw(REPLACE_ROW, bindings).then(
           () => console.log("AuthDb version updated")
