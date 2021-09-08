@@ -9,8 +9,7 @@ export abstract class AbstractResolver<T extends object> implements Resolver<T> 
 
   // TODO: add type annotations to rules
   protected abstract rules: any
-  // an error key will be part of the return value
-  // returns the same key with entered data
+  // returns the same vlaues with received data
   resolve(data: any, stripUnknown: boolean): T {
     return Joi.attempt(data, Joi.object(this.rules)
     .options({

@@ -4,11 +4,9 @@ import { AuthDatabaseFacade } from "./AuthDatabaseFacade";
 import { ShardDatabaseFacade } from "./ShardDatabaseFacade";
 import { AuthDbConfig } from "../interfaces/AuthDbConfig"
 
-
 // takes configuration to instantiate both dbs
 export class DatabaseFacade {
   private authDatabaseFacade: AuthDatabaseFacade;
-  // private shardDatabaseFacade: ShardDatabaseFacade;
 
   constructor(authDbConfig: AuthDbConfig){
     this.authDatabaseFacade = new AuthDatabaseFacade(authDbConfig) 

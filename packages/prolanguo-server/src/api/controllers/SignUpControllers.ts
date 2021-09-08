@@ -61,15 +61,31 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
   public async handleRequest(req: ApiRequest<SignUpRequest>, res: ApiResponse<SignUpResponse>): Promise<void> {
     console.log("Handling signup request")
     const db = this.database.getDb("auth");
-    // const { email, password } = req.body;
-    const email = "ricardopaul459@gmail.com"
+    const { email, password } = req.body;
+    console.log("Resolved Request Body :", req.body)
 
     const response = db.transaction(tx => {
       return new Promise(async (resolve, reject) => {
         try{
-          const r = await this.userModel.emailExists(tx, email);
-          console.log("User with email ", r)
+          const accessKey = "thisisanaccesskey";
+          const shardId = 444;
+          const userId = "110";
+          const emailExists = await this.userModel.emailExists(tx, email);
+          console.log("Is this email existed ?", emailExists)
 
+          if(emailExists){
+            throw new Error(`Ouch! it seems that you already signed up`)
+          }else{
+            console.log("Trying to insert user row")
+            await this.userModel.insertUser(tx, {
+              email,
+              userStatus: "new user",
+              userId
+            }, password, accessKey, shardId)
+          };
+          resolve({
+            message: "signed up"
+          });
         }catch(err){
           reject(err)
         }

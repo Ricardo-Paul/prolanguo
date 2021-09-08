@@ -28,7 +28,7 @@ export class ApiRouterFactory{
           return new Promise(async (resolve, reject) => {
             try{
               // perform request validation check
-              await controller.handleRequest(_req, _res);
+              await controller.handleRequest(req, res);
               resolve()
             } catch(err){
               reject(err)

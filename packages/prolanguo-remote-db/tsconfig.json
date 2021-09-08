@@ -8,14 +8,14 @@
     "strictNullChecks": true,
     "outDir": "dist",
     "rootDir": "src",
+    "declaration": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "declaration": true,
     "experimentalDecorators": true,
     "typeRoots": ["./node_modules/@types"],
   },
   "compileOnSave": true,
   "include": [
     "src"
-, "../prolanguo-resolver/src/setup"  ]
-} 
+  ]
+}   
