@@ -19,7 +19,7 @@ export class AuthDatabaseFacade {
       client: 'mysql',
       connection: {
         host: this.authDbConfig.host,
-        // port: this.authDbConfig.port, would prevent table creation
+        // port: 3306, //would prevent table creation
         database: this.authDbConfig.databaseName,
         user: this.authDbConfig.user,
         password: this.authDbConfig.password,

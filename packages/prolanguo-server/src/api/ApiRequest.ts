@@ -1,8 +1,7 @@
 import { Request } from "@prolanguo/prolanguo-common/interfaces";
 import * as express from "express";
 
-// TODO: import properly
-import { RequestResolver } from "@prolanguo/prolanguo-common/src/resolvers/request/RequestResolver";
+import { RequestResolver } from "@prolanguo/prolanguo-common/resolvers";
 
 
 //RequestResolver extends Abstract resolver (now has the resolve() method)
@@ -23,6 +22,17 @@ export class ApiRequest<T extends Request> {
       this.requestResolver.resolve(this.req, true).body;
       console.log("BODY AND QUERY :", this.req.body, this.req.query )
       this.requestResolver.testAbstractResolver();
+    }
+  }
+
+  public get body(): T["body"]{
+    if(this.requestResolver !== null){
+      // return body explicitly
+      return this.requestResolver.resolve(this.req, true).body
+    } else {
+      throw new Error(`Oops, we need a request resolver
+        with strict rules
+       to validate the request body`)
     }
   }
 }
