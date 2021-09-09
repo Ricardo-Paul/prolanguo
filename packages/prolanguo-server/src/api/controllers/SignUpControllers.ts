@@ -68,8 +68,8 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
       return new Promise(async (resolve, reject) => {
         try{
           const accessKey = "thisisanaccesskey";
-          const shardId = 444;
-          const userId = "110";
+          const shardId = 4446;
+          const userId = "1100";
           const emailExists = await this.userModel.emailExists(tx, email);
           console.log("Is this email existed ?", emailExists)
 
