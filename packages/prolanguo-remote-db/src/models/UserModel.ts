@@ -1,5 +1,8 @@
 import { Knex } from "knex"
 import { TableName } from "../enums/tableName";
+import { UserRowValidator } from "../preparers/UserRowValidator";
+import * as Joi from "joi";
+
 
 function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
   return new Promise((resolve, reject): void=> {
@@ -7,8 +10,13 @@ function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
   })
 }
 
-
 export class UserModel {
+  private userRowValidator: UserRowValidator;
+
+  constructor(){
+    this.userRowValidator = new UserRowValidator()
+  }
+
   public emailExists(db: Knex | Knex.Transaction, email: string){
     return new Promise(async (resolve, reject) => {
       try{
@@ -38,18 +46,28 @@ export class UserModel {
       try{
         const queries: Promise<void>[] = [];
 
-        const { email, userId, userStatus } = user;
-        const userRow = {
-          email, userId, userStatus,
-          password, accessKey, shardId,
-        };
-
-        const insertUserQuery = db.insert(userRow).into("prolanguo_user")
-        queries.push(promisifyQuery(insertUserQuery));
-
-        await Promise.all(queries).then(() => {
-          console.log(`Row inserted into prolanguo_user (UserModel.ts)`)
+        const rules = Joi.object({
+          userId: Joi.string(),
+          shardId: Joi.number(),
+          email: Joi.string()
         })
+
+        const { email, userId, userStatus } = user;
+        // const userRow = rules.validate({
+        //   userId, shardId,
+        // }, { stripUnknown: true, presence: "required" })
+
+        const userRow = this.userRowValidator.validateInsertRow({ userId, shardId, email })
+
+        console.log("PREPARED USER ROW :", userRow);
+
+        // const insertUserQuery = db.insert(userRow).into("prolanguo_user")
+        // queries.push(promisifyQuery(insertUserQuery));
+
+        // not executing promises for testing purpose
+        // await Promise.all(queries).then(() => {
+        //   console.log(`Row inserted into prolanguo_user (UserModel.ts)`)
+        // })
         resolve()
       }catch(err){
         reject(err)
@@ -57,5 +75,3 @@ export class UserModel {
     })
   }
 }
-
-// INSERT INTO prolanguo_user (userId, shardId, email, password, accessKey) values ('7989', '777', 'rica4@gmail.com', 'mypass', 'accesskk77');
