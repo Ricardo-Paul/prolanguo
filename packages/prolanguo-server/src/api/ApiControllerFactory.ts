@@ -2,7 +2,6 @@ import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { SignUpController } from "./controllers/SignUpControllers";
 
 
-
 export class ApiControllerFactory {
   private database: DatabaseFacade;
   private userModel: UserModel;

@@ -13,9 +13,11 @@
     "knex": "^0.95.10",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "@prolanguo/prolanguo-common": "1.1.0"
   },
   "devDependencies": {
+    "@types/joi": "^17.2.3",
     "@types/lodash": "^4.14.172",
     "@types/node": "^16.7.13"
   }
