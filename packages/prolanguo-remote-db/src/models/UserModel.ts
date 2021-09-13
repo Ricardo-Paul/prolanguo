@@ -3,7 +3,6 @@ import { TableName } from "../enums/tableName";
 import { UserRowValidator } from "../preparers/UserRowValidator";
 import * as Joi from "joi";
 
-
 function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
   return new Promise((resolve, reject): void=> {
     query.then(resolve, reject)
@@ -46,18 +45,9 @@ export class UserModel {
       try{
         const queries: Promise<void>[] = [];
 
-        const rules = Joi.object({
-          userId: Joi.string(),
-          shardId: Joi.number(),
-          email: Joi.string()
-        })
-
+        // type annotations
         const { email, userId, userStatus } = user;
-        // const userRow = rules.validate({
-        //   userId, shardId,
-        // }, { stripUnknown: true, presence: "required" })
-
-        const userRow = this.userRowValidator.validateInsertRow({ userId, shardId, email })
+        const userRow = this.userRowValidator.validateInsertRow()
 
         console.log("PREPARED USER ROW :", userRow);
 

@@ -1,16 +1,18 @@
-import Joi = require("joi");
+import * as Joi from "joi";
+import { UserMembership, UserStatus } from "@prolanguo/prolanguo-common/enums";
 
-abstract class AbstractPreparer{
-  protected insertRules;
-  protected upsertRules;
-  protected updateRules;
+type Rules<T> = { [P in keyof T]: Joi.SchemaLike }
 
-  protected validateData(data, rules: Joi.ObjectSchema){
+abstract class AbstractPreparer<T> {
+  protected insertRules?: Rules<T>;
+  protected upsertRules?: Rules<T>;
+  protected updateRules?: Rules<T>;
+
+  protected validateData(data: any, rules: Joi.ObjectSchema){
     const { value, error } = rules.validate(data, {
       stripUnknown: true,
       presence: "required"
     });
-    console.log("FROM VALIDATE DATA", value, error)
     if(error){
       throw error
     } else {
@@ -19,14 +21,52 @@ abstract class AbstractPreparer{
   }
 }
 
-export class UserRowValidator extends AbstractPreparer{
+interface UserRow{
+  readonly userId: string;
+  readonly shardId: number;
+  readonly email: string;
+  readonly password: string;
+  readonly accessKey: string;
+  readonly userStatus: UserStatus;
+
+  readonly membership: UserMembership;
+  readonly membershipExpiredAt: null | Date;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+  readonly firstSyncedAt: Date;
+  readonly lastSyncedAt: Date;
+}
+
+export class UserRowValidator extends AbstractPreparer<UserRow> {
   insertRules = {
     userId: Joi.string(),
     shardId: Joi.number(),
-    email: Joi.string()
+    email: Joi.string(),
+    password: Joi.string(),
+    accessKey: Joi.string(),
+    userStatus: Joi.string(),
+
+    membership: Joi.string(),
+    membershipExpiredAt: Joi.date(),
+    createdAt: Joi.date(),
+    updatedAt: Joi.date(),
+    firstSyncedAt: Joi.date(),
+    lastSyncedAt: Joi.date()
   }
 
-  public validateInsertRow(data){
-    return this.validateData(data, Joi.object(this.insertRules));
+  // TODO: user type annotation
+  public validateInsertRow(user, shardId: number, password: string, accessKey: string){
+    const userRowForInsert = {
+      userId: user.userId,
+      shardId,
+      email: user.email,
+      password,
+      accessKey,
+      userStatus: user.userStatus,
+      membership: user.membership,
+      membershipExpiredAt: user.membershipExpiredAt
+    }
+
+    return this.validateData(userRowForInsert, Joi.object(this.insertRules));
   }
 }
