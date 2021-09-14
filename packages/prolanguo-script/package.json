@@ -14,13 +14,18 @@
   "license": "ISC",
   "dependencies": {
     "@prolanguo/prolanguo-remote-db": "1.0.0",
+    "@prolanguo/prolanguo-resolver": "1.1.0",
+    "@types/js-yaml": "^4.0.3",
+    "app-root-path": "^3.0.0",
     "chalk": "^4.1.2",
     "commander": "^8.2.0",
     "dotenv": "^10.0.0",
     "inquirer": "^8.1.2",
     "joi": "^17.4.2",
+    "js-yaml": "^4.1.0",
     "knex": "^0.95.11",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "yaml-js": "^0.2.3"
   },
   "devDependencies": {
     "@types/inquirer": "^8.1.1",

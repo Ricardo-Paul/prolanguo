@@ -1,8 +1,12 @@
 #!/usr/bin/env node
-import { DatabaseManagerFacade, ShardDatabaseFacade } from "@prolanguo/prolanguo-remote-db"
+import { DatabaseManagerFacade, ShardDatabaseFacade, ShardDbConfig } from "@prolanguo/prolanguo-remote-db"
+import chalk = require("chalk");
 
 const { program } = require('commander');
 import * as inquirer from "inquirer";
+import { loadConfig } from "../setup/loadConfig";
+
+
 
 async function exec() {
   program
@@ -11,6 +15,9 @@ async function exec() {
     .option('-p, --port <port>', 'Database port')
     .option('-s --shardIds <shardIds>', 'Shard Ids for database (comma seprated)')
     .parse(process.argv);
+
+    const config = loadConfig();
+    console.log(chalk.blue('Calling Load config'), config.shardDb.shardDatabaseNamePrefix,);
 
   const answers = await inquirer.prompt([
     {
@@ -50,11 +57,12 @@ async function exec() {
     return parseInt(shardId.trim());
   });
 
-  const shardDbPrefix = 'prolanguo_shard_db_';
+
+  const shardDbPrefix = config.shardDb.shardDatabaseNamePrefix;
   const databaseManager = new DatabaseManagerFacade();
 
   // creating the shard databases
-  shardIds.map( async (shardId) => {
+  shardIds.map(async (shardId) => {
     const config = {
       shardId,
       host,
@@ -66,14 +74,14 @@ async function exec() {
     const existed = await databaseManager.databaseExists(config, shardDbPrefix);
     console.log("EXISTED :", existed);
 
-    try{
-      if(existed === false){
+    try {
+      if (existed === false) {
         console.log(`Creating database ${shardDbPrefix}${config.shardId}`);
         await databaseManager.createShardDatabaseIfNotExists(config, shardDbPrefix);
       } else {
         console.log(`Database already exists: ${shardDbPrefix}${config.shardId}`);
       }
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
 
@@ -81,24 +89,21 @@ async function exec() {
   console.log('Shard Ids number ', shardIds);
 
   // connecting to the shard databases;
-
-  // TODO: remove this
-  const shardConfigs = {
-  // removed before commit
-  }
-
-  const allShardDbConfigs = shardIds.map((shardId: number) => {
+  const allShardDbConfigs: Array<ShardDbConfig> = shardIds.map((shardId: number) => {
     return {
       shardId,
-      host: shardConfigs.host,
-      port: shardConfigs.port,
-      user: shardConfigs.user,
-      password: shardConfigs.password,
+      host,
+      port,
+      user,
+      password,
       connectionLimit: 20
     }
   })
   const shardDatabase = new ShardDatabaseFacade(allShardDbConfigs, shardDbPrefix);
   console.log('Random Shard ID :', shardDatabase.getRandomShardId());
+
+  // running sharded databases migrations
+
 }
 
 exec();
