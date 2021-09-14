@@ -13,6 +13,7 @@
   "author": "Ricardo Paul",
   "license": "ISC",
   "dependencies": {
+    "@prolanguo/prolanguo-remote-db": "1.0.0",
     "chalk": "^4.1.2",
     "commander": "^8.2.0",
     "dotenv": "^10.0.0",
