@@ -1,4 +1,4 @@
-import knex from "knex";
+import knex, { Knex } from "knex";
 
 
 interface ShardDbConfig {
@@ -43,4 +43,31 @@ export class DatabaseManagerFacade {
     );
   }
 
+  public async createShardDatabaseIfNotExists(config: ShardDbConfig, shardDatabaseNamePrefix: string): Promise<void>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const db = knex({
+            client: 'mysql',
+            connection: {
+              host: config.host,
+              port: config.port,
+              user: config.user,
+              password: config.password
+            }
+          })
+
+          await db.transaction((tx): Knex.Raw => {
+            return tx.raw(
+              `CREATE DATABASE IF NOT EXISTS ${shardDatabaseNamePrefix}${config.shardId}`
+            );
+          });
+          await db.destroy();
+        resolve()
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
 }

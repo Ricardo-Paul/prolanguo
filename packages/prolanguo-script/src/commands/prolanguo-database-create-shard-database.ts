@@ -40,35 +40,44 @@ async function exec() {
       type: 'input',
       name: 'shardIdStr',
       message: 'Enter Shard Ids (separated by comma)',
-      default: ''
+      default: '0,1,2,3'
     },
   ]);
 
   const { host, user, password, port, shardIdStr } = answers;
 
-  console.log('Creating shard database', answers, program.host);
-
-
   const shardIds: number[] = shardIdStr.split(",").map((shardId: string): number => {
     return parseInt(shardId.trim());
   });
 
-  const db = {
-    shardId: 0,
-    host: 'localhost',
-    port: 3306,
-    user: 'root',
-    password: 'ricardo00',
-    connectionLimit: 20
-  }
-
   const shardDbPrefix = 'prolanguo_shard_db_';
   const databaseManager = new DatabaseManagerFacade();
-  const existed = await databaseManager.databaseExists(db, shardDbPrefix)
 
+  shardIds.map( async (shardId) => {
+    const config = {
+      shardId,
+      host,
+      port,
+      user,
+      password,
+      connectionLimit: 20
+    };
+    const existed = await databaseManager.databaseExists(config, shardDbPrefix);
+    console.log("EXISTED :", existed);
+
+    try{
+      if(existed === false){
+        console.log(`Creating database ${shardDbPrefix}${config.shardId}`);
+        await databaseManager.createShardDatabaseIfNotExists(config, shardDbPrefix);
+      } else {
+        console.log(`Database already exists: ${shardDbPrefix}${config.shardId}`);
+      }
+    }catch(err){
+      console.log(err);
+    }
+
+  });
   console.log('Shard Ids number ', shardIds);
-  console.log("EXISTED :", existed);
-
 }
 
 exec();
