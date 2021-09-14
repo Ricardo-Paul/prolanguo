@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { DatabaseManagerFacade } from "@prolanguo/prolanguo-remote-db"
+import { DatabaseManagerFacade, ShardDatabaseFacade } from "@prolanguo/prolanguo-remote-db"
 
 const { program } = require('commander');
 import * as inquirer from "inquirer";
@@ -53,6 +53,7 @@ async function exec() {
   const shardDbPrefix = 'prolanguo_shard_db_';
   const databaseManager = new DatabaseManagerFacade();
 
+  // creating the shard databases
   shardIds.map( async (shardId) => {
     const config = {
       shardId,
@@ -78,6 +79,26 @@ async function exec() {
 
   });
   console.log('Shard Ids number ', shardIds);
+
+  // connecting to the shard databases;
+
+  // TODO: remove this
+  const shardConfigs = {
+  // removed before commit
+  }
+
+  const allShardDbConfigs = shardIds.map((shardId: number) => {
+    return {
+      shardId,
+      host: shardConfigs.host,
+      port: shardConfigs.port,
+      user: shardConfigs.user,
+      password: shardConfigs.password,
+      connectionLimit: 20
+    }
+  })
+  const shardDatabase = new ShardDatabaseFacade(allShardDbConfigs, shardDbPrefix);
+  console.log('Random Shard ID :', shardDatabase.getRandomShardId());
 }
 
 exec();

@@ -1,14 +1,5 @@
 import knex, { Knex } from "knex";
-
-
-interface ShardDbConfig {
-  shardId: number,
-  host: string,
-  port: number,
-  user: string,
-  password: string,
-  connectionLimit: number
-}
+import { ShardDbConfig } from "../interfaces/ShardDbConfig";
 
 export class DatabaseManagerFacade {
   public async databaseExists(config: ShardDbConfig, shardDatabaseNamePrefix: string): Promise<boolean> {
