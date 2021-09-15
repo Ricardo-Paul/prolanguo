@@ -4,6 +4,8 @@ import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { ApiControllerFactory } from "./api/ApiControllerFactory";
 import { ApiRouterFactory } from "./api/ApiRouterFactory";
 import { resolveEnv } from "./setup/resolveEnv";
+import { loadConfig } from "./setup/loadConfig";
+
 
 export class Server{
   // class used as Interface
@@ -12,13 +14,14 @@ export class Server{
   private database: DatabaseFacade;
   private userModel: UserModel;
   private env;
+  private config;
 
   constructor(){
     this.env = resolveEnv();
-    this.database = new DatabaseFacade(this.env.AUTH_DATABASE_CONFIG);
-    
-    this.userModel = new UserModel
+    this.config = loadConfig();
 
+    this.database = new DatabaseFacade(this.env.AUTH_DATABASE_CONFIG);
+    this.userModel = new UserModel
     this.apiControllerFactory = new ApiControllerFactory(
       this.database,
       this.userModel
@@ -65,7 +68,8 @@ export class Server{
           // TODO: use a logger instead
           console.log(`Server is listening on port 8000`);
           // console.log("CONFIG ::", dbConfig, );
-          console.log("Calling resolve Env" ,resolveEnv())
+          console.log("Calling resolve Env" ,resolveEnv());
+          console.log("Loading server config", this.config);
         }
       )
     }

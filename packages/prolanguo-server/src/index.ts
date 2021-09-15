@@ -10,6 +10,6 @@ server.setup()
   }
 ).catch(
   (error): void => {
-    console.log('Something occurred while setting up the sever', error)
+    console.log('Something occurred while setting up the server', error)
   }
 )
