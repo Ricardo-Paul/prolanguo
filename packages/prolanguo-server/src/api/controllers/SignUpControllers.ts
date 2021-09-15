@@ -2,7 +2,11 @@ import { ApiController } from "./ApiController";
 import { SignUpRequest } from "@prolanguo/prolanguo-common/interfaces";
 import { SignUpRequestResolver } from "@prolanguo/prolanguo-common/resolvers";
 import { ControllerOptions } from "../../interfaces/ControllerOptions";
+import { AuthenticatorFacade } from "../../facades/AuthenticatorFacace";
 import { ApiRequest } from "../ApiRequest";
+import { Config } from "../../interfaces/Config";
+import * as uuid from "uuid";
+
 
 // database stuff
 import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
@@ -37,15 +41,25 @@ interface SignUpResponse {
   readonly accessToken: string;
 }
 
+
+
 export class SignUpController extends ApiController<SignUpRequest, SignUpResponse> {
 
   private database: DatabaseFacade;
   private userModel: UserModel;
+  private config: Config;
+  private authenticator: AuthenticatorFacade;
 
-  constructor(database: DatabaseFacade, userModel: UserModel){
+  constructor(
+    database: DatabaseFacade, 
+    userModel: UserModel, 
+    config: Config,
+    authenticator: AuthenticatorFacade
+    ) {
     super()
     this.database = database;
     this.userModel = userModel;
+    this.config = config;
   }
 
   public options(): ControllerOptions<SignUpRequest> {
@@ -53,7 +67,9 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
       paths: ['/sign-up'],
       allowedMethod: 'post',
       authStrategies: null,
-      requestResolver: new SignUpRequestResolver(8)
+      requestResolver: new SignUpRequestResolver(
+        this.config.user.passwordMinLength
+      )
     }
   }
 
@@ -66,16 +82,21 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
 
     const response = db.transaction(tx => {
       return new Promise(async (resolve, reject) => {
-        try{
-          const accessKey = "thisisanaccesskey";
-          const shardId = 4446;
-          const userId = "1100";
+        try {
+          const accessKey = uuid.v4();
+          const userId = uuid.v4();
+          const shardId = this.database.getRandomShardId();
+          const encryptedPassword = await this.authenticator.encryptPassword(
+            password,
+            this.config.user.passwordEncryptionSaltRounds
+          );
+          
+
           const emailExists = await this.userModel.emailExists(tx, email);
           console.log("Is this email existed ?", emailExists)
-
-          if(emailExists){
+          if (emailExists) {
             throw new Error(`Ouch! it seems that you already signed up`)
-          }else{
+          } else {
             console.log("Trying to insert user row")
             await this.userModel.insertUser(tx, {
               email,
@@ -86,7 +107,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
           resolve({
             message: "signed up"
           });
-        }catch(err){
+        } catch (err) {
           reject(err)
         }
       })

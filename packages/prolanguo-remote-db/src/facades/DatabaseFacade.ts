@@ -1,23 +1,28 @@
-import knex, { Knex } from "knex";
+import { Knex } from "knex";
 
 import { AuthDatabaseFacade } from "./AuthDatabaseFacade";
 import { ShardDatabaseFacade } from "./ShardDatabaseFacade";
-import { AuthDbConfig } from "../interfaces/AuthDbConfig"
+import { AuthDbConfig } from "../interfaces/AuthDbConfig";
+import { ShardDbConfig } from "../interfaces/ShardDbConfig";
+
 
 // takes configuration to instantiate both dbs
 export class DatabaseFacade {
   private authDatabaseFacade: AuthDatabaseFacade;
+  private shardDatbaseFacade: ShardDatabaseFacade;
 
-  constructor(authDbConfig: AuthDbConfig){
-    this.authDatabaseFacade = new AuthDatabaseFacade(authDbConfig) 
+  constructor(authDbConfig: AuthDbConfig,
+     allShardDbConfig: ShardDbConfig[], 
+     shardDatabasePrefixName: string ){
+    this.authDatabaseFacade = new AuthDatabaseFacade(authDbConfig);
+    this.shardDatbaseFacade = new ShardDatabaseFacade(allShardDbConfig, shardDatabasePrefixName);
   }
 
   public getDb(authOrShardId: 'auth' | number): Knex{
     if (authOrShardId === "auth"){
       return this.authDatabaseFacade.getDb()
     }else {
-      // replace this with the shardDb
-      return this.authDatabaseFacade.getDb()
+      return this.shardDatbaseFacade.getDb(authOrShardId)
     }
   } 
 
@@ -27,5 +32,14 @@ export class DatabaseFacade {
 
   public checkShardDatabaseTalbes(){
     console.log(`No implementation yet for shard db`)
+  };
+
+  public getRandomShardId(){
+    return this.shardDatbaseFacade.getRandomShardId();
+  }
+
+  // meant for testing
+  public getAllShardIds(){
+    return this.shardDatbaseFacade.getAllShardIds();
   }
 }
