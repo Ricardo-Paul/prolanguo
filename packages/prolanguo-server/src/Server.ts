@@ -1,6 +1,6 @@
 import chalk = require("chalk");
 import * as express from "express";
-import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
+import { AuthDbConfig, DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { ApiControllerFactory } from "./api/ApiControllerFactory";
 import { ApiRouterFactory } from "./api/ApiRouterFactory";
 import { resolveEnv } from "./setup/resolveEnv";
@@ -20,11 +20,25 @@ export class Server{
     this.env = resolveEnv();
     this.config = loadConfig();
 
-    this.database = new DatabaseFacade(this.env.AUTH_DATABASE_CONFIG);
+    // TODO: remove hard coded details to .env file
+    this.database = new DatabaseFacade(
+      this.env.AUTH_DATABASE_CONFIG as AuthDbConfig,
+      [{
+        shardId: 0,
+        host: 'localhost',
+        port: 3306,
+        user: 'root',
+        password: 'ricardo00',
+        connectionLimit: 20
+      }],
+      'prolanguo_shard_db_'
+    );
+
     this.userModel = new UserModel
     this.apiControllerFactory = new ApiControllerFactory(
       this.database,
-      this.userModel
+      this.userModel,
+      this.config
     );
     this.apiRouterFactory = new ApiRouterFactory();
   }
@@ -70,6 +84,7 @@ export class Server{
           // console.log("CONFIG ::", dbConfig, );
           console.log("Calling resolve Env" ,resolveEnv());
           console.log("Loading server config", this.config);
+          console.log("All shardIds :", this.database.getAllShardIds())
         }
       )
     }

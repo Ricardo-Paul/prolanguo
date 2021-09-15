@@ -49,4 +49,13 @@ export class ShardDatabaseFacade {
 
     return shardIds[_.random(0, shardIds.length - 1)]
   }
+
+  // Meant for testing
+  public getAllShardIds(): number[]{
+    const shardIds: number[] = this.allShardDbConfig.map((config): number => {
+      return config.shardId
+    });
+
+    return shardIds
+  }
 }
