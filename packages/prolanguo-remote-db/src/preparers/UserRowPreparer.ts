@@ -1,5 +1,7 @@
 import * as Joi from "joi";
+import * as _ from "lodash";
 import { UserMembership, UserStatus } from "@prolanguo/prolanguo-common/enums";
+import { User } from "../interfaces/User";
 
 type Rules<T> = { [P in keyof T]: Joi.SchemaLike }
 
@@ -37,25 +39,40 @@ interface UserRow{
   readonly lastSyncedAt: Date;
 }
 
-export class UserRowValidator extends AbstractPreparer<UserRow> {
+
+export class UserRowPreparer extends AbstractPreparer<UserRow> {
   insertRules = {
     userId: Joi.string(),
     shardId: Joi.number(),
-    email: Joi.string(),
     password: Joi.string(),
     accessKey: Joi.string(),
-    userStatus: Joi.string(),
+    email: Joi.string(),
+    userStatus: Joi.string().valid(..._.values(UserStatus)),
 
-    membership: Joi.string(),
-    membershipExpiredAt: Joi.date(),
-    createdAt: Joi.date(),
-    updatedAt: Joi.date(),
-    firstSyncedAt: Joi.date(),
+    membership: Joi.string().valid(..._.values(UserMembership)),
+    membershipExpiredAt: Joi.date().allow(null),
+
+    createdAt: Joi.date().optional(),
+    updatedAt: Joi.date().optional(),
+    firstSyncedAt: Joi.date()
+      .forbidden()
+      .strip()
+      .optional(),
     lastSyncedAt: Joi.date()
+      .forbidden()
+      .strip()
+      .optional()
   }
 
   // TODO: user type annotation
-  public validateInsertRow(user, shardId: number, password: string, accessKey: string){
+  public prepareInsert(
+    user: User, 
+    shardId: number, 
+    password: string, 
+    accessKey: string
+    ){
+
+    // not include createdAt and sync pairs
     const userRowForInsert = {
       userId: user.userId,
       shardId,
@@ -67,6 +84,8 @@ export class UserRowValidator extends AbstractPreparer<UserRow> {
       membershipExpiredAt: user.membershipExpiredAt
     }
 
+    const v = _.values(UserMembership);
+    console.log("VALUES LODASH :", ...v);
     return this.validateData(userRowForInsert, Joi.object(this.insertRules));
   }
 }

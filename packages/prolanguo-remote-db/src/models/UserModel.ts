@@ -1,7 +1,9 @@
 import { Knex } from "knex"
 import { TableName } from "../enums/tableName";
-import { UserRowValidator } from "../preparers/UserRowValidator";
+import { UserRowPreparer } from "../preparers/UserRowPreparer";
+import { UserExtraDataModel } from "./UserExtraDataModel";
 import * as Joi from "joi";
+import { User } from "../interfaces/User";
 
 function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
   return new Promise((resolve, reject): void=> {
@@ -10,10 +12,10 @@ function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
 }
 
 export class UserModel {
-  private userRowValidator: UserRowValidator;
+  private userRowPreparer: UserRowPreparer;
 
   constructor(){
-    this.userRowValidator = new UserRowValidator()
+    this.userRowPreparer = new UserRowPreparer()
   }
 
   public emailExists(db: Knex | Knex.Transaction, email: string){
@@ -40,24 +42,19 @@ export class UserModel {
     })
   }
 
-  public insertUser(db: Knex, user: object, password: string, accessKey: string, shardId: number): Promise<void>{
+  public insertUser(db: Knex, user: User, password: string, accessKey: string, shardId: number): Promise<void>{
     return new Promise(async (resolve, reject) => {
       try{
         const queries: Promise<void>[] = [];
+        const userRow = this.userRowPreparer.prepareInsert(
+          user,
+          shardId,
+          password,
+          accessKey
+        );
 
-        // type annotations
-        const { email, userId, userStatus } = user;
-        const userRow = this.userRowValidator.validateInsertRow()
+        console.log("Prepared User Row for Insert :", userRow);
 
-        console.log("PREPARED USER ROW :", userRow);
-
-        // const insertUserQuery = db.insert(userRow).into("prolanguo_user")
-        // queries.push(promisifyQuery(insertUserQuery));
-
-        // not executing promises for testing purpose
-        // await Promise.all(queries).then(() => {
-        //   console.log(`Row inserted into prolanguo_user (UserModel.ts)`)
-        // })
         resolve()
       }catch(err){
         reject(err)

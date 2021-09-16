@@ -6,7 +6,8 @@ import { AuthenticatorFacade } from "../../facades/AuthenticatorFacace";
 import { ApiRequest } from "../ApiRequest";
 import { Config } from "../../interfaces/Config";
 import * as uuid from "uuid";
-
+import * as moment from "moment";
+import knex, { Knex } from "knex";
 
 // database stuff
 import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
@@ -42,7 +43,6 @@ interface SignUpResponse {
 }
 
 
-
 export class SignUpController extends ApiController<SignUpRequest, SignUpResponse> {
 
   private database: DatabaseFacade;
@@ -60,6 +60,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
     this.database = database;
     this.userModel = userModel;
     this.config = config;
+    this.authenticator = authenticator;
   }
 
   public options(): ControllerOptions<SignUpRequest> {
@@ -80,7 +81,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
     const { email, password } = req.body;
     console.log("Resolved Request Body :", req.body)
 
-    const response = db.transaction(tx => {
+    await db.transaction( (tx) => {
       return new Promise(async (resolve, reject) => {
         try {
           const accessKey = uuid.v4();
@@ -90,19 +91,37 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
             password,
             this.config.user.passwordEncryptionSaltRounds
           );
-          
 
+          console.log(`
+            encryptedPassword: ${encryptedPassword},
+            userId: ${userId},
+            accessKey: ${accessKey}
+          `)
+          
           const emailExists = await this.userModel.emailExists(tx, email);
+
+          // TODO: move error messages elsewhere
           console.log("Is this email existed ?", emailExists)
           if (emailExists) {
             throw new Error(`Ouch! it seems that you already signed up`)
           } else {
             console.log("Trying to insert user row")
             await this.userModel.insertUser(tx, {
+              userId,
               email,
               userStatus: "new user",
-              userId
-            }, password, accessKey, shardId)
+              membership: "user membership",
+              membershipExpiredAt: moment().toDate(),
+              createdAt: moment().toDate(),
+              updtateAt: moment().toDate(),
+              firstSyncedAt: null,
+              lastSyncedAt: null,
+              extraData: []
+            }, 
+            encryptedPassword, 
+            accessKey, 
+            shardId
+          )
           };
           resolve({
             message: "signed up"
@@ -112,8 +131,6 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
         }
       })
     })
-
-    console.log("Transaction response :", response)
 
     res.json({
       accessToken: "any access token",

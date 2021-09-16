@@ -5,6 +5,8 @@ import { ApiControllerFactory } from "./api/ApiControllerFactory";
 import { ApiRouterFactory } from "./api/ApiRouterFactory";
 import { resolveEnv } from "./setup/resolveEnv";
 import { loadConfig } from "./setup/loadConfig";
+import { AuthenticatorFacade } from "./facades/AuthenticatorFacace";
+import { Config } from "./interfaces/Config";
 
 
 export class Server{
@@ -14,11 +16,16 @@ export class Server{
   private database: DatabaseFacade;
   private userModel: UserModel;
   private env;
-  private config;
+  private config: Config;
+  private authenticator: AuthenticatorFacade;
 
   constructor(){
     this.env = resolveEnv();
     this.config = loadConfig();
+    this.userModel = new UserModel;
+    this.authenticator = new AuthenticatorFacade(
+      'secretkEyremoveitfromhere'
+    );
 
     // TODO: remove hard coded details to .env file
     this.database = new DatabaseFacade(
@@ -34,11 +41,12 @@ export class Server{
       'prolanguo_shard_db_'
     );
 
-    this.userModel = new UserModel
+    
     this.apiControllerFactory = new ApiControllerFactory(
       this.database,
       this.userModel,
-      this.config
+      this.config,
+      this.authenticator
     );
     this.apiRouterFactory = new ApiRouterFactory();
   }
