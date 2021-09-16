@@ -2,26 +2,8 @@ import * as Joi from "joi";
 import * as _ from "lodash";
 import { UserMembership, UserStatus } from "@prolanguo/prolanguo-common/enums";
 import { User } from "../interfaces/User";
+import { AbstractPreparer } from "./AbstractPreparer";
 
-type Rules<T> = { [P in keyof T]: Joi.SchemaLike }
-
-abstract class AbstractPreparer<T> {
-  protected insertRules?: Rules<T>;
-  protected upsertRules?: Rules<T>;
-  protected updateRules?: Rules<T>;
-
-  protected validateData(data: any, rules: Joi.ObjectSchema){
-    const { value, error } = rules.validate(data, {
-      stripUnknown: true,
-      presence: "required"
-    });
-    if(error){
-      throw error
-    } else {
-      return value
-    }
-  }
-}
 
 interface UserRow{
   readonly userId: string;
@@ -54,17 +36,16 @@ export class UserRowPreparer extends AbstractPreparer<UserRow> {
 
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
-    firstSyncedAt: Joi.date()
+    firstSyncedAt: Joi
       .forbidden()
       .strip()
       .optional(),
-    lastSyncedAt: Joi.date()
+    lastSyncedAt: Joi
       .forbidden()
       .strip()
       .optional()
   }
 
-  // TODO: user type annotation
   public prepareInsert(
     user: User, 
     shardId: number, 
@@ -84,8 +65,6 @@ export class UserRowPreparer extends AbstractPreparer<UserRow> {
       membershipExpiredAt: user.membershipExpiredAt
     }
 
-    const v = _.values(UserMembership);
-    console.log("VALUES LODASH :", ...v);
     return this.validateData(userRowForInsert, Joi.object(this.insertRules));
   }
 }
