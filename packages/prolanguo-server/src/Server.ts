@@ -41,7 +41,6 @@ export class Server{
       'prolanguo_shard_db_'
     );
 
-    
     this.apiControllerFactory = new ApiControllerFactory(
       this.database,
       this.userModel,

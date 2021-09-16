@@ -3,6 +3,7 @@ import { SignUpRequest } from "@prolanguo/prolanguo-common/interfaces";
 import { SignUpRequestResolver } from "@prolanguo/prolanguo-common/resolvers";
 import { ControllerOptions } from "../../interfaces/ControllerOptions";
 import { AuthenticatorFacade } from "../../facades/AuthenticatorFacace";
+import { UserStatus, UserMembership } from "@prolanguo/prolanguo-common/enums";
 import { ApiRequest } from "../ApiRequest";
 import { Config } from "../../interfaces/Config";
 import * as uuid from "uuid";
@@ -13,22 +14,12 @@ import knex, { Knex } from "knex";
 import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { ApiResponse } from "../ApiResponse";
 
-enum UserMemberShip {
-  REGULAR = 'REGULAR',
-  LIFETIME_PREMIUM = 'LIFETIME_PREMIUM',
-  SUBSCRIBED_PREMIUM = 'SUBSCRIBED_PREMIUM'
-}
-
-enum UserStatus {
-  ACTIVE = 'ACTIVE',
-  DISABLED = 'DISABLED'
-}
 
 interface User {
   readonly userId: string;
   readonly email: string;
   readonly userStatus: UserStatus;
-  readonly membership: UserMemberShip;
+  readonly membership: UserMembership;
   readonly membershipExpiredAt: null | Date;
   readonly updatedAt: Date;
   readonly createdAt: Date;
@@ -109,14 +100,26 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
             await this.userModel.insertUser(tx, {
               userId,
               email,
-              userStatus: "new user",
-              membership: "user membership",
-              membershipExpiredAt: moment().toDate(),
+              userStatus: UserStatus.ACTIVE,
+              membership: UserMembership.REGULAR,
+              membershipExpiredAt: null,
               createdAt: moment().toDate(),
               updtateAt: moment().toDate(),
               firstSyncedAt: null,
               lastSyncedAt: null,
-              extraData: []
+              extraData: [{
+                userId,
+                dataName: "A data Name",
+                dataValue: "Value for data",
+                createdAt: moment().toDate(),
+                updatedAt: moment().toDate()
+              }, {
+                userId,
+                dataName: "An other data Name",
+                dataValue: "An other data value",
+                createdAt: moment().toDate(),
+                updatedAt: moment().toDate()
+              }]
             }, 
             encryptedPassword, 
             accessKey, 

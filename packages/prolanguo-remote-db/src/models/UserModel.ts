@@ -2,7 +2,6 @@ import { Knex } from "knex"
 import { TableName } from "../enums/tableName";
 import { UserRowPreparer } from "../preparers/UserRowPreparer";
 import { UserExtraDataModel } from "./UserExtraDataModel";
-import * as Joi from "joi";
 import { User } from "../interfaces/User";
 
 function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
@@ -13,9 +12,11 @@ function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
 
 export class UserModel {
   private userRowPreparer: UserRowPreparer;
+  private userExtraDataModel: UserExtraDataModel;
 
   constructor(){
-    this.userRowPreparer = new UserRowPreparer()
+    this.userRowPreparer = new UserRowPreparer();
+    this.userExtraDataModel = new UserExtraDataModel();
   }
 
   public emailExists(db: Knex | Knex.Transaction, email: string){
@@ -51,6 +52,20 @@ export class UserModel {
           shardId,
           password,
           accessKey
+        );
+
+        // queries.push(promisifyQuery(
+        //   db.insert(userRow).into(TableName.USER)
+        // ));
+
+        console.log('Extra data received :', user.extraData);
+        
+        queries.push(
+          this.userExtraDataModel.upsertMultipleExtraData(
+            db,
+            user.extraData,
+            user.userId
+          )
         );
 
         console.log("Prepared User Row for Insert :", userRow);
