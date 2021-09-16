@@ -1,8 +1,9 @@
 import { Knex } from "knex";
 import { UserExtraDataRowPreparer } from "../preparers/UserExtraDataRowPreparer";
 import { UserExtraDataRowForUpsert } from "../interfaces/UserExtraDataRowForUpsert";
+import * as _ from "lodash";
 import { TableName } from "../enums/tableName";
-
+import { promisifyQuery } from "./PromisifyQuery";
 
 interface UserExtraDataRow {
   userId: string;
@@ -12,12 +13,6 @@ interface UserExtraDataRow {
   updatedAt: Date;
   firstSyncedAt: Date;
   lastSyncedAt: Date;
-}
-
-function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<void>{
-  return new Promise((resolve, reject) => {
-    query.then(resolve, reject)
-  })
 }
 
 export class UserExtraDataModel{
@@ -40,17 +35,27 @@ export class UserExtraDataModel{
         console.log('Rows for upsert :', userExtraDataRows);
         console.log('SQL to insert :', sql, bindings);
 
-        // insert operation
-        // queries.push(promisifyQuery(
-        //   db.raw(sql.replace('insert', 'insert ignore'), bindings)
-        // ));
+        // insert extra data array in bulk
+        queries.push(promisifyQuery(
+          db.raw(sql.replace('insert', 'insert ignore'), bindings)
+        ));
 
-        // update operation
+        // update each row except userId and dataName
+        const userExtraDataRowUpdateQueries = userExtraDataRows.map((row: any) => {
+          const { userId, dataName } = row;
+          const fieldsToUpdate = _.omit(row, ['userId', 'dataName']);
+          return promisifyQuery(
+            db.update(fieldsToUpdate).from(TableName.USER_EXTRA_DATA).where({ userId, dataName })
+          )
+        });
+
+        queries.push(...userExtraDataRowUpdateQueries);
         
-        // await Promise.all(queries);
+        await Promise.all(queries);
+        resolve()
       }catch(err){
         reject(err)
       }
     })
   }
-}
+};

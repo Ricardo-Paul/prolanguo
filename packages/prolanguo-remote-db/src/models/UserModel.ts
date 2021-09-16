@@ -3,12 +3,8 @@ import { TableName } from "../enums/tableName";
 import { UserRowPreparer } from "../preparers/UserRowPreparer";
 import { UserExtraDataModel } from "./UserExtraDataModel";
 import { User } from "../interfaces/User";
+import { promisifyQuery } from "./PromisifyQuery";
 
-function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw): Promise<any> {
-  return new Promise((resolve, reject): void=> {
-    query.then(resolve, reject)
-  })
-}
 
 export class UserModel {
   private userRowPreparer: UserRowPreparer;
@@ -54,12 +50,13 @@ export class UserModel {
           accessKey
         );
 
-        // queries.push(promisifyQuery(
-        //   db.insert(userRow).into(TableName.USER)
-        // ));
+        // inserting regular user data
+        queries.push(promisifyQuery(
+          db.insert(userRow).into(TableName.USER)
+        ));
 
-        console.log('Extra data received :', user.extraData);
         
+        // will insert an array of extra data
         queries.push(
           this.userExtraDataModel.upsertMultipleExtraData(
             db,
@@ -68,8 +65,10 @@ export class UserModel {
           )
         );
 
+        console.log('Extra data received :', user.extraData);
         console.log("Prepared User Row for Insert :", userRow);
-
+        
+        await Promise.all(queries);
         resolve()
       }catch(err){
         reject(err)
