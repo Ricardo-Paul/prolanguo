@@ -21,7 +21,7 @@ export class ApiRequest<T extends Request> {
     if(this.requestResolver !== null){
       this.requestResolver.resolve(this.req, true).body;
       console.log("BODY AND QUERY :", this.req.body, this.req.query )
-      this.requestResolver.testAbstractResolver();
+      // this.requestResolver.testAbstractResolver();
     }
   }
 

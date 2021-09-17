@@ -65,19 +65,22 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
     }
   }
 
-  // TODO: add type annotation to req and res
   public async handleRequest(req: ApiRequest<SignUpRequest>, res: ApiResponse<SignUpResponse>): Promise<void> {
     console.log("Handling signup request")
     const db = this.database.getDb("auth");
     const { email, password } = req.body;
+    const accessKey = uuid.v4();
+    const userId = uuid.v4();
+    const shardId = this.database.getRandomShardId();
+
     console.log("Resolved Request Body :", req.body)
 
-    await db.transaction( (tx) => {
+    const { errorCode } = await db.transaction( (tx): Promise<{ 
+      errorCode: null | string
+     }> => {
       return new Promise(async (resolve, reject) => {
         try {
-          const accessKey = uuid.v4();
-          const userId = uuid.v4();
-          const shardId = this.database.getRandomShardId();
+
           const encryptedPassword = await this.authenticator.encryptPassword(
             password,
             this.config.user.passwordEncryptionSaltRounds
@@ -94,7 +97,10 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
           // TODO: move error messages elsewhere
           console.log("Is this email existed ?", emailExists)
           if (emailExists) {
-            throw new Error(`Ouch! it seems that you already signed up`)
+            // throw new Error(`Ouch! it seems that you already signed up`);
+            resolve({
+              errorCode: 'EMAIL_ALREADY_IN_USED'
+            });
           } else {
             console.log("Trying to insert user row")
             await this.userModel.insertUser(tx, {
@@ -127,22 +133,27 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
           )
           };
           resolve({
-            message: "signed up"
+            errorCode: null
           });
         } catch (err) {
           reject(err)
         }
       })
-    })
+    });
+
+    console.log('ERROR CODE :', errorCode, typeof errorCode);
+    if(errorCode !== null){
+      console.log('There was an error, could not process request', errorCode);
+      // move this code to the else block
+      const testId = '2aa28829-4d98-4cb0-a547-eee2f6f5f75d';
+      const user = await this.userModel.getUserById(db, testId);
+    } else {
+      console.log('Sign up successful');
+    };
 
     res.json({
       accessToken: "any access token",
       currentUser: {}
     })
   }
-}
-
-// Next: write emailExists method for UserModel
-// Write a password encryptor
-// Write a method to get random Shard Id
-// Write insert user method
+};

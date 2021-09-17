@@ -4,6 +4,8 @@ import { UserExtraDataRowForUpsert } from "../interfaces/UserExtraDataRowForUpse
 import * as _ from "lodash";
 import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
+import { UserExtraDataRowResolver } from "../resolvers/UserExtraDataRowResolver";
+
 
 interface UserExtraDataRow {
   userId: string;
@@ -17,8 +19,10 @@ interface UserExtraDataRow {
 
 export class UserExtraDataModel{
   private userExtraDataRowPreparer: UserExtraDataRowPreparer;
+  private userExtraDataRowResolver: UserExtraDataRowResolver;
   constructor(){
-    this.userExtraDataRowPreparer = new UserExtraDataRowPreparer()
+    this.userExtraDataRowPreparer = new UserExtraDataRowPreparer();
+    this.userExtraDataRowResolver = new UserExtraDataRowResolver();
   }
 
   public upsertMultipleExtraData(db: Knex, userExtraData: any, userId: string): Promise<void> {
@@ -57,5 +61,33 @@ export class UserExtraDataModel{
         reject(err)
       }
     })
+  };
+
+  public getUserExtraDataById(db: Knex, userId: string){
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db
+            .select()
+            .from(TableName.USER_EXTRA_DATA)
+            .where({
+              userId
+            })
+          );
+
+          if(result !== undefined){
+            const userExtraDataRows = this.userExtraDataRowResolver.resolveArray(result, true)
+            console.log('Resolved ARRRAYY userExtradatarows:', userExtraDataRows);
+            
+            resolve({
+              result
+            })
+          };
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
   }
 };

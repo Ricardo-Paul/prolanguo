@@ -2,7 +2,7 @@ import * as Joi from "joi";
 
 interface Resolver<T> {
   resolve(data: any, stripUnknown: boolean): T;
-  testAbstractResolver():any
+  resolveArray(data: any, stripUnknown: boolean): T;
 }
 
 export abstract class AbstractResolver<T extends object> implements Resolver<T> {
@@ -16,11 +16,19 @@ export abstract class AbstractResolver<T extends object> implements Resolver<T> 
       stripUnknown: {
         arrays: stripUnknown,
         objects: stripUnknown,
-      }
+      },
+      presence: 'required'
     }))
+  };
+
+  resolveArray(data: any, stripUnknown: boolean): T {
+    return Joi.attempt(data, Joi.array().items(Joi.object(this.rules).options({
+      stripUnknown: {
+        arrays: stripUnknown,
+        objects: stripUnknown
+      },
+      presence: 'required'
+    })))
   }
 
-  testAbstractResolver(): any{
-    console.log(`AbstractController/testAbstractResolver about to validate data`);
-  }
 }
