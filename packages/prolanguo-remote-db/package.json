@@ -14,7 +14,8 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mysql": "^2.18.1",
-    "@prolanguo/prolanguo-common": "1.1.0"
+    "@prolanguo/prolanguo-common": "1.1.0",
+    "@prolanguo/prolanguo-resolver": "1.1.0"
   },
   "devDependencies": {
     "@types/joi": "^17.2.3",
