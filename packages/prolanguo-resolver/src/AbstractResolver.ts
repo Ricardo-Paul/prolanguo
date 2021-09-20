@@ -2,7 +2,7 @@ import * as Joi from "joi";
 
 interface Resolver<T> {
   resolve(data: any, stripUnknown: boolean): T;
-  resolveArray(data: any, stripUnknown: boolean): T;
+  resolveArray(data: any, stripUnknown: boolean): ReadonlyArray<T>;
 }
 
 export abstract class AbstractResolver<T extends object> implements Resolver<T> {
@@ -21,7 +21,7 @@ export abstract class AbstractResolver<T extends object> implements Resolver<T> 
     }))
   };
 
-  resolveArray(data: any, stripUnknown: boolean): T {
+  resolveArray(data: any, stripUnknown: boolean): ReadonlyArray<T> {
     return Joi.attempt(data, Joi.array().items(Joi.object(this.rules).options({
       stripUnknown: {
         arrays: stripUnknown,

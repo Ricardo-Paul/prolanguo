@@ -13,8 +13,7 @@ interface UserExtraDataRow {
   lastSyncedAt: Date;
 }
 
-
-export class UserExtraDataRowPreparer extends AbstractPreparer<UserExtraDataRow>{
+export class UserExtraDataRowPreparer extends AbstractPreparer<UserExtraDataRow> {
   protected upsertRules = {
     userId: Joi.string(),
     dataName: Joi.string(),
@@ -44,14 +43,13 @@ export class UserExtraDataRowPreparer extends AbstractPreparer<UserExtraDataRow>
     userId: string
   ): UserExtraDataRowForUpsert {
     // construct an extra data row for the table
+    // sync lines removed, they have default values
     const row = {
       userId,
       dataName: userExtraDataRow.dataName,
       dataValue: userExtraDataRow.dataValue,
       createdAt: userExtraDataRow.createdAt,
       updatedAt: userExtraDataRow.updatedAt,
-      firstSyncedAt: null,
-      lastSyncedAt: null
     }
 
     return row

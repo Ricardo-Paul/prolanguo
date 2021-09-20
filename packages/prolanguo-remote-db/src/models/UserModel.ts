@@ -2,10 +2,11 @@ import { Knex } from "knex"
 import { TableName } from "../enums/tableName";
 import { UserRowPreparer } from "../preparers/UserRowPreparer";
 import { UserExtraDataModel } from "./UserExtraDataModel";
-import { User } from "../interfaces/User";
+import { User, UserRow } from "../interfaces/User";
 import { promisifyQuery } from "./PromisifyQuery";
 import { UserRowResolver } from "../resolvers/UserRowResolver";
 import * as _ from "lodash";
+
 
 export class UserModel {
   private userRowPreparer: UserRowPreparer;
@@ -51,9 +52,11 @@ export class UserModel {
               resolve()
             } else {
               const userRow = this.userRowResolver.resolve(_.first(result), true);
-              const user = this.getCompleteUserByUserRow(db, userRow)
+              const user = await this.getCompleteUserByUserRow(db, userRow)
+              // const user = await this.userExtraDataModel.getUserExtraDataById(db, userRow.userId);
               console.log("FOUND USER :", result);
-              console.log("RESOLVED ROW :", userRow);
+              console.log("RESOLVED ROW ::::", userRow);
+              console.log("WILL BE COMPLETE USER :", user);
             }
 
         resolve()
@@ -64,10 +67,29 @@ export class UserModel {
     );
   };
 
-  public getCompleteUserByUserRow(db: Knex, userRow: any){
-    this.userExtraDataModel.getUserExtraDataById(
+  public async  getCompleteUserByUserRow(db: Knex, userRow: UserRow ): Promise<User>{
+    console.log('CALLING getCompleteUserByUserRow ...');
+    
+    const {
+      extraData
+    } = await this.userExtraDataModel.getUserExtraDataById(
       db, userRow.userId
     );
+
+    const user: User = {
+      userId: userRow.userId,
+      email: userRow.email,
+      userStatus: userRow.userStatus,
+      createdAt: userRow.createdAt,
+      updatedAt: userRow.updatedAt,
+      membership: userRow.membership,
+      membershipExpiredAt: userRow.membershipExpiredAt,
+      firstSyncedAt: userRow.firstSyncedAt,
+      lastSyncedAt: userRow.lastSyncedAt,
+      extraData
+    }
+
+    return user
   };
 
   public insertUser(db: Knex, user: User, password: string, accessKey: string, shardId: number): Promise<void>{

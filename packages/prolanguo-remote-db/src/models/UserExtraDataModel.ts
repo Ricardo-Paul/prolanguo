@@ -5,17 +5,8 @@ import * as _ from "lodash";
 import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import { UserExtraDataRowResolver } from "../resolvers/UserExtraDataRowResolver";
+import { UserExtraDataRow } from "../interfaces/UserExtraDataRow";
 
-
-interface UserExtraDataRow {
-  userId: string;
-  dataName: string;
-  dataValue: string;
-  createdAt: Date;
-  updatedAt: Date;
-  firstSyncedAt: Date;
-  lastSyncedAt: Date;
-}
 
 export class UserExtraDataModel{
   private userExtraDataRowPreparer: UserExtraDataRowPreparer;
@@ -54,7 +45,7 @@ export class UserExtraDataModel{
         });
 
         queries.push(...userExtraDataRowUpdateQueries);
-        
+
         await Promise.all(queries);
         resolve()
       }catch(err){
@@ -63,7 +54,7 @@ export class UserExtraDataModel{
     })
   };
 
-  public getUserExtraDataById(db: Knex, userId: string){
+  public getUserExtraDataById(db: Knex, userId: string): Promise<{ extraData: UserExtraDataRow[] }>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -77,12 +68,27 @@ export class UserExtraDataModel{
           );
 
           if(result !== undefined){
-            const userExtraDataRows = this.userExtraDataRowResolver.resolveArray(result, true)
+            const userExtraDataRows = this.userExtraDataRowResolver.resolveArray(result, true);
             console.log('Resolved ARRRAYY userExtradatarows:', userExtraDataRows);
-            
+
+            // JSON.parse() dataValue in each array object
+            const extraData = userExtraDataRows.map(row => {
+              return {
+                userId: row.userId,
+                dataName: row.dataName,
+                dataValue: row.dataValue, //parse the value (Json.parse)
+                createdAt: row.createdAt,
+                updatedAt: row.updatedAt,
+                firstSyncedAt: row.firstSyncedAt,
+                lastSyncedAt: row.lastSyncedAt
+              };
+            });
+
+            console.log('EXTRA DATA :', extraData)
+
             resolve({
-              result
-            })
+              extraData
+            });
           };
         }catch(error){
           reject(error)

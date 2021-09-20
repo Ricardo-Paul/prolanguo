@@ -1,14 +1,11 @@
 import { UserStatus, UserMembership } from "@prolanguo/prolanguo-common/dist/enums";
 import { AbstractResolver } from "@prolanguo/prolanguo-resolver";
+import { UserRow } from "../interfaces/User";
 import * as Joi from "joi";
 import * as _ from "lodash";
 
 
-interface UserInterface {
-
-}
-
-export class UserRowResolver extends AbstractResolver<UserInterface>{
+export class UserRowResolver extends AbstractResolver<UserRow>{
   rules = {
     userId: Joi.string(),
     email: Joi.string(),
