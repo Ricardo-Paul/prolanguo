@@ -2,11 +2,11 @@ import { Knex } from "knex"
 import { TableName } from "../enums/tableName";
 import { UserRowPreparer } from "../preparers/UserRowPreparer";
 import { UserExtraDataModel } from "./UserExtraDataModel";
-import { User, UserRow } from "../interfaces/User";
+import { UserRow } from "../interfaces/User"; //import from common
+import { User } from "@prolanguo/prolanguo-common/interfaces";
 import { promisifyQuery } from "./PromisifyQuery";
 import { UserRowResolver } from "../resolvers/UserRowResolver";
 import * as _ from "lodash";
-
 
 export class UserModel {
   private userRowPreparer: UserRowPreparer;
@@ -43,13 +43,13 @@ export class UserModel {
     })
   };
 
-  public getUserById(db: Knex, userId: string): Promise<void> {
+  public getUserById(db: Knex, userId: string): Promise<User | null> {
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
             const result = await db.select().from(TableName.USER).where({ userId }).limit(1);
             if(_.first(result) === undefined){
-              resolve()
+              resolve(null)
             } else {
               const userRow = this.userRowResolver.resolve(_.first(result), true);
               const user = await this.getCompleteUserByUserRow(db, userRow)
@@ -57,9 +57,9 @@ export class UserModel {
               console.log("FOUND USER :", result);
               console.log("RESOLVED ROW ::::", userRow);
               console.log("WILL BE COMPLETE USER :", user);
-            }
 
-        resolve()
+              resolve(user)
+            }
         }catch(error){
           reject(error)
         }

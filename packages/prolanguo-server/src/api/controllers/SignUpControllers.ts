@@ -8,12 +8,11 @@ import { ApiRequest } from "../ApiRequest";
 import { Config } from "../../interfaces/Config";
 import * as uuid from "uuid";
 import * as moment from "moment";
-import knex, { Knex } from "knex";
+import { assertExists } from "../../utils/assertExists";
 
 // database stuff
 import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { ApiResponse } from "../ApiResponse";
-
 
 interface User {
   readonly userId: string;
@@ -32,7 +31,6 @@ interface SignUpResponse {
   readonly currentUser: User;
   readonly accessToken: string;
 }
-
 
 export class SignUpController extends ApiController<SignUpRequest, SignUpResponse> {
 
@@ -110,7 +108,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
               membership: UserMembership.REGULAR,
               membershipExpiredAt: null,
               createdAt: moment().toDate(),
-              updtateAt: moment().toDate(),
+              updatedAt: moment().toDate(),
               firstSyncedAt: null,
               lastSyncedAt: null,
               extraData: [{
@@ -118,13 +116,17 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
                 dataName: "A data Name",
                 dataValue: "Value for data",
                 createdAt: moment().toDate(),
-                updatedAt: moment().toDate()
+                updatedAt: moment().toDate(),
+                firstSyncedAt: null,
+                lastSyncedAt: null
               }, {
                 userId,
                 dataName: "An other data Name",
                 dataValue: "An other data value",
                 createdAt: moment().toDate(),
-                updatedAt: moment().toDate()
+                updatedAt: moment().toDate(),
+                firstSyncedAt: null,
+                lastSyncedAt: null
               }]
             }, 
             encryptedPassword, 
@@ -146,14 +148,22 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
       console.log('There was an error, could not process request', errorCode);
       // move this code to the else block
       const testId = '2aa28829-4d98-4cb0-a547-eee2f6f5f75d';
-      const user = await this.userModel.getUserById(db, testId);
+      const currentUser = assertExists(
+        await this.userModel.getUserById(db, testId),
+        "User is null or undefined, (signupController)"
+      );
+      console.log('JUST SIGNUP USER :', currentUser);
+
+      const accessToken = this.authenticator.createAccessToken(currentUser.userId, accessKey);
+      res.json({
+        accessToken,
+        currentUser
+      })
     } else {
       console.log('Sign up successful');
     };
-
-    res.json({
-      accessToken: "any access token",
-      currentUser: {}
-    })
   }
 };
+
+// logger
+// some formal tests
