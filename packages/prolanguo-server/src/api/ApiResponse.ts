@@ -1,4 +1,9 @@
-import { Response } from "express"
+import { Response } from "express";
+
+interface SignUpResponse {
+  currentUser: object,
+  accessToken: string
+}
 
 export class ApiResponse<T>{
   private res: Response;
@@ -7,7 +12,11 @@ export class ApiResponse<T>{
     this.res = res;
   }
 
-  json(obj: { currentUser: object, accessToken: string}){
+  json(obj: SignUpResponse){
     return this.res.json(obj)
+  }
+
+  error(obj: { errorCode: string }){
+    return this.res.status(500).json(obj)
   }
 }

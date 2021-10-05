@@ -109,13 +109,15 @@ export class UserModel {
         ));
 
         // will insert an array of extra data
-        queries.push(
-          this.userExtraDataModel.upsertMultipleExtraData(
-            db,
-            user.extraData,
-            user.userId
-          )
-        );
+        if(user.extraData.length > 0){
+          queries.push(
+            this.userExtraDataModel.upsertMultipleExtraData(
+              db,
+              user.extraData,
+              user.userId
+            )
+          );
+        }
 
         console.log('Extra data received :', user.extraData);
         console.log("Prepared User Row for Insert :", userRow);
