@@ -134,9 +134,8 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
       });
     } else {
       console.log('Sign up successful');
-      const testId = '2aa28829-4d98-4cb0-a547-eee2f6f5f75d';
       const currentUser = assertExists(
-        await this.userModel.getUserById(db, testId),
+        await this.userModel.getUserById(db, userId),
         "User is null or undefined, (signupController)"
       );
       console.log('JUST SIGNUP USER :', currentUser);
