@@ -12,4 +12,4 @@ interface GlobalReminder {
   readonly dataName: UserExtraDataName.GLOBAL_REMINDER
 }
 
-export type UserExtraDataRow = | GlobalAutoArchive | GlobalAutoArchive
+export type UserExtraDataRow = | GlobalAutoArchive | GlobalReminder

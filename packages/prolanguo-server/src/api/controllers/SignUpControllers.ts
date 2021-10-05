@@ -9,7 +9,7 @@ import { Config } from "../../interfaces/Config";
 import * as uuid from "uuid";
 import * as moment from "moment";
 import { assertExists } from "../../utils/assertExists";
-
+import { ErrorCode } from "@prolanguo/prolanguo-common/enums";
 // database stuff
 import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { ApiResponse } from "../ApiResponse";
@@ -95,9 +95,8 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
           // TODO: move error messages elsewhere
           console.log("Is this email existed ?", emailExists)
           if (emailExists) {
-            // throw new Error(`Ouch! it seems that you already signed up`);
             resolve({
-              errorCode: 'EMAIL_ALREADY_IN_USED'
+              errorCode: ErrorCode.USER__EMAIL_ALREADY_REGISTERED
             });
           } else {
             console.log("Trying to insert user row")
@@ -111,23 +110,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
               updatedAt: moment().toDate(),
               firstSyncedAt: null,
               lastSyncedAt: null,
-              extraData: [{
-                userId,
-                dataName: "A data Name",
-                dataValue: "Value for data",
-                createdAt: moment().toDate(),
-                updatedAt: moment().toDate(),
-                firstSyncedAt: null,
-                lastSyncedAt: null
-              }, {
-                userId,
-                dataName: "An other data Name",
-                dataValue: "An other data value",
-                createdAt: moment().toDate(),
-                updatedAt: moment().toDate(),
-                firstSyncedAt: null,
-                lastSyncedAt: null
-              }]
+              extraData: []
             }, 
             encryptedPassword, 
             accessKey, 
@@ -146,7 +129,11 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
     console.log('ERROR CODE :', errorCode, typeof errorCode);
     if(errorCode !== null){
       console.log('There was an error, could not process request', errorCode);
-      // move this code to the else block
+      res.error({
+        errorCode
+      });
+    } else {
+      console.log('Sign up successful');
       const testId = '2aa28829-4d98-4cb0-a547-eee2f6f5f75d';
       const currentUser = assertExists(
         await this.userModel.getUserById(db, testId),
@@ -159,8 +146,6 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
         accessToken,
         currentUser
       })
-    } else {
-      console.log('Sign up successful');
     };
   }
 };
