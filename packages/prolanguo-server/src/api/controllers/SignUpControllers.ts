@@ -129,7 +129,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
     console.log('ERROR CODE :', errorCode, typeof errorCode);
     if(errorCode !== null){
       console.log('There was an error, could not process request', errorCode);
-      res.error({
+      res.error(500, {
         errorCode
       });
     } else {

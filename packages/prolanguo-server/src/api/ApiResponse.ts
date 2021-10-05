@@ -16,7 +16,7 @@ export class ApiResponse<T>{
     return this.res.json(obj)
   }
 
-  error(obj: { errorCode: string }){
-    return this.res.status(500).json(obj)
+  error(code: number, obj: { errorCode: string }){
+    return this.res.status(code).json(obj)
   }
 }

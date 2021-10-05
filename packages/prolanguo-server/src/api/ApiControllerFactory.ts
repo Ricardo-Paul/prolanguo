@@ -1,5 +1,6 @@
 import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { SignUpController } from "./controllers/SignUpControllers";
+import { SignInController } from "./controllers/SignInController";
 import { Config } from "../interfaces/Config";
 import { AuthenticatorFacade } from "../facades/AuthenticatorFacace";
 
@@ -34,6 +35,11 @@ export class ApiControllerFactory {
         this.database,
         this.userModel,
         this.config,
+        this.authenticator
+      ),
+      new SignInController(
+        this.database,
+        this.userModel,
         this.authenticator
       )
     ]
