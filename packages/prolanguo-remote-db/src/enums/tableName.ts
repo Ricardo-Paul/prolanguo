@@ -6,7 +6,15 @@ export enum TableName {
   USER_EXTRA_DATA = 'prolanguo_user_extra_data',
   API_KEY = 'prolanguo_api_key',
   PURCHASE = 'prolanguo_purchase',
-  DAILY_STREAK = 'prolanguo_daily_streak',
 
-  // table name for shard database
+  // table names for shard database
+  SHARD_DB_INFO = "prolanguo_shard_db_info",
+  SET = "prolanguo_set",
+  SET_EXTRA_DATA = "prolanguo_set_extra_data",
+  VOCABULARY = "prolanguo_vocabulary",
+  DEFINITION = "prolanguo_definition",
+  VOCABULARY_CATEGORY = "prolanguo_vocabulary_category",
+  VOCABULARY_WRITING = "prolanguo_vocabulary_writing",
+  LESSON_RESULT = "prolanguo_lesson_result",
+  LOCK = "prolanguo_lock",
 }
