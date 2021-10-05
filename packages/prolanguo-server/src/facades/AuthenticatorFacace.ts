@@ -16,4 +16,8 @@ export class AuthenticatorFacade {
   public createAccessToken(userId: string, accessKey: string): string{
     return jwt.sign({ userId, accessKey }, this.jwtSecretKey)
   }
+
+  public validatePassword(password: string, encryptedPassword: string){
+    return bcrypt.compare(password, encryptedPassword);
+  }
 }

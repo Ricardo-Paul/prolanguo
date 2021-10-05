@@ -53,7 +53,7 @@ export class UserModel {
             } else {
               const userRow = this.userRowResolver.resolve(_.first(result), true);
               const user = await this.getCompleteUserByUserRow(db, userRow)
-              // const user = await this.userExtraDataModel.getUserExtraDataById(db, userRow.userId);
+
               console.log("FOUND USER :", result);
               console.log("RESOLVED ROW ::::", userRow);
               console.log("WILL BE COMPLETE USER :", user);
@@ -67,7 +67,36 @@ export class UserModel {
     );
   };
 
-  public async  getCompleteUserByUserRow(db: Knex, userRow: UserRow ): Promise<User>{
+  public getUserByEmail(db: Knex | Knex.Transaction | Knex.QueryBuilder, email: string): Promise<{
+    user: User,
+    shardId: number,
+    password: string,
+    accessKey: string
+  } | null>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await db.select().from(TableName.USER).where({ email }).limit(1);
+          if(_.first(result) === undefined){
+            resolve(null)
+          } else {
+            const userRow = this.userRowResolver.resolve(_.first(result), true);
+            const user = await this.getCompleteUserByUserRow(db, userRow);
+            resolve({
+              user,
+              shardId: userRow.shardId,
+              password: userRow.password,
+              accessKey: userRow.accessKey
+            })
+          }
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
+
+  public async  getCompleteUserByUserRow(db: Knex | Knex.Transaction | Knex.QueryBuilder, userRow: UserRow ): Promise<User>{
     console.log('CALLING getCompleteUserByUserRow ...');
     
     const {
