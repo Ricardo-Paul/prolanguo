@@ -3,7 +3,6 @@ import { generateEmail } from "../utils/generateEmail";
 import { generatePassword } from "../utils/generatePassword";
 import { Signup } from "../utils/sign-up";
 
-
 describe('it signup users successfully', () => {
   const email = generateEmail();
   const password = generatePassword();
