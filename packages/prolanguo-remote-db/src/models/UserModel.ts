@@ -43,6 +43,44 @@ export class UserModel {
     })
   };
 
+  public async getUserByIdAndAcessKey(db: Knex, userId: string, accessKey: string, stripUnknown: boolean): Promise<null | {
+    user: User,
+    shardId: number,
+    accessKey: string,
+    password: string
+  }>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db.select()
+            .from(TableName.USER)
+            .where({
+              userId,
+              accessKey
+            }).limit(1)
+          );
+
+          const first = _.first(result);
+          if(typeof first === "undefined"){
+            resolve(null)
+          }else{
+            const userRow = this.userRowResolver.resolve(first, stripUnknown);
+            const user = await this.getCompleteUserByUserRow(db, userRow);
+            resolve({
+              user,
+              shardId: userRow.shardId,
+              accessKey: userRow.accessKey,
+              password: userRow.password
+            });
+          }
+        }catch(error){
+          reject(error)
+        }
+      }
+    )
+  };
+
   public getUserById(db: Knex, userId: string): Promise<User | null> {
     return new Promise(
       async (resolve, reject): Promise<void> => {
@@ -67,7 +105,7 @@ export class UserModel {
     );
   };
 
-  public getUserByEmail(db: Knex | Knex.Transaction | Knex.QueryBuilder, email: string): Promise<{
+  public getUserByEmail(db: Knex | Knex.Transaction, email: string): Promise<{
     user: User,
     shardId: number,
     password: string,
@@ -96,7 +134,7 @@ export class UserModel {
     );
   }
 
-  public async  getCompleteUserByUserRow(db: Knex | Knex.Transaction | Knex.QueryBuilder, userRow: UserRow ): Promise<User>{
+  public async getCompleteUserByUserRow(db: Knex | Knex.Transaction, userRow: UserRow ): Promise<User>{
     console.log('CALLING getCompleteUserByUserRow ...');
     
     const {
