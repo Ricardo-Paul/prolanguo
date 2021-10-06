@@ -8,6 +8,18 @@ import { promisifyQuery } from "./PromisifyQuery";
 import { UserRowResolver } from "../resolvers/UserRowResolver";
 import * as _ from "lodash";
 
+// TODO: move this function to an outer package
+// remove its duplicate from server
+export function assertExists<T>(value: T, message?: string): NonNullable<T>{
+  if(value !== null && typeof value !== undefined){
+    return value as NonNullable<T>
+  } else {
+    throw Error(
+      message? message : "Assert value exits but is actually null/undefined"
+    );
+  }
+};
+
 export class UserModel {
   private userRowPreparer: UserRowPreparer;
   private userExtraDataModel: UserExtraDataModel;
@@ -78,8 +90,37 @@ export class UserModel {
           reject(error)
         }
       }
-    )
+    );
   };
+
+  public async getUserIdByEmail(db: Knex, email: string): Promise<null | string> {
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db.select('userId')
+            .from(TableName.USER)
+            .where({
+              email
+            }).limit(1)
+          );
+  
+          const first = _.first(result);
+          if(typeof first === "undefined"){
+            resolve(null)
+          } else {
+            const userRow = this.userRowResolver.resolvePartial(first, true);
+            const userId = assertExists(userRow.userId,
+              "User Id cannot be null or undefined"
+            );
+            resolve(userId);
+          };
+        } catch(error){
+          reject(error)
+        };
+      }
+    )
+  }
 
   public getUserById(db: Knex, userId: string): Promise<User | null> {
     return new Promise(

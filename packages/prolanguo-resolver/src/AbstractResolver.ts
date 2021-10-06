@@ -29,6 +29,16 @@ export abstract class AbstractResolver<T extends object> implements Resolver<T> 
       },
       presence: 'required'
     })))
-  }
+  };
 
+  // Build a deepPartial Type for return type
+  resolvePartial(data: any, stripUnknown: boolean){
+    return Joi.attempt(data, Joi.object(this.rules).options({
+      stripUnknown: {
+        arrays: stripUnknown,
+        objects: stripUnknown
+      },
+      presence: "optional"
+    }))
+  };
 }
