@@ -1,5 +1,6 @@
 import knex, { Knex } from "knex";
 import * as _ from "lodash";
+import { ShardDatabaseMigrationRunner } from "../database-migrations/ShardDatabaseMigrationRunner";
 import { ShardDbConfig } from "../interfaces/ShardDbConfig";
 
 export class ShardDatabaseFacade {
@@ -11,6 +12,7 @@ export class ShardDatabaseFacade {
     this.allShardDbConfig = allShardDbConfig;
     this.shardDatabaseNamePrefix = shardDatabasePrefixName
 
+    // create a database with each shardDb config
     const connections = this.allShardDbConfig.map((config: ShardDbConfig) => {
       const { shardId, host, port, user, password, connectionLimit } = config;
       const databaseName = this.shardDatabaseNamePrefix + shardId;
@@ -36,6 +38,8 @@ export class ShardDatabaseFacade {
     });
 
     this.shardedDbs = _.fromPairs(connections);
+    // [[0, KnexDatabase], [1, KnexDatabase]] ==> {0: KnexDatabase, 1: KnexDatabase}
+    console.log("Connected to all shard databases (ShardDatabaseFacade)")
   };
 
   public getDb(shardId: number): Knex{
@@ -57,5 +61,22 @@ export class ShardDatabaseFacade {
     });
 
     return shardIds
+  };
+
+  public checkAllShardDatabaseTables(){
+    console.log(`Checking all shard databases`)
+
+    // get shardIds from config to retrieve dbs
+    this.allShardDbConfig.map((config) => {
+      const {shardId} = config;
+      this.checkShardDatabaseTables(shardId);
+    })
+  }
+
+  private async checkShardDatabaseTables(shardId: number){
+    console.log(`About to run shard db migrations for shardId : ${shardId}`)
+    const db = this.getDb(shardId);
+    const migrationRunner = new ShardDatabaseMigrationRunner(db);
+    await migrationRunner.run();
   }
 }
