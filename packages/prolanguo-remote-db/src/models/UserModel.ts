@@ -122,7 +122,7 @@ export class UserModel {
     )
   }
 
-  public async getLastUpdatedTime(db: Knex, userId: string): Promise<null | Date>{
+  public async getLatestUpdatedTime(db: Knex, userId: string): Promise<null | Date> {
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -140,7 +140,7 @@ export class UserModel {
             const { updatedAt } = userRow;
             resolve(
               assertExists(updatedAt,
-                "updatedAt must not be null or undefined"
+                "updatedAt cannot be null or undefined"
                 )
             );
           }
@@ -149,7 +149,35 @@ export class UserModel {
         }
       }
     );
-  }
+  };
+
+  public async getLatestSyncTime(db: Knex, userId: string): Promise<null | Date>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db.select('lastSyncedAt')
+              .from(TableName.USER)
+              .where({ userId })
+              .limit(1)
+          );
+          const first = _.first(result);
+          if(typeof first === "undefined"){
+            resolve(null);
+          } else {
+            const userRow = this.userRowResolver.resolvePartial(first, true);
+            const { lastSyncedAt } = userRow;
+            resolve(assertExists(
+              lastSyncedAt,
+              "lastSyncedAt cannot be null or undefined"
+            ));
+          }
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  };
 
   public getUserById(db: Knex, userId: string): Promise<User | null> {
     return new Promise(
