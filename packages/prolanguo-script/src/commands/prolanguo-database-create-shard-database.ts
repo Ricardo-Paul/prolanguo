@@ -90,6 +90,7 @@ async function exec() {
 
   // connecting to the shard databases;
   const allShardDbConfigs: Array<ShardDbConfig> = shardIds.map((shardId: number) => {
+    // create many configs identified by shardIds
     return {
       shardId,
       host,
@@ -103,7 +104,7 @@ async function exec() {
   console.log('Random Shard ID :', shardDatabase.getRandomShardId());
 
   // running sharded databases migrations
-
+  shardDatabase.checkAllShardDatabaseTables();
 }
 
 exec();

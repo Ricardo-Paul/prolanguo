@@ -17,6 +17,7 @@ export class DatabaseManagerFacade {
             }
           });
 
+          // see whether schema_name equals db
           const result = await db
             .select('SCHEMA_NAME')
             .from('INFORMATION_SCHEMA.SCHEMATA')
