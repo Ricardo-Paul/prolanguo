@@ -18,20 +18,21 @@ export class ShardDatabaseMigrationRunner{
     this.shardDb = shardDb
   };
 
-  public async run(){
-    this.preMigration();
+  public async run(): Promise<void>{
+    await this.preMigration();
     const databaseVersion = await this.getDatabaseVersion();
     for(const [version, migration] of this.migrations){
+      console.log(`databaseVersion: ${databaseVersion}, migrationVersion: ${version}`);
       if(databaseVersion < version){
         this.shardDb.transaction(async (tx) => {
-          migration(tx);
-          this.updateDatabaseVersion(tx, version);
+          await migration(tx);
+          await this.updateDatabaseVersion(tx, version);
         })
       }
     }
   }
 
-  private preMigration(){
+  private async preMigration(): Promise<void>{
     this.shardDb.transaction(async (tx) => {
       await pre_migration(tx, TableName.SHARD_DB_INFO)
     })
@@ -68,7 +69,7 @@ export class ShardDatabaseMigrationRunner{
 
           const { sql, bindings } = query;
           const replaceSQL = sql.replace('insert', 'replace');
-          db.raw(replaceSQL, bindings); //replace db version number
+          await db.raw(replaceSQL, bindings); //replace db version number
           resolve();
         }catch(error){
           reject(error)
