@@ -143,7 +143,7 @@ export class UserModel {
                 "updatedAt cannot be null or undefined"
                 )
             );
-          }
+          };
         }catch(error){
           reject(error)
         }
@@ -293,5 +293,49 @@ export class UserModel {
         reject(err)
       }
     })
+  };
+
+  // set user type as DeepPartial<User> to make keys optional
+  public async updateUser(
+    db: Knex,
+    user, //DeepPartial<User>
+    password: string,
+    accessKey: string
+  ): Promise<void>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const queries: Promise<void>[] = [];
+          const userRow = this.userRowPreparer.prepareUpdate(user, password, accessKey);
+          const fieldsToUpdate = _.omit(user, 'userId');
+          const userId = assertExists(userRow.userId);
+          // update basic user fields
+          if(Object.keys(fieldsToUpdate).length > 0){
+            queries.push(
+              await promisifyQuery(
+                db.update(fieldsToUpdate)
+                .from(TableName.USER)
+                .where({userId})
+              )
+            )
+          }
+
+          // update extra data
+          if(user.extraData && user.extraData.length > 0){
+            queries.push(
+              this.userExtraDataModel.upsertMultipleExtraData(
+                db, user.extraData, user.userId
+              )
+            )
+          };
+
+          Promise.all(queries);
+          resolve()
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
   }
+  
 }

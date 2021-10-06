@@ -1,7 +1,7 @@
 // will move afterwards
 import { UserMembership, UserStatus } from "@prolanguo/prolanguo-common/enums";
 import { UserExtraDataRow } from './UserExtraDataRow';
-
+ 
 
 // User fields as exists in the database
 export interface UserRow {
@@ -20,3 +20,16 @@ export interface UserRow {
   readonly lastSyncedAt: null | Date;
   // no extra data
 }
+
+// should be deep partial
+export type UserRowForUpdate = Partial<{
+  readonly accessKey: string;
+  readonly password: string;
+  readonly userId: string;
+  readonly email: string;
+  readonly userStatus: UserStatus;
+  readonly membership: UserMembership;
+  readonly membershipExpiredAt: null | Date;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+}>

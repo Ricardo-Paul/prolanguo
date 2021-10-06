@@ -12,7 +12,7 @@ export class AuthDatabaseFacade {
   private authDbConfig: AuthDbConfig;
 
   constructor(authDbConfig: AuthDbConfig){
-    console.log("AuthDB Facace constructor");
+    console.log("AuthDB Facade constructor");
 
     this.authDbConfig = authDbConfig;
     this.authDb = knex({
