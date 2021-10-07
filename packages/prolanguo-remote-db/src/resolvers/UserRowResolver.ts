@@ -4,7 +4,6 @@ import { UserRow } from "../interfaces/User";
 import * as Joi from "joi";
 import * as _ from "lodash";
 
-
 export class UserRowResolver extends AbstractResolver<UserRow>{
   rules = {
     userId: Joi.string(),
