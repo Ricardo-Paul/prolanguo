@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import * as moment from "moment";
 
-interface UserExtraDataItem {
+export interface UserExtraDataItem {
   readonly dataName: string,
   readonly dataValue: object,
   readonly createdAt: Date,
@@ -26,15 +26,16 @@ export class UserExtraDataItemBuilder {
   }
 };
 
-const userExtra = new UserExtraDataItemBuilder().build(
-  {
-    dataName: "GLOBAL_AUTO_ARCHIVE",
-    dataValue: {
-      globalAutoArchiveEnabled: true,
-      spaceRepetitionThreshold: 4,
-    },
-    firstSyncedAt: moment.utc().toDate()
-  }
-)
+// test
+// const userExtra = new UserExtraDataItemBuilder().build(
+//   {
+//     dataName: "GLOBAL_AUTO_ARCHIVE",
+//     dataValue: {
+//       globalAutoArchiveEnabled: true,
+//       spaceRepetitionThreshold: 4,
+//     },
+//     firstSyncedAt: moment.utc().toDate()
+//   }
+// )
 
-console.log(userExtra);
+// console.log(userExtra);
