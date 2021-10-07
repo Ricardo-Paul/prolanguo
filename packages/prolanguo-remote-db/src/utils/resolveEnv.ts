@@ -1,11 +1,6 @@
 import { EnvResolver } from "../resolvers/EnvResolver";
 import { assertExists } from "./assertExists";
 import * as _ from 'lodash';
-import * as dotenv from "dotenv";
-
-dotenv.config({
-  path: "./envDB"
-});
 
 export function resolveEnv(){
 
@@ -19,13 +14,13 @@ export function resolveEnv(){
 
   return new EnvResolver().resolve(
     {
+      ...process.env,
       AUTH_DATABASE_CONFIG,
       ALL_SHARD_DATABASE_CONFIG,
     },
     true
   )
 };
-
 
 // transform semi-colon separated values into object
 function preprocessAuthDbConfig(authDatabaseConfig: string): object{
@@ -63,6 +58,3 @@ function preprocessAllShardDbConfig(allShardDatabaseConfig: string): object{
     }
   )
 }
-
-
-console.log(resolveEnv());
