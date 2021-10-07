@@ -12,4 +12,3 @@ export class ShardDatabaseConfigResolver extends AbstractResolver<ShardDbConfig>
     connectionLimit: Joi.number()
   }
 };
-

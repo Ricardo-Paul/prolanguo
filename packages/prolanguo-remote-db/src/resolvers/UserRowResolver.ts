@@ -19,4 +19,4 @@ export class UserRowResolver extends AbstractResolver<UserRow>{
     firstSyncedAt: Joi.date(),
     lastSyncedAt: Joi.date()
   }
-}
+};
