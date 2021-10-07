@@ -75,6 +75,9 @@ function preprocessAllShardDbConfig(allShardDatabaseConfig: string): object{
       return {
         shardId,
         host,
+        port,
+        user,
+        password,
         connectionLimit
       }
     }
