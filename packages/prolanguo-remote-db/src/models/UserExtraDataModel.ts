@@ -6,6 +6,7 @@ import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import { UserExtraDataRowResolver } from "../resolvers/UserExtraDataRowResolver";
 import { UserExtraDataRow } from "../interfaces/UserExtraDataRow";
+import { UserExtraDataItem } from "@prolanguo/prolanguo-common/dist/types/UserExtraDataItem";
 
 
 export class UserExtraDataModel{
@@ -54,7 +55,7 @@ export class UserExtraDataModel{
     })
   };
 
-  public getUserExtraDataById(db: Knex, userId: string): Promise<{ extraData: UserExtraDataRow[] }>{
+  public getUserExtraDataById(db: Knex, userId: string): Promise<{ extraData: UserExtraDataItem[] }>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -72,9 +73,9 @@ export class UserExtraDataModel{
             console.log('Resolved ARRRAYY userExtradatarows:', userExtraDataRows);
 
             // JSON.parse() dataValue in each array object
-            const extraData = userExtraDataRows.map(row => {
+            const extraData: UserExtraDataItem[] = userExtraDataRows.map((row): UserExtraDataItem => {
+
               return {
-                userId: row.userId,
                 dataName: row.dataName,
                 dataValue: row.dataValue, //parse the value (Json.parse)
                 createdAt: row.createdAt,
@@ -82,6 +83,7 @@ export class UserExtraDataModel{
                 firstSyncedAt: row.firstSyncedAt,
                 lastSyncedAt: row.lastSyncedAt
               };
+
             });
 
             console.log('EXTRA DATA :', extraData)

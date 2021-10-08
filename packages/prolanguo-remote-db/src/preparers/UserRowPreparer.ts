@@ -1,27 +1,9 @@
 import * as Joi from "joi";
 import * as _ from "lodash";
 import { UserMembership, UserStatus } from "@prolanguo/prolanguo-common/enums";
-import { User, UserRowForUpdate } from "../interfaces/User";
+import { UserRow, UserRowForUpdate } from "../interfaces/User";
 import { AbstractPreparer } from "./AbstractPreparer";
-
-
-
-interface UserRow{
-  readonly userId: string;
-  readonly shardId: number;
-  readonly email: string;
-  readonly password: string;
-  readonly accessKey: string;
-  readonly userStatus: UserStatus;
-
-  readonly membership: UserMembership;
-  readonly membershipExpiredAt: null | Date;
-  readonly createdAt: Date;
-  readonly updatedAt: Date;
-  readonly firstSyncedAt: Date;
-  readonly lastSyncedAt: Date;
-}
-
+import { User } from "@prolanguo/prolanguo-common/interfaces";
 
 export class UserRowPreparer extends AbstractPreparer<UserRow> {
   insertRules = {
@@ -97,7 +79,7 @@ export class UserRowPreparer extends AbstractPreparer<UserRow> {
   };
 
   public prepareUpdate(
-    user, //DeepPartial<User>
+    user: Partial<User>,
     newPassword: string | undefined,
     newAccessKey: string | undefined
   ): UserRowForUpdate{

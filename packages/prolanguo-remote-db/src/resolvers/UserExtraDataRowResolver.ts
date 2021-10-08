@@ -1,18 +1,9 @@
 import { AbstractResolver } from "@prolanguo/prolanguo-resolver";
-
+import { UserExtraDataRow } from "../interfaces/UserExtraDataRow";
 import * as Joi from "joi";
 
-interface UserExtraData {
-  userId: string,
-  dataName: string,
-  dataValue: string,
-  createdAt: Date,
-  updatedAt: Date,
-  firstSyncedAt: Date,
-  lastSyncedAt: Date
-}
 
-export class UserExtraDataRowResolver extends AbstractResolver<UserExtraData> {
+export class UserExtraDataRowResolver extends AbstractResolver<UserExtraDataRow> {
   rules = {
     userId: Joi.string(),
     dataName: Joi.string(),
