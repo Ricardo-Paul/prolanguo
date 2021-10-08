@@ -32,7 +32,7 @@ export class UserModel {
     this.userRowResolver = new UserRowResolver();
   }
 
-  public emailExists(db: Knex | Knex.Transaction, email: string){
+  public async emailExists(db: Knex | Knex.Transaction, email: string){
     return new Promise(async (resolve, reject) => {
       try{
         const result = await promisifyQuery(
@@ -74,7 +74,10 @@ export class UserModel {
             }).limit(1)
           );
 
+          
           const first = _.first(result);
+          console.log("retrieved by access key", first);
+
           if(typeof first === "undefined"){
             resolve(null)
           }else{
@@ -214,7 +217,9 @@ export class UserModel {
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
-          const result = await db.select().from(TableName.USER).where({ email }).limit(1);
+          const result = await promisifyQuery(
+            db.select().from(TableName.USER).where({ email }).limit(1)
+          );
           if(_.first(result) === undefined){
             resolve(null)
           } else {
@@ -309,7 +314,7 @@ export class UserModel {
         try{
           const queries: Promise<void>[] = [];
           const userRow = this.userRowPreparer.prepareUpdate(user, password, accessKey);
-          const fieldsToUpdate = _.omit(user, 'userId');
+          const fieldsToUpdate = _.omit(userRow, 'userId');
           const userId = assertExists(userRow.userId);
           // update basic user fields
           if(Object.keys(fieldsToUpdate).length > 0){
@@ -322,16 +327,18 @@ export class UserModel {
             )
           }
 
-          // update extra data
-          if(user.extraData && user.extraData.length > 0){
-            queries.push(
-              this.userExtraDataModel.upsertMultipleExtraData(
-                db, user.extraData, user.userId
-              )
+        // will update an array of extra data
+        if(user.extraData.length > 0){
+          queries.push(
+            this.userExtraDataModel.upsertMultipleExtraData(
+              db,
+              user.extraData,
+              user.userId
             )
-          };
+          );
+        }
 
-          Promise.all(queries);
+          await Promise.all(queries);
           resolve()
         }catch(error){
           reject(error)
