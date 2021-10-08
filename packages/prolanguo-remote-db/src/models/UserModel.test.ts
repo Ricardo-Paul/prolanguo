@@ -4,6 +4,7 @@ import { Knex } from "knex";
 import { resolveEnv } from "../utils/resolveEnv";
 import { UserBuilder } from "@prolanguo/prolanguo-common/builders";
 import * as short from "short-uuid";
+import { UserExtraDataName } from "@prolanguo/prolanguo-common/dist/enums";
 
 describe('Test UserModel', () => {
   const env = resolveEnv();
@@ -53,6 +54,23 @@ describe('Test UserModel', () => {
             shardId
           );
       });
+    });
+
+    describe('tests start after inserting user with extra data', async (): Promise<void> => {
+      beforeEach(() => {
+        const user = new UserBuilder().build({
+          email: short.generate() + `@prolanguo.tes`,
+          extraData:[{
+            dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
+            dataValue: {
+              globalAutoArchiveEnabled: true,
+              spaceRepetitionLevelThreshold: 10,
+              writingLevelThreshold: 10
+            }
+          }]
+        });
+        
+      })
     })
 
   });
