@@ -56,7 +56,7 @@ export class UserModel {
     })
   };
 
-  public async getUserByIdAndAcessKey(db: Knex, userId: string, accessKey: string, stripUnknown: boolean): Promise<null | {
+  public async getUserByIdAndAcessKey(db: Knex, userId: string, accessKey: string, stripUnknown: boolean): Promise< null | {
     user: User,
     shardId: number,
     accessKey: string,
@@ -107,6 +107,7 @@ export class UserModel {
           );
   
           const first = _.first(result);
+          
           if(typeof first === "undefined"){
             resolve(null)
           } else {
@@ -204,12 +205,12 @@ export class UserModel {
     );
   };
 
-  public getUserByEmail(db: Knex | Knex.Transaction, email: string): Promise<{
+  public async getUserByEmail(db: Knex | Knex.Transaction, email: string): Promise<{
     user: User,
     shardId: number,
     password: string,
     accessKey: string
-  } | null>{
+  } | null> {
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{

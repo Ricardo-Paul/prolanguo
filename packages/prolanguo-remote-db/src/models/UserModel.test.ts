@@ -4,7 +4,8 @@ import { Knex } from "knex";
 import { resolveEnv } from "../utils/resolveEnv";
 import { UserBuilder } from "@prolanguo/prolanguo-common/builders";
 import * as short from "short-uuid";
-import { UserExtraDataName } from "@prolanguo/prolanguo-common/enums";
+import { UserExtraDataName, UserMembership } from "@prolanguo/prolanguo-common/enums";
+import { assertExists } from "../utils/assertExists";
 
 describe('Test UserModel', () => {
   const env = resolveEnv();
@@ -47,7 +48,7 @@ describe('Test UserModel', () => {
       const shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
 
       await authDb.transaction(async (tx) => {
-          userModel.insertUser(tx,
+          await userModel.insertUser(tx,
             user,
             password,
             accessKey,
@@ -57,38 +58,80 @@ describe('Test UserModel', () => {
     });
 
     describe('tests start after inserting user with extra data', () => {
+      const password = "extradatapass";
+      const accessKey = short.generate();
+      const shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
+      const userId = short.generate();
+
+      const userWithExtraData = new UserBuilder().build({
+        email: short.generate() + `@prolanguo.tes`,
+        userId,
+        extraData:[{
+          dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
+          dataValue: {
+            globalAutoArchiveEnabled: true,
+            spaceRepetitionLevelThreshold: 10,
+            writingLevelThreshold: 10
+          }
+        }]
+      });
+
       beforeEach(async () => {
-        const password = "extradatapass";
-        const accessKey = short.generate();
-        const shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
-
-        const user = new UserBuilder().build({
-          email: short.generate() + `@prolanguo.tes`,
-          userId: short.generate(),
-          extraData:[{
-            dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
-            dataValue: {
-              globalAutoArchiveEnabled: true,
-              spaceRepetitionLevelThreshold: 10,
-              writingLevelThreshold: 10
-            }
-          }]
-        });
-
         await authDb.transaction(async (tx): Promise<void> => {
-          await userModel.insertUser(
-            tx,
-            user,
-            password,
-            accessKey,
-            shardId
-          )
+          await Promise.all([
+            userModel.insertUser(
+              tx,
+              userWithExtraData,
+              password,
+              accessKey,
+              shardId
+            )
+          ])
         })
       });
 
-      test('get user by and access key', () => {
-        console.log("testing inserting user with extrad data")
-      });
+      test('get user by email', async () => {
+        const fetchedUser = await userModel.getUserByEmail(authDb, userWithExtraData.email);
+
+        const { 
+          user: userCoreData,
+          accessKey: fetchedAccessKey,
+          password: fetchedPassword,
+          shardId: fetchedShardId
+         } = assertExists(fetchedUser);
+
+        console.log("fetchedUser", fetchedUser);
+
+        // TODO: deal with testing date
+        expect(userCoreData).toEqual({
+          ...userWithExtraData,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+          firstSyncedAt: expect.any(Date),
+          lastSyncedAt: expect.any(Date),
+          membership: UserMembership.REGULAR,
+          extraData: userWithExtraData.extraData.map((extraDataItem) => {
+            return {
+              ...extraDataItem,
+              createdAt: expect.any(Date),
+              updatedAt: expect.any(Date),
+              firstSyncedAt: expect.any(Date),
+              lastSyncedAt: expect.any(Date),
+              dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
+              dataValue: {
+                globalAutoArchiveEnabled: true,
+                spaceRepetitionLevelThreshold: 10,
+                writingLevelThreshold: 10
+              }
+            }
+          })
+        });
+
+        expect(fetchedAccessKey).toEqual(accessKey);
+        expect(fetchedPassword).toEqual(password);
+        expect(fetchedShardId).toEqual(shardId);
+      })
+
     });
 
   });
