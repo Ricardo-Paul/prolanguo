@@ -1,22 +1,19 @@
-import { string } from "joi";
 import { UserModel } from "../models/UserModel";
+import { ModelList } from "../interfaces/ModelList";
 
-enum ModelList{
-  userModel = 'UserModel'
-}
-
-interface Model {
-  UserModel: UserModel
-}
-
-// rewrite this more elangtly
 export class ModelFactory{
-  public makeModel(model: string){
-    switch(model){
-      case ModelList.userModel:
-        return new UserModel
-      default:
-        return model
+  public createAllModels(): ModelList{
+    return {
+      userModel: this.createModel('userModel')
     }
   }
-}
+
+  public createModel<K extends keyof ModelList>(model: K): ModelList[K]{
+    switch(model){
+      case 'userModel':
+        return new UserModel();
+      default:
+        throw new Error(`Model ${model} is not existed`);
+    }
+  }
+};
