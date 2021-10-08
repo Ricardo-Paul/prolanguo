@@ -23,6 +23,7 @@ describe('Test UserModel', () => {
     let databaseFacade: DatabaseFacade;
     let authDb: Knex;
     let userModel: UserModel;
+    let user: User;
 
     beforeEach(async () => {
       databaseFacade = new DatabaseFacade(
@@ -42,8 +43,16 @@ describe('Test UserModel', () => {
     });
 
     test("inserts user succesfully", async () => {
-      const user = new UserBuilder().build({
-        email: short.generate() + `@prolanguo.tes`
+      user = new UserBuilder().build({
+        email: short.generate() + `@prolanguo.tes`,
+        extraData:[{
+          dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
+          dataValue: {
+            globalAutoArchiveEnabled: true,
+            spaceRepetitionLevelThreshold: 10,
+            writingLevelThreshold: 10
+          }
+        }]
       });
       const accessKey = short.generate();
       const password = "mypassword";
@@ -59,24 +68,31 @@ describe('Test UserModel', () => {
       });
     });
 
-    describe('tests start after inserting user with extra data', () => {
-      const password = "extradatapass";
-      const accessKey = short.generate();
-      const shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
+    test("test email exists", async () => {
+      const exists = await userModel.emailExists(authDb, user.email);
+      expect(exists).toBe(true);
+    });
 
-      const userWithExtraData = new UserBuilder().build({
-        email: short.generate() + `@prolanguo.tes`,
-        extraData:[{
-          dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
-          dataValue: {
-            globalAutoArchiveEnabled: true,
-            spaceRepetitionLevelThreshold: 10,
-            writingLevelThreshold: 10
-          }
-        }]
-      });
+    describe('tests start after inserting user with extra data', () => {
+      let password = "extradatapass";
+      let accessKey = short.generate();
+      let shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
+      let userWithExtraData: User;
 
       beforeEach(async () => {
+        password = "ex"
+        userWithExtraData = new UserBuilder().build({
+          email: short.generate() + `@prolanguo.tes`,
+          extraData:[{
+            dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
+            dataValue: {
+              globalAutoArchiveEnabled: true,
+              spaceRepetitionLevelThreshold: 10,
+              writingLevelThreshold: 10
+            }
+          }]
+        });
+
         await authDb.transaction(async (tx): Promise<void> => {
           await Promise.all([
             userModel.insertUser(
@@ -90,97 +106,93 @@ describe('Test UserModel', () => {
         })
       });
 
-      // test('get user by email', async () => {
-      //   const fetchedUser = await userModel.getUserByEmail(authDb, userWithExtraData.email);
+      test('get user by email', async () => {
+        const fetchedUser = await userModel.getUserByEmail(authDb, userWithExtraData.email);
 
-      //   const { 
-      //     user: userCoreData,
-      //     accessKey: fetchedAccessKey,
-      //     password: fetchedPassword,
-      //     shardId: fetchedShardId
-      //    } = assertExists(fetchedUser);
+        const { 
+          user: userCoreData,
+          accessKey: fetchedAccessKey,
+          password: fetchedPassword,
+          shardId: fetchedShardId
+         } = assertExists(fetchedUser);
 
-      //   // TODO: deal with testing date
-      //   expect(userCoreData).toEqual({
-      //     ...userWithExtraData,
-      //     createdAt: expect.any(Date),
-      //     updatedAt: expect.any(Date),
-      //     firstSyncedAt: expect.any(Date),
-      //     lastSyncedAt: expect.any(Date),
-      //     membership: UserMembership.REGULAR,
-      //     extraData: userWithExtraData.extraData.map((extraDataItem) => {
-      //       return {
-      //         ...extraDataItem,
-      //         createdAt: expect.any(Date),
-      //         updatedAt: expect.any(Date),
-      //         firstSyncedAt: expect.any(Date),
-      //         lastSyncedAt: expect.any(Date),
-      //         dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
-      //         dataValue: {
-      //           globalAutoArchiveEnabled: true,
-      //           spaceRepetitionLevelThreshold: 10,
-      //           writingLevelThreshold: 10
-      //         }
-      //       }
-      //     })
-      //   });
+        // TODO: deal with testing date
+        expect(userCoreData).toEqual({
+          ...userWithExtraData,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+          firstSyncedAt: expect.any(Date),
+          lastSyncedAt: expect.any(Date),
+          membership: UserMembership.REGULAR,
+          extraData: userWithExtraData.extraData.map((extraDataItem) => {
+            return {
+              ...extraDataItem,
+              createdAt: expect.any(Date),
+              updatedAt: expect.any(Date),
+              firstSyncedAt: expect.any(Date),
+              lastSyncedAt: expect.any(Date),
+              dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
+              dataValue: {
+                globalAutoArchiveEnabled: true,
+                spaceRepetitionLevelThreshold: 10,
+                writingLevelThreshold: 10
+              }
+            }
+          })
+        });
 
-      //   expect(fetchedAccessKey).toEqual(accessKey);
-      //   expect(fetchedPassword).toEqual(password);
-      //   expect(fetchedShardId).toEqual(shardId);
-      // });
+        expect(fetchedAccessKey).toEqual(accessKey);
+        expect(fetchedPassword).toEqual(password);
+        expect(fetchedShardId).toEqual(shardId);
+      });
 
-      // test("get user by id and access key", async () => {
-      //   const fetchedUser = await userModel.getUserByIdAndAcessKey(
-      //     authDb, 
-      //     userWithExtraData.userId,
-      //     accessKey,
-      //     true
-      //  );
+      test("get user by id and access key", async () => {
+        const fetchedUser = await userModel.getUserByIdAndAcessKey(
+          authDb, 
+          userWithExtraData.userId,
+          accessKey,
+          true
+        );
 
-      //   const { 
-      //     user: userCoreData,
-      //     accessKey: fetchedAccessKey,
-      //     password: fetchedPassword,
-      //     shardId: fetchedShardId
-      //    } = assertExists(fetchedUser);
+        const { 
+          user: userCoreData,
+          accessKey: fetchedAccessKey,
+          password: fetchedPassword,
+          shardId: fetchedShardId
+          } = assertExists(fetchedUser);
 
-      //   console.log("fetchedUser by id and accesskey", fetchedUser);
+        console.log("fetchedUser by id and accesskey", fetchedUser);
 
-      //   // TODO: deal with testing date
-      //   expect(userCoreData).toEqual({
-      //     ...userWithExtraData,
-      //     createdAt: expect.any(Date),
-      //     updatedAt: expect.any(Date),
-      //     firstSyncedAt: expect.any(Date),
-      //     lastSyncedAt: expect.any(Date),
-      //     membership: UserMembership.REGULAR,
-      //     extraData: userWithExtraData.extraData.map((extraDataItem) => {
-      //       return {
-      //         ...extraDataItem,
-      //         createdAt: expect.any(Date),
-      //         updatedAt: expect.any(Date),
-      //         firstSyncedAt: expect.any(Date),
-      //         lastSyncedAt: expect.any(Date),
-      //         dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
-      //         dataValue: {
-      //           globalAutoArchiveEnabled: true,
-      //           spaceRepetitionLevelThreshold: 10,
-      //           writingLevelThreshold: 10
-      //         }
-      //       }
-      //     })
-      //   });
+        // TODO: deal with testing date
+        expect(userCoreData).toEqual({
+          ...userWithExtraData,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+          firstSyncedAt: expect.any(Date),
+          lastSyncedAt: expect.any(Date),
+          membership: UserMembership.REGULAR,
+          extraData: userWithExtraData.extraData.map((extraDataItem) => {
+            return {
+              ...extraDataItem,
+              createdAt: expect.any(Date),
+              updatedAt: expect.any(Date),
+              firstSyncedAt: expect.any(Date),
+              lastSyncedAt: expect.any(Date),
+              dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
+              dataValue: {
+                globalAutoArchiveEnabled: true,
+                spaceRepetitionLevelThreshold: 10,
+                writingLevelThreshold: 10
+              }
+            }
+          })
+        });
 
-      //   expect(fetchedAccessKey).toEqual(accessKey);
-      //   expect(fetchedPassword).toEqual(password);
-      //   expect(fetchedShardId).toEqual(shardId);
-      // })
+        expect(fetchedAccessKey).toEqual(accessKey);
+        expect(fetchedPassword).toEqual(password);
+        expect(fetchedShardId).toEqual(shardId);
+      })
 
-      // test("test email exists", async () => {
-      //   const exists = await userModel.emailExists(authDb, userWithExtraData.email);
-      //   expect(exists).toBe(true);
-      // })
 
       test("test update user", async () => {
         const editedUser: DeepPartial<User> = new UserBuilder().build({
