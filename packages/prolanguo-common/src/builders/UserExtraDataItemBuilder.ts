@@ -1,17 +1,10 @@
 import * as _ from "lodash";
 import * as moment from "moment";
-
-export interface UserExtraDataItem {
-  readonly dataName: string,
-  readonly dataValue: object,
-  readonly createdAt: Date,
-  readonly updatedAt: Date,
-  readonly firstSyncedAt: Date,
-  readonly lastSyncedAt: Date
-}
+import { DeepPartial } from "../extended-types";
+import { UserExtraDataItem } from "../types/UserExtraDataItem";
 
 export class UserExtraDataItemBuilder {
-  public build(userExtraDataItem: Partial<UserExtraDataItem>): UserExtraDataItem{
+  public build(userExtraDataItem: DeepPartial<UserExtraDataItem>): UserExtraDataItem{
 
     return _.merge({
       dataName: "",

@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "main": "../dist/assert/index.js",
+  "types": "../dist/assert/index.d.ts"
+}
