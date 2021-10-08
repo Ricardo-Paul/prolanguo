@@ -200,10 +200,6 @@ export class UserModel {
               const userRow = this.userRowResolver.resolve(_.first(result), true);
               const user = await this.getCompleteUserByUserRow(db, userRow)
 
-              console.log("FOUND USER :", result);
-              console.log("RESOLVED ROW ::::", userRow);
-              console.log("WILL BE COMPLETE USER :", user);
-
               resolve({
                 user,
                 shardId: userRow.shardId,
@@ -300,9 +296,6 @@ export class UserModel {
             )
           );
         }
-
-        console.log('Extra data received :', user.extraData);
-        console.log("Prepared User Row for Insert :", userRow);
         
         await Promise.all(queries);
         resolve()

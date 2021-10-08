@@ -8,6 +8,8 @@ import { UserExtraDataName, UserMembership, UserStatus } from "@prolanguo/prolan
 import { assertExists } from "../utils/assertExists";
 import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 import { User } from "@prolanguo/prolanguo-common/interfaces";
+import { ModelFactory } from "../factories/ModelFactory";
+
 
 describe('Test UserModel', () => {
   const env = resolveEnv();
@@ -33,7 +35,7 @@ describe('Test UserModel', () => {
       );
 
       // use factory to create model
-      userModel = new UserModel();
+      userModel = new ModelFactory().createModel('userModel');
       authDb = databaseFacade.getDb('auth');
     });
 
