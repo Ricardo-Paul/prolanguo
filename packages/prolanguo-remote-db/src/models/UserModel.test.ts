@@ -4,7 +4,7 @@ import { Knex } from "knex";
 import { resolveEnv } from "../utils/resolveEnv";
 import { UserBuilder } from "@prolanguo/prolanguo-common/builders";
 import * as short from "short-uuid";
-import { UserExtraDataName } from "@prolanguo/prolanguo-common/dist/enums";
+import { UserExtraDataName } from "@prolanguo/prolanguo-common/enums";
 
 describe('Test UserModel', () => {
   const env = resolveEnv();
@@ -56,10 +56,15 @@ describe('Test UserModel', () => {
       });
     });
 
-    describe('tests start after inserting user with extra data', async (): Promise<void> => {
-      beforeEach(() => {
+    describe('tests start after inserting user with extra data', () => {
+      beforeEach(async () => {
+        const password = "extradatapass";
+        const accessKey = short.generate();
+        const shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
+
         const user = new UserBuilder().build({
           email: short.generate() + `@prolanguo.tes`,
+          userId: short.generate(),
           extraData:[{
             dataName: UserExtraDataName.GLOBAL_AUTO_ARCHIVE,
             dataValue: {
@@ -69,9 +74,22 @@ describe('Test UserModel', () => {
             }
           }]
         });
-        
-      })
-    })
+
+        await authDb.transaction(async (tx): Promise<void> => {
+          await userModel.insertUser(
+            tx,
+            user,
+            password,
+            accessKey,
+            shardId
+          )
+        })
+      });
+
+      test('get user by and access key', () => {
+        console.log("testing inserting user with extrad data")
+      });
+    });
 
   });
 

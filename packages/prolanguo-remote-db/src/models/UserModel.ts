@@ -8,6 +8,7 @@ import { promisifyQuery } from "./PromisifyQuery";
 import { UserRowResolver } from "../resolvers/UserRowResolver";
 import * as _ from "lodash";
 
+
 // TODO: move this function to an outer package
 // remove its duplicate from server
 export function assertExists<T>(value: T, message?: string): NonNullable<T>{
@@ -29,18 +30,6 @@ export class UserModel {
     this.userRowPreparer = new UserRowPreparer();
     this.userExtraDataModel = new UserExtraDataModel();
     this.userRowResolver = new UserRowResolver();
-  }
-
-  public async sayHello(): Promise<string>{
-    return new Promise(
-      async (resolve, reject): Promise<void> => {
-        try{
-        resolve("I am a promise from User Model");
-        }catch(error){
-          reject(error)
-        }
-      }
-    );
   }
 
   public emailExists(db: Knex | Knex.Transaction, email: string){
