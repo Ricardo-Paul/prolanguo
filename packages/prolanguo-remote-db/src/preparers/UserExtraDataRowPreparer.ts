@@ -1,17 +1,7 @@
 import { UserExtraDataRowForUpsert } from "../interfaces/UserExtraDataRowForUpsert";
 import { AbstractPreparer } from "./AbstractPreparer";
 import * as Joi from "joi";
-
-// remove duplicate interface
-interface UserExtraDataRow {
-  userId: string;
-  dataName: string;
-  dataValue: string;
-  createdAt: Date;
-  updatedAt: Date;
-  firstSyncedAt: Date;
-  lastSyncedAt: Date;
-}
+import { UserExtraDataRow } from "../interfaces/UserExtraDataRow";
 
 export class UserExtraDataRowPreparer extends AbstractPreparer<UserExtraDataRow> {
   protected upsertRules = {
@@ -47,7 +37,7 @@ export class UserExtraDataRowPreparer extends AbstractPreparer<UserExtraDataRow>
     const row = {
       userId,
       dataName: userExtraDataRow.dataName,
-      dataValue: userExtraDataRow.dataValue,
+      dataValue: JSON.stringify(userExtraDataRow.dataValue),
       createdAt: userExtraDataRow.createdAt,
       updatedAt: userExtraDataRow.updatedAt,
     }

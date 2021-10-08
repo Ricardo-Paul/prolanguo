@@ -23,18 +23,20 @@ export class UserExtraDataModel{
         const queries: Promise<void>[] = [];
 
         const userExtraDataRows = userExtraData.map((row: UserExtraDataRow): UserExtraDataRowForUpsert => {
-          return this.userExtraDataRowPreparer.prepareUpsert(row, userId)
+          return this.userExtraDataRowPreparer.prepareUpsert(row, userId) //will stringify dataValue for insertion
         });
     
         const { sql, bindings } = db.insert(userExtraDataRows).into(TableName.USER_EXTRA_DATA).toSQL();
         
-        console.log('Rows for upsert :', userExtraDataRows);
-        console.log('SQL to insert :', sql, bindings);
+        console.log('Extra Data Row for upsert :', userExtraDataRows);
+        // console.log('SQL to insert :', sql, bindings);
 
         // insert extra data array in bulk
-        queries.push(promisifyQuery(
+        queries.push( 
+            await promisifyQuery(
           db.raw(sql.replace('insert', 'insert ignore'), bindings)
-        ));
+        )
+      );
 
         // update each row except userId and dataName
         const userExtraDataRowUpdateQueries = userExtraDataRows.map((row: any) => {
@@ -72,18 +74,15 @@ export class UserExtraDataModel{
             const userExtraDataRows = this.userExtraDataRowResolver.resolveArray(result, true);
             console.log('Resolved ARRRAYY userExtradatarows:', userExtraDataRows);
 
-            // JSON.parse() dataValue in each array object
             const extraData: UserExtraDataItem[] = userExtraDataRows.map((row): UserExtraDataItem => {
-
               return {
                 dataName: row.dataName,
-                dataValue: row.dataValue, //parse the value (Json.parse)
+                dataValue: JSON.parse(row.dataValue), //from string to object
                 createdAt: row.createdAt,
                 updatedAt: row.updatedAt,
                 firstSyncedAt: row.firstSyncedAt,
                 lastSyncedAt: row.lastSyncedAt
               };
-
             });
 
             console.log('EXTRA DATA :', extraData)

@@ -46,3 +46,12 @@ const uPartial: DeepPartial<typeof u> = {
     job: "Tester",
   }
 }
+
+const User = new UserBuilder().build({
+  email: "",
+  extraData: [
+    {
+      
+    }
+  ]
+})
