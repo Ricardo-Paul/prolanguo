@@ -184,7 +184,12 @@ export class UserModel {
     );
   };
 
-  public getUserById(db: Knex, userId: string): Promise<User | null> {
+  public getUserById(db: Knex, userId: string): Promise<{
+    user: User,
+    shardId: number,
+    password: string,
+    accessKey: string
+  } | null> {
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -199,7 +204,12 @@ export class UserModel {
               console.log("RESOLVED ROW ::::", userRow);
               console.log("WILL BE COMPLETE USER :", user);
 
-              resolve(user)
+              resolve({
+                user,
+                shardId: userRow.shardId,
+                password: userRow.password,
+                accessKey: userRow.accessKey
+              })
             }
         }catch(error){
           reject(error)
