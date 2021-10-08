@@ -46,14 +46,12 @@ describe('Test UserModel', () => {
       const shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
 
       await authDb.transaction(async (tx) => {
-        await Promise.all([
           userModel.insertUser(tx,
             user,
             password,
             accessKey,
             shardId
-          )
-        ]);
+          );
       });
     })
 

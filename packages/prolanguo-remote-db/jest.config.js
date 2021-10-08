@@ -7,6 +7,7 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest'
   },
+  "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.ts?$", //run only .ts files
   setupFilesAfterEnv: ['./src/setupTest.ts'],
   reporters: [
     "default", [
