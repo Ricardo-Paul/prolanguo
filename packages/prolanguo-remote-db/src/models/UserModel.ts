@@ -269,7 +269,7 @@ export class UserModel {
     return user
   };
 
-  public insertUser(db: Knex, user: User, password: string, accessKey: string, shardId: number): Promise<void>{
+  public async insertUser(db: Knex, user: User, password: string, accessKey: string, shardId: number): Promise<void>{
     return new Promise(async (resolve, reject) => {
       try{
         const queries: Promise<void>[] = [];
@@ -281,7 +281,7 @@ export class UserModel {
         );
 
         // inserting regular user data
-        queries.push(promisifyQuery(
+        queries.push(await promisifyQuery(
           db.insert(userRow).into(TableName.USER)
         ));
 
