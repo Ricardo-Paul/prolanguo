@@ -31,6 +31,18 @@ export class UserModel {
     this.userRowResolver = new UserRowResolver();
   }
 
+  public async sayHello(): Promise<string>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+        resolve("I am a promise from User Model");
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
+
   public emailExists(db: Knex | Knex.Transaction, email: string){
     return new Promise(async (resolve, reject) => {
       try{
@@ -298,7 +310,7 @@ export class UserModel {
   // set user type as DeepPartial<User> to make keys optional
   public async updateUser(
     db: Knex,
-    user, //DeepPartial<User>
+    user: any, //DeepPartial<User>
     password: string,
     accessKey: string
   ): Promise<void>{
