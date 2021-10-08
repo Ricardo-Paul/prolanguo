@@ -206,9 +206,13 @@ describe('Test UserModel', () => {
           return u
         });
 
-
-      })
-
+        const fetchedUser = await userModel.getUserById(
+          authDb,
+          assertExists(editedUser.userId)
+        );
+        const { accessKey: fetchedAccessKey } = assertExists(fetchedUser);
+        expect(fetchedAccessKey).toEqual(accessKey);
+      });
     });
 
   });
