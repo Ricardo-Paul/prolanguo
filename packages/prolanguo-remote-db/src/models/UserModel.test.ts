@@ -73,6 +73,21 @@ describe('Test UserModel', () => {
       expect(exists).toBe(true);
     });
 
+    test("get user id by email", async () => {
+      const userId = await userModel.getUserIdByEmail(authDb, user.email);
+      expect(userId).toEqual(user.userId);
+    });
+
+    test("get latest updated time", async() => {
+      const latestUpdatedTime = await userModel.getLatestUpdatedTime(authDb, user.userId);
+      expect(latestUpdatedTime).toEqual(expect.any(Date));
+    });
+
+    test("get latest sync time", async () => {
+      const latestSyncTime = await userModel.getLatestSyncTime(authDb, user.userId);
+      expect(latestSyncTime).toEqual(expect.any(Date));
+    });
+
     describe('tests start after inserting user with extra data', () => {
       let password = "extradatapass";
       let accessKey = short.generate();
