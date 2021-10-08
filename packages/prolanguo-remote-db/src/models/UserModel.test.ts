@@ -28,19 +28,33 @@ describe('Test UserModel', () => {
       );
 
       // use factory to create model
-      userModel = new UserModel()
+      userModel = new UserModel();
+      authDb = databaseFacade.getDb('auth');
     });
 
     afterEach(async () => {
       // destroy all dbs here
+      await authDb.destroy();
     });
 
-    test("inserts user succesfully", () => {
+    test("inserts user succesfully", async () => {
       const user = new UserBuilder().build({
         email: short.generate() + `@prolanguo.tes`
       });
+      const accessKey = short.generate();
+      const password = "mypassword";
+      const shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
 
-
+      await authDb.transaction(async (tx) => {
+        await Promise.all([
+          userModel.insertUser(tx,
+            user,
+            password,
+            accessKey,
+            shardId
+          )
+        ]);
+      });
     })
 
   });
