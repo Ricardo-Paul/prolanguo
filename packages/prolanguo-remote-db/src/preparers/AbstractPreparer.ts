@@ -19,5 +19,15 @@ export abstract class AbstractPreparer<T> {
     } else {
       return value
     }
-  }
+  };
+
+  protected isDataValid(data: any, rules: Joi.ObjectSchema){
+    const { error } = rules.validate(data, {
+      stripUnknown: true,
+      presence: "required"
+    });
+
+    return error === null
+  };
+
 }
