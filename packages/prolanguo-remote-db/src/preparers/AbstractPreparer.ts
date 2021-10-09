@@ -22,12 +22,12 @@ export abstract class AbstractPreparer<T> {
   };
 
   protected isDataValid(data: any, rules: Joi.ObjectSchema): boolean{
-    const { error } = rules.validate(data, {
+    const { error, value } = rules.validate(data, {
       stripUnknown: true,
       presence: "required"
     });
 
-    return error === null
+    return error === undefined
   };
 
-}
+};
