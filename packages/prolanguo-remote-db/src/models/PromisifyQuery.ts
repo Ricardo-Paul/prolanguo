@@ -4,4 +4,4 @@ export function promisifyQuery(query: Knex.QueryBuilder | Knex.Raw ): Promise<an
   return new Promise((resolve, reject): void=> {
     query.then(resolve, reject)
   })
-}
+};
