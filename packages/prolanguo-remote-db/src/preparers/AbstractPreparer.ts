@@ -21,7 +21,7 @@ export abstract class AbstractPreparer<T> {
     }
   };
 
-  protected isDataValid(data: any, rules: Joi.ObjectSchema){
+  protected isDataValid(data: any, rules: Joi.ObjectSchema): boolean{
     const { error } = rules.validate(data, {
       stripUnknown: true,
       presence: "required"
