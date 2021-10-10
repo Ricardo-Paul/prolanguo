@@ -3,16 +3,9 @@ import { Set } from "@prolanguo/prolanguo-common/interfaces";
 import { promisifyQuery } from "./PromisifyQuery";
 import { SetRowPreparer } from "../preparers/SetRowPreparer";
 import { TableName } from "../enums/tableName";
-import { DatabaseFacade } from "../facades/DatabaseFacade";
-import { resolveEnv } from "../utils/resolveEnv";
-import { SetStatus } from "@prolanguo/prolanguo-common/dist/enums";
-import moment = require("moment");
-
-
-// remove after testing
-import * as dotenv from "dotenv";
-import * as path from "path";
-import { UserModel } from "./UserModel";
+import { DeepPartial } from "@prolanguo/prolanguo-common/dist/extended-types";
+import * as _ from "lodash";
+import { assertExists } from "../utils/assertExists";
 
 export class SetModel{
   private setRowPreparer: SetRowPreparer;
@@ -21,24 +14,32 @@ export class SetModel{
     this.setRowPreparer = new SetRowPreparer();
   }
 
-  public async upsertSets(db: Knex, userId: string, sets: Set[]): Promise<void> {
+  public async upsertSets(db: Knex, userId: string, sets: DeepPartial<Set>[] ): Promise<void> {
     console.log("upsertSet is running")
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
           const queries = [];
-          console.log("sets length :", sets.length)
+          // bulk insert with `insert ignore` won't raise error for duplicate PK
           if(sets.length > 0){
             queries.push(
               this.insertOrIgnoreSets(
                 db,
                 userId,
                 sets.filter((set) => {
-                  return this.setRowPreparer.canBeInserted(set, userId)
-                })
+                  return this.setRowPreparer.canBeInserted(set as Set, userId)
+                }) as Set[]
               )
             );
-          }
+
+            queries.push(
+              this.updateSets(
+                db,
+                sets,
+                userId
+              )
+            )
+          };
 
         await Promise.all(queries);
         resolve()
@@ -48,6 +49,57 @@ export class SetModel{
       }
     );
   };
+
+  // test this function
+  private updateSets(db: Knex, sets: DeepPartial<Set>[], userId: string): Promise<void>{
+    console.log(`Running update sets`);
+
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          Promise.all(
+            sets.map((set) => {
+              this.updateSet(
+                db,
+                set,
+                userId
+              )
+            })
+          );
+        resolve()
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  };
+
+
+  private updateSet(db: Knex, set: DeepPartial<Set>, userId: string): Promise<void>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const setRow = this.setRowPreparer.prepareUpdate(set, userId);
+          const updateFields = _.omit(setRow, ['userId, setId']);
+          const setId = assertExists(setRow.setId);
+
+          await promisifyQuery(
+            db
+            .update(updateFields)
+            .from(TableName.SET)
+            .where({
+              userId,
+              setId
+            })
+          );
+
+        resolve()
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
 
   private async insertOrIgnoreSets(db: Knex, userId: string, sets: Set[]): Promise<void> {
     console.log("insert or ignore sets running ")
