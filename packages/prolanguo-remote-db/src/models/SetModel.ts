@@ -33,7 +33,9 @@ export class SetModel{
               this.insertOrIgnoreSets(
                 db,
                 userId,
-                sets // send only validated sets
+                sets.filter((set) => {
+                  return this.setRowPreparer.canBeInserted(set, userId)
+                })
               )
             );
           }
@@ -60,16 +62,12 @@ export class SetModel{
               }
             );
 
-            console.log("sets received :", sets);
-            console.log("set rows :", setRows);
-
             const {sql, bindings} = db
               .insert(setRows)
               .into(TableName.SET)
               .toSQL();
             
             const replaceSql = sql.replace('insert', 'insert ignore');
-            console.log("SQL line run :", replaceSql);
 
             // bulk insert all rows
             queries.push(
