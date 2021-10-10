@@ -44,46 +44,46 @@ describe("Set Model", () => {
       console.log("shardDb found", schemaName);
     })
 
-    // test("it upserts data into set table", async () => {
-    //   const setModel = new SetModel();
+    test("it upserts data into set table", async () => {
+      const setModel = new SetModel();
       
-    //   await setModel.upsertSets(shardDb,"usr id", [
-    //     {
-    //       userId: "id",
-    //       setId: "set id",
-    //       setName: "Learn English",
-    //       setStatus: SetStatus.ACTIVE,
-    //       learningLanguageCode: "en",
-    //       translatedToLanguageCode: "en",
-    //       createdAt: moment.utc().toDate(),
-    //       updatedAt: moment.utc().toDate(),
-    //       updatedStatusAt: moment.utc().toDate(),
-    //       firstSyncedAt: moment.utc().toDate(),
-    //       lastSyncedAt: moment.utc().toDate(),
-    //       extraData: []
-    //     },
-    //   ] );
+      await setModel.upsertSets(shardDb,"usr id", [
+        {
+          userId: "id",
+          setId: "set id",
+          setName: "Learn English",
+          setStatus: SetStatus.ACTIVE,
+          learningLanguageCode: "en",
+          translatedLanguageCode: "en",
+          createdAt: moment.utc().toDate(),
+          updatedAt: moment.utc().toDate(),
+          updatedStatusAt: moment.utc().toDate(),
+          firstSyncedAt: moment.utc().toDate(),
+          lastSyncedAt: moment.utc().toDate(),
+          extraData: []
+        },
+      ] );
   
-    //   await shardDb.transaction(async tx => {
-    //     await setModel.upsertSets(tx, "usr id", [
-    //       {
-    //         userId: "id",
-    //         setId: "set id",
-    //         setName: "Learn English",
-    //         setStatus: SetStatus.ACTIVE,
-    //         learningLanguageCode: "en",
-    //         translatedToLanguageCode: "en",
-    //         createdAt: moment.utc().toDate(),
-    //         updatedAt: moment.utc().toDate(),
-    //         updatedStatusAt: moment.utc().toDate(),
-    //         firstSyncedAt: moment.utc().toDate(),
-    //         lastSyncedAt: moment.utc().toDate(),
-    //         extraData: []
-    //       }
-    //     ])
-    //   });
+      // await shardDb.transaction(async tx => {
+      //   await setModel.upsertSets(tx, "usr id", [
+      //     {
+      //       userId: "id",
+      //       setId: "set id",
+      //       setName: "Learn English",
+      //       setStatus: SetStatus.ACTIVE,
+      //       learningLanguageCode: "en",
+      //       translatedLanguageCode: "en",
+      //       createdAt: moment.utc().toDate(),
+      //       updatedAt: moment.utc().toDate(),
+      //       updatedStatusAt: moment.utc().toDate(),
+      //       firstSyncedAt: moment.utc().toDate(),
+      //       lastSyncedAt: moment.utc().toDate(),
+      //       extraData: []
+      //     }
+      //   ])
+      // });
   
-    // })
+    })
 
   })
 

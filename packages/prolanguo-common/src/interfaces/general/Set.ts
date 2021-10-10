@@ -25,7 +25,7 @@ export interface Set {
   readonly setName: string,
   readonly setStatus: SetStatus,
   readonly learningLanguageCode: string,
-  readonly translatedToLanguageCode: string,
+  readonly translatedLanguageCode: string,
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly updatedStatusAt: null | Date;
