@@ -11,7 +11,7 @@ export class SetExtraDataModel {
     this.setExtraDataRowConverter = new SetExtraDataRowConverter();
   }
 
-  public getSetExtraDataBySetIds(db: Knex, setIds: string[], userId: string): Promise<{ setExtraDataItems: SetExtraDataItem[] }>{
+  public async getSetExtraDataBySetIds(db: Knex, setIds: string[], userId: string): Promise<{ setExtraDataItems: SetExtraDataItem[] }>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -24,7 +24,7 @@ export class SetExtraDataModel {
 
           // TODO: resolve this array
           const setExtraDataRows = result;
-          const setExtraDataItems = this.setExtraDataRowConverter.converToSetExtraDataItem(setExtraDataRows)
+          const setExtraDataItems = this.setExtraDataRowConverter.converToSetExtraDataItem(setExtraDataRows);
         resolve({
           setExtraDataItems
         })
