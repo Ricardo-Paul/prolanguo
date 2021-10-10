@@ -9,18 +9,19 @@ import { SetRowPreparer } from "../preparers/SetRowPreparer";
 import { SetRowResolver } from "../resolvers/SetRowResolver";
 import { SetRow } from "../interfaces/SetRow";
 import { SetExtraDataModel } from "./SetExtraDataModel";
-
+import { SetRowConverter } from "../converters/SetRowConverter";
 
 export class SetModel{
   private setRowPreparer: SetRowPreparer;
   private setRowResolver: SetRowResolver;
   private setExtraDataModel: SetExtraDataModel;
-
+  private setRowConverter: SetRowConverter;
 
   constructor(){
     this.setRowPreparer = new SetRowPreparer();
     this.setRowResolver = new SetRowResolver();
     this.setExtraDataModel = new SetExtraDataModel();
+    this.setRowConverter = new SetRowConverter();
   }
 
   public async getSetsByIds(db: Knex, setIds: string[], userId: string): Promise<Set[]>{
@@ -40,7 +41,7 @@ export class SetModel{
           db,
           userId,
           setRow
-        )
+        );
 
         resolve(
           setList
@@ -57,9 +58,14 @@ export class SetModel{
         try{
           let setList: Set[] = [];
           const setIds = setRows.map((setRow): string => setRow.setId);
-          const setExtraDataBySetIds = await this.setExtraDataModel.getSetExtraDataBySetIds(db, setIds, userId);
-          
-          console.log(" Set extra data", setExtraDataBySetIds);
+          const {
+            setExtraDataItems
+          } = await this.setExtraDataModel.getSetExtraDataBySetIds(db, setIds, userId);
+
+          setList = setRows.map((setRow) => {
+            const setExtraData = setExtraDataItems[setRow.setId] // get ExtraData for each set from the dictionary
+            return this.setRowConverter.converToSet(setRow, setExtraData); // merge set with extra data
+          });
 
         resolve({
           setList
@@ -70,7 +76,6 @@ export class SetModel{
       }
     );
   }
-
 
   public async upsertSets(db: Knex, userId: string, sets: DeepPartial<Set>[] ): Promise<void> {
     console.log("upsertSet is running")
