@@ -31,7 +31,8 @@ export class DatabaseFacade {
   }
 
   public checkShardDatabaseTalbes(){
-    console.log(`No implementation yet for shard db`)
+    console.log(`Checking shard db tables`);
+    this.shardDatbaseFacade.checkAllShardDatabaseTables();
   };
 
   public getRandomShardId(){
