@@ -29,7 +29,12 @@ export class SetRowPreparer extends AbstractPreparer<SetRow>{
     return this.validateData(setRow, Joi.object(this.insertRules));
   }
 
-  private convertToInsertRow(set: Set, userId: string): SetRowForInsert{
+  public canBeInserted(set: Set, userId: string): boolean{
+    const setRow = this.convertToInsertRow(set, userId);
+    return this.isDataValid(setRow, Joi.object(this.insertRules));
+  };
+
+  private convertToInsertRow(set: Set, userId: string): SetRowForInsert {
     const {
       setId, 
       setName, 

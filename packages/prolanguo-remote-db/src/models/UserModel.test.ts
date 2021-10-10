@@ -86,7 +86,6 @@ describe('Test UserModel', () => {
       }));
     });
 
-
     test("test email exists", async () => {
       const exists = await userModel.emailExists(authDb, user.email);
       expect(exists).toBe(true);
