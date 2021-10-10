@@ -63,9 +63,9 @@ export class SetModel{
             console.log("sets received :", sets);
             console.log("set rows :", setRows);
 
-            const {sql, bindings} = await db
+            const {sql, bindings} = db
               .insert(setRows)
-              .into(TableName.DEFINITION) //revert this
+              .into(TableName.SET)
               .toSQL();
             
             const replaceSql = sql.replace('insert', 'insert ignore');
@@ -74,7 +74,7 @@ export class SetModel{
             // bulk insert all rows
             queries.push(
               await promisifyQuery(
-                await db.raw(
+                db.raw(
                   replaceSql, bindings
                 )
               )
@@ -116,7 +116,7 @@ async function addSets(){
       setName: "Learn English",
       setStatus: SetStatus.ACTIVE,
       learningLanguageCode: "en",
-      translatedToLanguageCode: "en",
+      translatedLanguageCode: "en",
       createdAt: moment.utc().toDate(),
       updatedAt: moment.utc().toDate(),
       updatedStatusAt: moment.utc().toDate(),
@@ -144,7 +144,7 @@ async function addSets(){
   //         setName: "Learn English",
   //         setStatus: SetStatus.ACTIVE,
   //         learningLanguageCode: "en",
-  //         translatedToLanguageCode: "en",
+  //         translatedLanguageCode: "en",
   //         createdAt: moment.utc().toDate(),
   //         updatedAt: moment.utc().toDate(),
   //         updatedStatusAt: moment.utc().toDate(),
@@ -158,7 +158,7 @@ async function addSets(){
   //         setName: "Learn Spanish",
   //         setStatus: SetStatus.ARCHIVED,
   //         learningLanguageCode: "sp",
-  //         translatedToLanguageCode: "sp",
+  //         translatedLanguageCode: "sp",
   //         createdAt: moment.utc().toDate(),
   //         updatedAt: moment.utc().toDate(),
   //         updatedStatusAt: moment.utc().toDate(),
