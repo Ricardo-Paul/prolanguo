@@ -4,11 +4,14 @@ import { Knex } from "knex";
 import { resolveEnv } from "../utils/resolveEnv";
 import { UserBuilder } from "@prolanguo/prolanguo-common/builders";
 import * as short from "short-uuid";
-import { UserExtraDataName, UserMembership, UserStatus } from "@prolanguo/prolanguo-common/enums";
+import { SetStatus, UserExtraDataName, UserMembership, UserStatus } from "@prolanguo/prolanguo-common/enums";
 import { assertExists } from "../utils/assertExists";
 import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 import { User } from "@prolanguo/prolanguo-common/interfaces";
 import { ModelFactory } from "../factories/ModelFactory";
+import { SetModel } from "./SetModel";
+import moment = require("moment");
+import { TableName } from "../enums/tableName";
 
 
 describe('Test UserModel', () => {
@@ -27,21 +30,27 @@ describe('Test UserModel', () => {
     let userModel: UserModel;
     let user: User;
 
+    let shardDb: Knex;
+
     beforeEach(async () => {
       databaseFacade = new DatabaseFacade(
         env.AUTH_DATABASE_CONFIG,
         env.ALL_SHARD_DATABASE_CONFIG,
         env.SHARD_DATABASE_PREFIX_NAME
       );
+      databaseFacade.checkShardDatabaseTalbes();
 
       // use factory to create model
       userModel = new ModelFactory().createModel('userModel');
       authDb = databaseFacade.getDb('auth');
+      shardDb = databaseFacade.getDb(env.ALL_SHARD_DATABASE_CONFIG[0].shardId);
+
     });
 
     afterEach(async () => {
       // destroy all dbs here
       await authDb.destroy();
+      await shardDb.destroy();
     });
 
     test("inserts user succesfully", async () => {
@@ -69,6 +78,14 @@ describe('Test UserModel', () => {
           );
       });
     });
+
+    test("it pull shard db", async () => {
+
+      console.log("set from shard db", await shardDb.table(TableName.USER).insert({
+        name: "anyt thing"
+      }));
+    });
+
 
     test("test email exists", async () => {
       const exists = await userModel.emailExists(authDb, user.email);
@@ -242,6 +259,7 @@ describe('Test UserModel', () => {
         const { accessKey: fetchedAccessKey } = assertExists(fetchedUser);
         expect(fetchedAccessKey).toEqual(accessKey);
       });
+      
     });
 
   });
