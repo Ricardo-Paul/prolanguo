@@ -1,18 +1,76 @@
 import { Knex } from "knex"
 import { Set } from "@prolanguo/prolanguo-common/interfaces";
 import { promisifyQuery } from "./PromisifyQuery";
-import { SetRowPreparer } from "../preparers/SetRowPreparer";
 import { TableName } from "../enums/tableName";
 import { DeepPartial } from "@prolanguo/prolanguo-common/dist/extended-types";
 import * as _ from "lodash";
 import { assertExists } from "../utils/assertExists";
+import { SetRowPreparer } from "../preparers/SetRowPreparer";
+import { SetRowResolver } from "../resolvers/SetRowResolver";
+import { SetRow } from "../interfaces/SetRow";
+import { SetExtraDataModel } from "./SetExtraDataModel";
+
 
 export class SetModel{
   private setRowPreparer: SetRowPreparer;
+  private setRowResolver: SetRowResolver;
+  private setExtraDataModel: SetExtraDataModel;
+
 
   constructor(){
     this.setRowPreparer = new SetRowPreparer();
+    this.setRowResolver = new SetRowResolver();
+    this.setExtraDataModel = new SetExtraDataModel();
   }
+
+  public async getSetsByIds(db: Knex, setIds: string[], userId: string): Promise<Set[]>{
+    return new Promise(async (resolve, reject): Promise<void> => {
+      try{
+        const result = await promisifyQuery(
+          db.select()
+            .from(TableName.SET)
+            .where({userId})
+            .whereIn('setId', setIds)
+        );
+
+        console.log("result value :", result)
+         
+        const setRow = this.setRowResolver.resolveArray(result, true);
+        const { setList } = await this.getCompleteSetByRows(
+          db,
+          userId,
+          setRow
+        )
+
+        resolve(
+          setList
+        )
+      }catch(error){
+        reject(error)
+      }
+    })
+  };
+
+  private getCompleteSetByRows(db: Knex, userId: string, setRows: readonly SetRow[]): Promise<{setList: Set[]}>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          let setList: Set[] = [];
+          const setIds = setRows.map((setRow): string => setRow.setId);
+          const setExtraDataBySetIds = await this.setExtraDataModel.getSetExtraDataBySetIds(db, setIds, userId);
+          
+          console.log(" Set extra data", setExtraDataBySetIds);
+
+        resolve({
+          setList
+        })
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
+
 
   public async upsertSets(db: Knex, userId: string, sets: DeepPartial<Set>[] ): Promise<void> {
     console.log("upsertSet is running")
@@ -137,5 +195,6 @@ export class SetModel{
         }
       }
     );
-  }
+  };
+
 };

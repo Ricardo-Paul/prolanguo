@@ -1,23 +1,6 @@
 import { SetStatus } from "../../enums/SetStatus";
+import { SetExtraDataItem } from "../../types/SetExtraDataItem";
 
-enum SetExtraDataName{
-  SPACED_REPETITION_MAX_LIMIT = 'spacedRepetiontionMaxLimit'
-}
-
-interface SpacedRepetiontionMaxLimit{
-  readonly dataName: SetExtraDataName.SPACED_REPETITION_MAX_LIMIT,
-  readonly dataValue: number,
-  readonly createdAt: Date,
-  readonly updatedAt: Date,
-  readonly firstSyncedAt: Date,
-  readonly lastSyncedAt: Date
-}
-
-interface OtherItems{
-
-}
-
-type SetExtraDataItem = SpacedRepetiontionMaxLimit | OtherItems
 
 export interface Set {
   readonly userId: string,

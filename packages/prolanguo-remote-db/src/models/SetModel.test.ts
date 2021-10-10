@@ -15,7 +15,6 @@ describe("Set Model", () => {
     let shardId: number;
     const setModel = new SetModel();
 
-
     beforeEach(async () => {
       databaseFacade = new DatabaseFacade(
         env.AUTH_DATABASE_CONFIG,
@@ -66,6 +65,10 @@ describe("Set Model", () => {
       ]);
     });
 
+    // TODO: build a setBuilder to create mock sets
+    test("it returns complete sets (set + extradata) with set ids", async () => {
+      await setModel.getSetsByIds(shardDb, ['set id', 'set id2'], 'usr id');
+    });
 
   });
 });
