@@ -35,16 +35,16 @@ describe("Set Model", () => {
       await authDb.destroy();
     });
 
-    test("it returns selected shard database", async () => {
+    test("returns selected shard database", async () => {
       const schemaName = await 
         shardDb.select('SCHEMA_NAME')
         .from('INFORMATION_SCHEMA.SCHEMATA')
         .where({ SCHEMA_NAME: env.SHARD_DATABASE_PREFIX_NAME + shardId });
-      // TODO: write expect line
+      // TODO: write expected output
       console.log("shardDb found", schemaName);
     });
 
-    test("it upserts set and extraData into set and set_extra_data table", async () => {
+    test("upserts set and extraData into set and set_extra_data table", async () => {
 
       // TODO: build a setBuilder to create mock sets
       const extraData = [
@@ -74,11 +74,11 @@ describe("Set Model", () => {
     });
 
     // TODO: build a setBuilder to create mock sets
-    test("it returns complete sets (set + extradata) with set ids", async () => {
+    test("returns complete sets (set + extradata) with set ids", async () => {
       await setModel.getSetsByIds(shardDb, ['set id', 'set id2'], 'usr id');
     });
 
-    test("it returns existing setIds", async () => {
+    test("returns existing setIds", async () => {
       const {existingSetIds: fetchedExistingSetIds} = await setModel.getExistingSetIds(
         shardDb,
         'usr id',
@@ -88,21 +88,21 @@ describe("Set Model", () => {
       console.log("fetched set ids", fetchedExistingSetIds);
     });
 
-    test("it returns latest sync time", async () => {
+    test("returns latest sync time", async () => {
         await setModel.getLatestSyncTime(
         shardDb,
         'usr id'
       );
     });
 
-    test("it returns sets by last sync time", async () => {
+    test("returns sets by last sync time", async () => {
       const {setList} = await setModel.getSetsByLastSyncTime(
         shardDb,
         'usr id',
         undefined,
         2
       );
-      
+
       console.log("set list by sync time", setList)
     })
 
