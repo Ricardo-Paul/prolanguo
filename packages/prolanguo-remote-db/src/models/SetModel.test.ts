@@ -78,5 +78,15 @@ describe("Set Model", () => {
       await setModel.getSetsByIds(shardDb, ['set id', 'set id2'], 'usr id');
     });
 
+    test("it returns existing setIds", async () => {
+      const {existingSetIds: fetchedExistingSetIds} = await setModel.getExistingSetIds(
+        shardDb,
+        'usr id',
+        ['set id', 'set id2']
+      );
+
+      console.log("fetched set ids", fetchedExistingSetIds);
+    })
+
   });
 });
