@@ -11,6 +11,8 @@ import { SetRow } from "../interfaces/SetRow";
 import { SetExtraDataModel } from "./SetExtraDataModel";
 import { SetRowConverter } from "../converters/SetRowConverter";
 import { SetExtraDataItem } from "@prolanguo/prolanguo-common/types";
+import * as moment from "moment";
+
 
 export class SetModel{
   private setRowPreparer: SetRowPreparer;
@@ -23,6 +25,62 @@ export class SetModel{
     this.setRowResolver = new SetRowResolver();
     this.setExtraDataModel = new SetExtraDataModel();
     this.setRowConverter = new SetRowConverter();
+  }
+
+  public async getSetsByLastSyncTime(
+    db: Knex,
+    userId: string,
+    startAt: Date | undefined,
+    softLimit: number
+  ): Promise<{
+    setList: Set[],
+    noMore: boolean
+  }>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+
+          const date = typeof startAt === 'undefined'? 
+            moment.unix(0).toDate():
+            startAt;
+
+          const firstQuery = promisifyQuery(
+            db
+            .select()
+            .from(TableName.SET)
+            .where('userId', userId)
+            .where('lastSyncedAt', '=', date)
+          );
+
+          const secondQuery = promisifyQuery(
+            db 
+            .select()
+            .from(TableName.SET)
+            .where('userId', userId)
+            .where('lastSyncedAt', '>', date)
+            .limit(softLimit)
+          );
+          
+          const [firstResult, secondResult] = await Promise.all([firstQuery, secondQuery]);
+          const noMore = secondResult.length === 0;
+          const result = _.union(firstResult, secondResult);
+          const setRows = this.setRowResolver.resolveArray(result, true);
+
+          const {
+            setList
+          } = await this.getCompleteSetByRows(
+            db, userId, setRows
+          );
+
+        resolve({
+          setList,
+          noMore
+        });
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
   }
 
   public async getLatestSyncTime(

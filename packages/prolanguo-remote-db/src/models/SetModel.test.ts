@@ -95,5 +95,16 @@ describe("Set Model", () => {
       );
     });
 
+    test("it returns sets by last sync time", async () => {
+      const {setList} = await setModel.getSetsByLastSyncTime(
+        shardDb,
+        'usr id',
+        undefined,
+        2
+      );
+      
+      console.log("set list by sync time", setList)
+    })
+
   });
 });
