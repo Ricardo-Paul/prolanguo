@@ -79,13 +79,6 @@ describe('Test UserModel', () => {
       });
     });
 
-    test("it pull shard db", async () => {
-
-      console.log("set from shard db", await shardDb.table(TableName.USER).insert({
-        name: "anyt thing"
-      }));
-    });
-
     test("test email exists", async () => {
       const exists = await userModel.emailExists(authDb, user.email);
       expect(exists).toBe(true);

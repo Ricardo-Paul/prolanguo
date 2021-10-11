@@ -5,6 +5,8 @@ import { resolveEnv } from "../utils/resolveEnv";
 import { SetModel } from "./SetModel";
 import { SetBuilder } from "@prolanguo/prolanguo-common/builders";
 import { SetExtraDataItemBuilder } from "@prolanguo/prolanguo-common/builders";
+import { ModelFactory } from "../factories/ModelFactory";
+
 
 
 describe("Set Model", () => {
@@ -15,7 +17,8 @@ describe("Set Model", () => {
     let shardDb: Knex;
     let authDb: Knex;
     let shardId: number;
-    const setModel = new SetModel();
+    let modelFactory = new ModelFactory();
+    const setModel = modelFactory.createModel('setModel');
 
     beforeEach(async () => {
       databaseFacade = new DatabaseFacade(
