@@ -10,6 +10,7 @@ import { SetRowResolver } from "../resolvers/SetRowResolver";
 import { SetRow } from "../interfaces/SetRow";
 import { SetExtraDataModel } from "./SetExtraDataModel";
 import { SetRowConverter } from "../converters/SetRowConverter";
+import { SetExtraDataItem } from "@prolanguo/prolanguo-common/dist/types";
 
 export class SetModel{
   private setRowPreparer: SetRowPreparer;
@@ -34,7 +35,7 @@ export class SetModel{
             .whereIn('setId', setIds)
         );
 
-        console.log("result value :", result)
+        console.log("result value :", result);
          
         const setRow = this.setRowResolver.resolveArray(result, true);
         const { setList } = await this.getCompleteSetByRows(
@@ -64,7 +65,7 @@ export class SetModel{
 
           setList = setRows.map((setRow) => {
             const setExtraData = setExtraDataItems[setRow.setId] // get ExtraData for each set from the dictionary
-            return this.setRowConverter.converToSet(setRow, setExtraData); // merge set with extra data
+            return this.setRowConverter.convertToSet(setRow, setExtraData); // merge set with extra data
           });
 
         resolve({
@@ -100,6 +101,24 @@ export class SetModel{
                 db,
                 sets,
                 userId
+              )
+            );
+
+            const extraDataItemAndSetPairs = _.flatMap(sets, (set): [DeepPartial<SetExtraDataItem>, string][] => {
+              if(typeof set.extraData !== 'undefined'){
+                return set.extraData.map((setExtraDataItem) => {
+                  return [ setExtraDataItem, assertExists(set.setId) ]
+                })
+              } else {
+                return []
+              }
+            });
+
+            queries.push(
+              this.setExtraDataModel.upsertMultipleExtraData(
+                db, 
+                userId,
+                extraDataItemAndSetPairs
               )
             )
           };
