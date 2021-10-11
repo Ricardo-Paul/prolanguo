@@ -54,7 +54,7 @@ describe("Set Model", () => {
           createdAt: moment.utc().toDate(),
           updatedAt: moment.utc().toDate()
         }
-      ]
+      ];
       await setModel.upsertSets(shardDb,"usr id", [
         {
           userId: "id2",
@@ -86,7 +86,14 @@ describe("Set Model", () => {
       );
 
       console.log("fetched set ids", fetchedExistingSetIds);
-    })
+    });
+
+    test("it returns latest sync time", async () => {
+        await setModel.getLatestSyncTime(
+        shardDb,
+        'usr id'
+      );
+    });
 
   });
 });

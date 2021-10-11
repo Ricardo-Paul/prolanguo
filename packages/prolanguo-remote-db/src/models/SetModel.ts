@@ -25,6 +25,39 @@ export class SetModel{
     this.setRowConverter = new SetRowConverter();
   }
 
+  public async getLatestSyncTime(
+    db: Knex,
+    userId: string
+  ): Promise<{latestSyncTime: Date | null}>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db
+            .max('lastSyncedAt AS latestSyncTime')
+            .from(TableName.SET)
+            .where({ userId })
+          );
+
+          const resultObject = assertExists(result);
+
+          if(resultObject.length > 0){
+            const latestSyncTime = resultObject[0].latestSyncTime;
+
+            resolve(latestSyncTime);
+          } else {
+            resolve({
+              latestSyncTime: null
+            })
+          }
+            
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
+
   public getExistingSetIds(
     db: Knex,
     userId: string,
