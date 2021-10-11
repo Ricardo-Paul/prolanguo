@@ -4,6 +4,10 @@ import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
 import { SetModel } from "./SetModel";
 import * as moment from "moment";
+import { SetBuilder } from "@prolanguo/prolanguo-common/builders";
+import { SetExtraDataItemBuilder } from "@prolanguo/prolanguo-common/builders";
+import { uuid } from "short-uuid";
+
 
 describe("Set Model", () => {
   const env = resolveEnv();
@@ -46,31 +50,35 @@ describe("Set Model", () => {
 
     test("upserts set and extraData into set and set_extra_data table", async () => {
 
-      // TODO: build a setBuilder to create mock sets
-      const extraData = [
-        {
-          dataName: SetExtraDataName.SPACED_REPETITION_MAX_LIMIT,
-          dataValue: 10,
-          createdAt: moment.utc().toDate(),
-          updatedAt: moment.utc().toDate()
-        }
-      ];
-      await setModel.upsertSets(shardDb,"usr id", [
-        {
-          userId: "id2",
-          setId: "set id2",
-          setName: "Learn English",
-          setStatus: SetStatus.DELETED,
-          learningLanguageCode: "en",
-          translatedLanguageCode: "en",
+
+      // TODO: futher test, try to upsert extra data with different data names
+      // the api won't re-insert many records with the same data name.
+
+      const setList = new Array(3)
+      .fill(null)
+      .map((_, index) => {
+        return {
+          // userId: uuid.v4(),
+          setId: "any set id",
+          setName: "Learn German",
+          setStatus: SetStatus.ACTIVE,
+          learningLanguageCode: "gm",
+          translatedLanguageCode: "gm",
           createdAt: moment.utc().toDate(),
           updatedAt: moment.utc().toDate(),
           updatedStatusAt: moment.utc().toDate(),
-          firstSyncedAt: moment.utc().toDate(),
-          lastSyncedAt: moment.utc().toDate(),
-          extraData
-        },
-      ]);
+          firstSyncedAt: null,
+          lastSyncedAt: null,
+          extraData: [
+            new SetExtraDataItemBuilder().build({
+              dataName: SetExtraDataName.SPACED_REPETITION_MAX_LIMIT,
+              dataValue: 2
+            })
+          ]
+        };
+      })
+
+      await setModel.upsertSets(shardDb,"usr id", setList);
     });
 
     // TODO: build a setBuilder to create mock sets
