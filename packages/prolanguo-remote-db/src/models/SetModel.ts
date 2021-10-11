@@ -25,6 +25,36 @@ export class SetModel{
     this.setRowConverter = new SetRowConverter();
   }
 
+  public getExistingSetIds(
+    db: Knex,
+    userId: string,
+    setIds: string[]
+  ): Promise<{ existingSetIds: string[] }>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db.
+            select('setId')
+            .from(TableName.SET)
+            .where({userId})
+            .whereIn('setId', setIds)
+          );
+
+          const existingSetIds = result.map((set: SetRow) => {
+            return set.setId
+          })
+
+        resolve({
+          existingSetIds
+        })
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
+
   public async getSetsByIds(db: Knex, setIds: string[], userId: string): Promise<Set[]>{
     return new Promise(async (resolve, reject): Promise<void> => {
       try{
