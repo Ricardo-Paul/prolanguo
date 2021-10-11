@@ -5,9 +5,7 @@ import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
 import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
-import { SetExtraDataRowPreparer } from "../preparers/SetExtraDataItemRowPreparer";
-
-
+import { SetExtraDataRowPreparer } from "../preparers/SetExtraDataRowPreparer";
 
 export class SetExtraDataModel {
   private setExtraDataRowConverter: SetExtraDataRowConverter;

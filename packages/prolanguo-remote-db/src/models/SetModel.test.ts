@@ -1,4 +1,4 @@
-import { SetStatus } from "@prolanguo/prolanguo-common/enums";
+import { SetExtraDataName, SetStatus } from "@prolanguo/prolanguo-common/enums";
 import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
@@ -44,9 +44,17 @@ describe("Set Model", () => {
       console.log("shardDb found", schemaName);
     });
 
-    test("it upserts data into set table", async () => {
+    test("it upserts set and extraData into set and set_extra_data table", async () => {
 
       // TODO: build a setBuilder to create mock sets
+      const extraData = [
+        {
+          dataName: SetExtraDataName.SPACED_REPETITION_MAX_LIMIT,
+          dataValue: 10,
+          createdAt: moment.utc().toDate(),
+          updatedAt: moment.utc().toDate()
+        }
+      ]
       await setModel.upsertSets(shardDb,"usr id", [
         {
           userId: "id2",
@@ -60,7 +68,7 @@ describe("Set Model", () => {
           updatedStatusAt: moment.utc().toDate(),
           firstSyncedAt: moment.utc().toDate(),
           lastSyncedAt: moment.utc().toDate(),
-          extraData: []
+          extraData
         },
       ]);
     });

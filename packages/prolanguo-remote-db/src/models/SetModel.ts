@@ -10,7 +10,7 @@ import { SetRowResolver } from "../resolvers/SetRowResolver";
 import { SetRow } from "../interfaces/SetRow";
 import { SetExtraDataModel } from "./SetExtraDataModel";
 import { SetRowConverter } from "../converters/SetRowConverter";
-import { SetExtraDataItem } from "@prolanguo/prolanguo-common/dist/types";
+import { SetExtraDataItem } from "@prolanguo/prolanguo-common/types";
 
 export class SetModel{
   private setRowPreparer: SetRowPreparer;
