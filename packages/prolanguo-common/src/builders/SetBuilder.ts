@@ -7,7 +7,6 @@ import { Set } from "../interfaces/general/Set";
 import { SetExtraDataItemBuilder } from "./SetExtraDataItemBuilder";
 import { SetExtraDataItem } from "../types";
 
-
 export class SetBuilder{
   public build(set: DeepPartial<Set>){
     let extraData;

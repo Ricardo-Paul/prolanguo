@@ -49,6 +49,7 @@ export class SetExtraDataModel {
               )
             );
 
+            console.log("about to upsert set extra data", setExtraDataRows);
             queries.push(
               ...setExtraDataRows.map((row) => {
                 const updateFields = _.omit(row, [

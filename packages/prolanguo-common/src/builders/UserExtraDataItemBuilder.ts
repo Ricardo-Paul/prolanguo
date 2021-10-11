@@ -18,17 +18,3 @@ export class UserExtraDataItemBuilder {
     );
   }
 };
-
-// test
-// const userExtra = new UserExtraDataItemBuilder().build(
-//   {
-//     dataName: "GLOBAL_AUTO_ARCHIVE",
-//     dataValue: {
-//       globalAutoArchiveEnabled: true,
-//       spaceRepetitionThreshold: 4,
-//     },
-//     firstSyncedAt: moment.utc().toDate()
-//   }
-// )
-
-// console.log(userExtra);

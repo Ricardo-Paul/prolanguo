@@ -4,11 +4,9 @@ import * as _ from "lodash";
 import { SetExtraDataName } from "../enums";
 import * as moment from "moment";
 
-
-
 export class SetExtraDataItemBuilder{
     public build(setExtraData: DeepPartial<SetExtraDataItem>){
-      
+
       return _.merge({
         dataName: SetExtraDataName.SPACED_REPETITION_MAX_LIMIT,
         dataValue: 10,
