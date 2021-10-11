@@ -4,11 +4,60 @@ import { SetExtraDataRowConverter } from "../converters/SetExtraDataRowConverter
 import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
+import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
+import { SetExtraDataRowPreparer } from "../preparers/SetExtraDataItemRowPreparer";
+
+
 
 export class SetExtraDataModel {
   private setExtraDataRowConverter: SetExtraDataRowConverter;
+  private setExtraDataRowPreparer: SetExtraDataRowPreparer;
+
   constructor(){
     this.setExtraDataRowConverter = new SetExtraDataRowConverter();
+    this.setExtraDataRowPreparer = new SetExtraDataRowPreparer();
+  }
+
+  public async upsertMultipleExtraData(
+    db: Knex, 
+    userId: string,
+    setExtraDataItemSetIdPairs: [DeepPartial<SetExtraDataItem>, string][] | []
+    ): Promise<void>{
+      return new Promise(
+        async (resolve, reject): Promise<void> => {
+          try{
+            const queries = [];
+
+            const setExtraDataRows = setExtraDataItemSetIdPairs.map(
+              ([extraDataItem, setId]) => {
+                return this.setExtraDataRowPreparer.prepareUpsert(
+                  userId,
+                  setId,
+                  extraDataItem
+                )
+              }
+            );
+
+            const {sql, bindings} = db
+                .insert(setExtraDataRows)
+                .into(TableName.SET_EXTRA_DATA)
+                .toSQL();
+
+            queries.push(
+              promisifyQuery(
+                db.raw(
+                  sql.replace('insert', 'insert ignore'), bindings
+                )
+              )
+            );
+
+          await Promise.all(queries);
+          resolve()
+          }catch(error){
+            reject(error)
+          }
+        }
+      );
   }
 
   public async getSetExtraDataBySetIds(db: Knex, setIds: string[], userId: string): Promise<{ setExtraDataItems: {[P in string]: SetExtraDataItem[]} }>{
@@ -45,4 +94,5 @@ export class SetExtraDataModel {
       }
     );
   }
-}
+};
+
