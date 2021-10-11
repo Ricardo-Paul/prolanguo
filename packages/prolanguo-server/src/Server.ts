@@ -59,7 +59,7 @@ export class Server{
       try{
         this.displayMessage("Setting up database services (server) :");
         await this.database.checkAuthDatabaseTables();
-        this.database.checkShardDatabaseTalbes();
+        this.database.checkShardDatabaseTables();
 
         resolve("")
       }catch(error){

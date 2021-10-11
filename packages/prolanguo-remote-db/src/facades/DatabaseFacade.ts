@@ -30,7 +30,7 @@ export class DatabaseFacade {
     this.authDatabaseFacade.checkAuthDatabaseTables()
   }
 
-  public checkShardDatabaseTalbes(){
+  public checkShardDatabaseTables(){
     console.log(`Checking shard db tables`);
     this.shardDatbaseFacade.checkAllShardDatabaseTables();
   };

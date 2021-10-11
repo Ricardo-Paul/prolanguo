@@ -11,7 +11,7 @@ export class SetBuilder{
   public build(set: DeepPartial<Set>){
     let extraData;
     if(typeof set.extraData !== 'undefined'){
-      set.extraData.map((setExtraDataItem): SetExtraDataItem => {
+      extraData = set.extraData.map((setExtraDataItem): SetExtraDataItem => {
         return new SetExtraDataItemBuilder().build(setExtraDataItem);
       })
     }

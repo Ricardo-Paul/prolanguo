@@ -38,7 +38,7 @@ describe('Test UserModel', () => {
         env.ALL_SHARD_DATABASE_CONFIG,
         env.SHARD_DATABASE_PREFIX_NAME
       );
-      databaseFacade.checkShardDatabaseTalbes();
+      databaseFacade.checkShardDatabaseTables();
 
       // use factory to create model
       userModel = new ModelFactory().createModel('userModel');
