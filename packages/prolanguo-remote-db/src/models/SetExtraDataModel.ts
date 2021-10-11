@@ -51,6 +51,27 @@ export class SetExtraDataModel {
               )
             );
 
+            queries.push(
+              ...setExtraDataRows.map((row) => {
+                const updateFields = _.omit(row, [
+                  'userId',
+                  'setId',
+                  'dataName'
+                ]);
+                const { userId, setId, dataValue } = row;
+                promisifyQuery(
+                  db
+                    .update(updateFields)
+                    .from(TableName.SET_EXTRA_DATA)
+                    .where({
+                      userId,
+                      setId,
+                      dataValue
+                    })
+                )
+              })
+            )
+
           await Promise.all(queries);
           resolve()
           }catch(error){
@@ -60,7 +81,11 @@ export class SetExtraDataModel {
       );
   }
 
-  public async getSetExtraDataBySetIds(db: Knex, setIds: string[], userId: string): Promise<{ setExtraDataItems: {[P in string]: SetExtraDataItem[]} }>{
+  public async getSetExtraDataBySetIds(
+    db: Knex, 
+    setIds: string[], 
+    userId: string
+    ): Promise<{ setExtraDataItems: {[P in string]: SetExtraDataItem[]} }>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
