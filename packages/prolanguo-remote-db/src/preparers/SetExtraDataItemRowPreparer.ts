@@ -1,18 +1,19 @@
 import { AbstractPreparer } from "./AbstractPreparer";
-import { SetExtraDataRow, SetExtraDataRowForInsert } from "../interfaces/SetExtraDataRow";
+import { SetExtraDataRow, SetExtraDataRowForUpsert } from "../interfaces/SetExtraDataRow";
 import { SetExtraDataName } from "@prolanguo/prolanguo-common/enums";
 import { SetExtraDataItem } from "@prolanguo/prolanguo-common/types";
+import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 import * as Joi from "joi";
 import * as _ from "lodash";
 
-export class SetExtraDataItemRowPreparer extends AbstractPreparer<SetExtraDataRow>{
-  protected insertRules = {
+export class SetExtraDataRowPreparer extends AbstractPreparer<SetExtraDataRow>{
+  protected upsertRules = {
     userId: Joi.string(),
     setId: Joi.string(),
     dataName: Joi.string().valid(..._.values(SetExtraDataName)),
     dataValue: Joi.string(),
-    createdAt: Joi.date(),
-    updatedAt: Joi.date(),
+    createdAt: Joi.date().optional(),
+    updatedAt: Joi.date().optional(),
     firstSyncedAt: Joi
       .forbidden()
       .strip()
@@ -22,23 +23,23 @@ export class SetExtraDataItemRowPreparer extends AbstractPreparer<SetExtraDataRo
       .strip()
   };
 
-  public prepareInsert(
+  public prepareUpsert(
     userId: string,
     setId: string, 
-    setExtraDataItem: SetExtraDataItem): SetExtraDataRowForInsert{
+    setExtraDataItem: DeepPartial<SetExtraDataItem>): SetExtraDataRowForUpsert{
     const extraDataRow = this.convertToSetExtraDataRow(
       userId,
       setId,
       setExtraDataItem
     )
-    return this.validateData(extraDataRow, Joi.object(this.insertRules));
+    return this.validateData(extraDataRow, Joi.object(this.upsertRules));
   };
 
   private convertToSetExtraDataRow(
     userId: string,
     setId: string, 
-    setExtraDataItem: SetExtraDataItem
-  ): SetExtraDataRowForInsert{
+    setExtraDataItem: DeepPartial<SetExtraDataItem>
+  ): SetExtraDataRowForUpsert{
     return {
       userId,
       setId,

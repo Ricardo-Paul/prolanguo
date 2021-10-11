@@ -13,4 +13,4 @@ export interface SetExtraDataRow {
 }
 
 export type SetExtraDataRowForInsert = Omit<SetExtraDataRow, 'firstSyncedAt' | 'lastSyncedAt'>
-export type SetExtraDataRowForUpdate = DeepPartial<SetExtraDataRow>
+export type SetExtraDataRowForUpsert = DeepPartial<SetExtraDataRow>
