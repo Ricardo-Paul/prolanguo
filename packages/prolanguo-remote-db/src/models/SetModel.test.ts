@@ -3,10 +3,8 @@ import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
 import { SetModel } from "./SetModel";
-import * as moment from "moment";
 import { SetBuilder } from "@prolanguo/prolanguo-common/builders";
 import { SetExtraDataItemBuilder } from "@prolanguo/prolanguo-common/builders";
-import { uuid } from "short-uuid";
 
 
 describe("Set Model", () => {
@@ -27,7 +25,7 @@ describe("Set Model", () => {
         );
         
       // correct tables spelling here
-      databaseFacade.checkShardDatabaseTalbes()
+      databaseFacade.checkShardDatabaseTables()
       shardDb = databaseFacade.getDb(env.ALL_SHARD_DATABASE_CONFIG[0].shardId);
       authDb = databaseFacade.getDb('auth');
       shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
@@ -49,41 +47,29 @@ describe("Set Model", () => {
     });
 
     test("upserts set and extraData into set and set_extra_data table", async () => {
-
-
-      // TODO: futher test, try to upsert extra data with different data names
-      // the api won't re-insert many records with the same data name.
-
       const setList = new Array(3)
       .fill(null)
       .map((_, index) => {
-        return {
-          // userId: uuid.v4(),
-          setId: "any set id",
+        return new SetBuilder().build({
           setName: "Learn German",
           setStatus: SetStatus.ACTIVE,
           learningLanguageCode: "gm",
           translatedLanguageCode: "gm",
-          createdAt: moment.utc().toDate(),
-          updatedAt: moment.utc().toDate(),
-          updatedStatusAt: moment.utc().toDate(),
-          firstSyncedAt: null,
-          lastSyncedAt: null,
           extraData: [
             new SetExtraDataItemBuilder().build({
               dataName: SetExtraDataName.SPACED_REPETITION_MAX_LIMIT,
               dataValue: 2
             })
           ]
-        };
+        })
       })
-
       await setModel.upsertSets(shardDb,"usr id", setList);
+      // TODO: write expected output
     });
 
-    // TODO: build a setBuilder to create mock sets
     test("returns complete sets (set + extradata) with set ids", async () => {
       await setModel.getSetsByIds(shardDb, ['set id', 'set id2'], 'usr id');
+      // TODO: write expected output
     });
 
     test("returns existing setIds", async () => {
@@ -94,6 +80,7 @@ describe("Set Model", () => {
       );
 
       console.log("fetched set ids", fetchedExistingSetIds);
+      // TODO: write expected output
     });
 
     test("returns latest sync time", async () => {
@@ -111,7 +98,8 @@ describe("Set Model", () => {
         2
       );
 
-      console.log("set list by sync time", setList)
+      console.log("set list by sync time", setList);
+      // TODO: write expected output
     })
 
   });
