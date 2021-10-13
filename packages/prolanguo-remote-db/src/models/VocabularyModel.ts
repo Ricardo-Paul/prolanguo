@@ -4,8 +4,17 @@ import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
 import { Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
+import { VocabularyModelRowPreparer } from "../preparers/VocabularyRowPreparer";
+import { assertExists } from "@prolanguo/prolanguo-common/assert";
+
 
 export class VocabularyModel{
+  private vocabularyModelRowPreparer: VocabularyModelRowPreparer;
+
+  constructor(){
+    this.vocabularyModelRowPreparer = new VocabularyModelRowPreparer()
+  }
+
   public async upserMultipleVocabulary(
     db: Knex,
     userId: string,
@@ -25,9 +34,10 @@ export class VocabularyModel{
                 db,
                 userId,
                 vocabularySetIdPairs.filter(
-                  ([Vocabulary, setId]) => {
+                  (pair): pair is [ Vocabulary, string ]  => {
+                    const [ vocabulary, setId ] = pair;
                     return this.vocabularyModelRowPreparer.canBeInserted(
-                      Vocabulary,
+                      vocabulary as Vocabulary,
                       setId,
                       userId
                     )
@@ -85,7 +95,7 @@ export class VocabularyModel{
         try{
           const queries = [];
 
-          const vocabularyRows = this.vocabularyModelRowPreparer.prepareUpdate(
+          const vocabularyRows = this.vocabularyModelRowPreparer.prepareUpsert(
             vocabulary,
             setId,
             userId
@@ -107,7 +117,7 @@ export class VocabularyModel{
               )
             );
           };
-          
+
         resolve()
         }catch(error){
           reject(error)
@@ -120,7 +130,7 @@ export class VocabularyModel{
     db: Knex,
     userId: string,
     vocabularySetIdPairs: [
-      DeepPartial<Vocabulary>, string
+      Vocabulary, string
     ][]
   ): Promise<void>{
     return new Promise(
@@ -133,7 +143,7 @@ export class VocabularyModel{
                 vocabulary,
                 setId,
                 userId
-              )
+              );
             }
           );
 
