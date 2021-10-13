@@ -5,7 +5,7 @@ import { VocabularyWriting } from "./VocabularyWriting";
 
 export interface Vocabulary{
   readonly vocabularyId: string,
-  readonly setId: string,
+  // readonly setId: string,
   readonly vocabularyText: string,
   readonly vocabularyStatus: VocabularyStatus,
   readonly level: number,

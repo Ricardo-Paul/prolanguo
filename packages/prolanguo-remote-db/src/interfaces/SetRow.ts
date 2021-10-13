@@ -3,7 +3,7 @@ import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 
 
 
-// a Set as it exists in the database
+// Set fields as they exist in the table
 export interface SetRow {
   readonly userId: string,
   readonly setId: string,
@@ -16,7 +16,6 @@ export interface SetRow {
   readonly updatedStatusAt: null | Date;
   readonly firstSyncedAt: null | Date;
   readonly lastSyncedAt: null | Date;
-  // readonly extraData: SetExtraDataItem[]
 }
 
 export type SetRowForInsert = Omit<SetRow, 'firstSyncedAt' | 'lastSyncedAt'>;
