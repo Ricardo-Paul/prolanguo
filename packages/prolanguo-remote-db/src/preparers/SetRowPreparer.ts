@@ -8,7 +8,6 @@ import { SetRowForInsert } from "../interfaces/SetRow";
 import { SetRowForUpdate } from "../interfaces/SetRow";
 import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 
-
 export class SetRowPreparer extends AbstractPreparer<SetRow>{
   protected insertRules = {
     userId: Joi.string(),
@@ -20,7 +19,7 @@ export class SetRowPreparer extends AbstractPreparer<SetRow>{
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
     updatedStatusAt: Joi.date(),
-    // may as well remove these lines
+    // might as well remove these lines
     // leave them for compliance with SetRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
     lastSyncedAt: Joi.forbidden().strip().optional(),
@@ -36,7 +35,7 @@ export class SetRowPreparer extends AbstractPreparer<SetRow>{
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
     updatedStatusAt: Joi.date(),
-    // may as well remove these lines
+    // might as well remove these lines
     // leave them for compliance with SetRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
     lastSyncedAt: Joi.forbidden().strip().optional(),

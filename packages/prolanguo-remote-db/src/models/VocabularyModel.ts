@@ -3,10 +3,7 @@ import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
-
-interface Vocabulary{
-
-}
+import { Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
 
 export class VocabularyModel{
   public async upserMultipleVocabulary(
@@ -97,17 +94,20 @@ export class VocabularyModel{
           const fieldsToUpdate = _.omit(vocabularyRows, ['vocabularyId, userId']);
           const { vocabularyId } = vocabularyRows;
       
-          queries.push(
-            await promisifyQuery(
-              db
-              .update(fieldsToUpdate)
-              .from(TableName.VOCABULARY)
-              .where({
-                vocabularyId,
-                userId
-              })
-            )
-          );
+          if(!_.isEmpty(fieldsToUpdate)){
+            queries.push(
+              await promisifyQuery(
+                db
+                .update(fieldsToUpdate)
+                .from(TableName.VOCABULARY)
+                .where({
+                  vocabularyId,
+                  userId
+                })
+              )
+            );
+          };
+          
         resolve()
         }catch(error){
           reject(error)
