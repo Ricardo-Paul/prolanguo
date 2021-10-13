@@ -20,10 +20,7 @@ export class UserExtraDataRowPreparer extends AbstractPreparer<UserExtraDataRow>
       .optional()
   }
 
-  public prepareUpsert(
-    userExtraDataRow: UserExtraDataRow,
-    userId: string
-    ){
+  public prepareUpsert( userExtraDataRow: UserExtraDataRow, userId: string ){
     const row = this.convertToUserExtraDataRow(userExtraDataRow, userId)
     return this.validateData(row, Joi.object(this.upsertRules));
   };

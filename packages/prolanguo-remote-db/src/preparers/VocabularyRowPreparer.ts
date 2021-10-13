@@ -80,6 +80,19 @@ export class VocabularyModelRowPreparer extends AbstractPreparer<VocabularyRow> 
     return vocabularyRowForInsert;
   }
 
+  public canBeInserted(
+    vocabulary: Vocabulary,
+    userId: string,
+    setId: string
+  ): boolean{
+    const row = this.convertToInsertRow(
+      vocabulary,
+      userId,
+      setId
+    );
+    return this.isDataValid(row, Joi.object(this.insertRules));
+  }
+
   // upsert row validation methods
   public prepareUpsert(
     vocabulary: DeepPartial<Vocabulary>,
