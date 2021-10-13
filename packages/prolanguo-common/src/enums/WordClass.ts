@@ -1,0 +1,10 @@
+export enum WordClass {
+  NOUN = 'NOUN',
+  VERB = 'VERB',
+  ADJECTIVE = 'ADJECTIVE',
+  ADVERB = 'ADVERB',
+  PREPOSTION = 'PREPOSITION',
+  PHRASAL_VERB = 'PHRASAL_VERB',
+  IDIOM = 'IDOM',
+  PRONOUN = 'PRONOUN'
+}
