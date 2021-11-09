@@ -8,7 +8,6 @@ import { UserExtraDataRowResolver } from "../resolvers/UserExtraDataRowResolver"
 import { UserExtraDataRow } from "../interfaces/UserExtraDataRow";
 import { UserExtraDataItem } from "@prolanguo/prolanguo-common/dist/types/UserExtraDataItem";
 
-
 export class UserExtraDataModel{
   private userExtraDataRowPreparer: UserExtraDataRowPreparer;
   private userExtraDataRowResolver: UserExtraDataRowResolver;
