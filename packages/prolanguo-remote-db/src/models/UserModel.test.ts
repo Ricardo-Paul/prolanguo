@@ -13,7 +13,6 @@ import { SetModel } from "./SetModel";
 import moment = require("moment");
 import { TableName } from "../enums/tableName";
 
-
 describe('Test UserModel', () => {
   const env = resolveEnv();
   test("Env var loads properly", () => {
@@ -29,7 +28,6 @@ describe('Test UserModel', () => {
     let authDb: Knex;
     let userModel: UserModel;
     let user: User;
-
     let shardDb: Knex;
 
     beforeEach(async () => {
@@ -44,7 +42,6 @@ describe('Test UserModel', () => {
       userModel = new ModelFactory().createModel('userModel');
       authDb = databaseFacade.getDb('auth');
       shardDb = databaseFacade.getDb(env.ALL_SHARD_DATABASE_CONFIG[0].shardId);
-
     });
 
     afterEach(async () => {
