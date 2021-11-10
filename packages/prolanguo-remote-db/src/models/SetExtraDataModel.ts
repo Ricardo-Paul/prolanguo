@@ -57,7 +57,7 @@ export class SetExtraDataModel {
                   'setId',
                   'dataName'
                 ]);
-                const { userId, setId, dataValue } = row;
+                const { userId, setId, dataName } = row;
                 promisifyQuery(
                   db
                     .update(updateFields)
@@ -65,11 +65,11 @@ export class SetExtraDataModel {
                     .where({
                       userId,
                       setId,
-                      dataValue
+                      dataName
                     })
                 )
               })
-            )
+            );
 
           await Promise.all(queries);
           resolve()
