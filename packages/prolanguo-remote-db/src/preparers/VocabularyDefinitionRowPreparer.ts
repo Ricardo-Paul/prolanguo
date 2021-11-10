@@ -17,20 +17,35 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     // might as well remove these lines
     // leave them for compliance with VocabularyRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
-    lastSyncedAt: Joi.forbidden().strip().optional(),
+    lastSyncedAt: Joi.forbidden().strip().optional()
+  }
+
+  protected upsertRules = {
+    definitionId: Joi.string(),
+    meaning: Joi.string().optional(),
+    source: Joi.string().optional(),
+    wordClasses: Joi.string().valid(..._.values(WordClass)).optional(),
+    definitionStatus: Joi.string().valid(..._.values(DefinitionStatus)).optional(),
+    createdAt: Joi.date().optional(),
+    updatedAt: Joi.date().optional(),
+    updatedStatusAt: Joi.date().optional(),
+    // might as well remove these lines
+    // leave them for compliance with VocabularyRow interface
+    firstSyncedAt: Joi.forbidden().strip().optional(),
+    lastSyncedAt: Joi.forbidden().strip().optional()
   }
   public prepareInsert(
     definition: Definition,
     vocabularyId: string,
     userId: string
   ){
-    const definitionRow = this.convertToInsertRow(
+    const definitionRowForInsert = this.convertToInsertRow(
       definition,
       vocabularyId,
       userId
     );
 
-    return this.validateData(definitionRow, Joi.object(this.insertRules))
+    return this.validateData(definitionRowForInsert, Joi.object(this.insertRules))
   };
 
   private convertToInsertRow(
@@ -57,5 +72,48 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
       vocabularyId,
       userId
     }
+  };
+
+  // TODO: replace update by upsert
+  public prepareUpdate(
+    definition: Definition,
+    vocabularyId: string,
+    userId: string
+  ){
+    const definitionRowForUpsert = this.convertToUpdateRow(
+      definition,
+      vocabularyId,
+      userId
+    );
+
+    return this.validateData(definitionRowForUpsert, Joi.object(this.upsertRules))
+  };
+
+  private convertToUpdateRow(
+    definition: Definition,
+    vocabularyId: string,
+    userId: string
+  ){
+    const {
+      definitionId,
+      meaning,
+      wordClasses,
+      source,
+      definitionStatus,
+      updatedStatusAt
+    } = definition;
+
+    const definitionRow = {
+      definitionId,
+      meaning,
+      wordClasses,
+      source,
+      definitionStatus,
+      updatedStatusAt,
+      vocabularyId,
+      userId
+    }
+    
+    return definitionRow;
   }
 }
