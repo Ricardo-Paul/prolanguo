@@ -5,17 +5,18 @@ import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
 import { Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
 import { VocabularyModelRowPreparer } from "../preparers/VocabularyRowPreparer";
-import { assertExists } from "@prolanguo/prolanguo-common/assert";
-
+import { VocabularyDefinitionModel } from "./VocabularyDefinitionModel";
 
 export class VocabularyModel{
   private vocabularyModelRowPreparer: VocabularyModelRowPreparer;
+  private vocabularyDefinitionModel: VocabularyDefinitionModel;
 
   constructor(){
-    this.vocabularyModelRowPreparer = new VocabularyModelRowPreparer()
+    this.vocabularyModelRowPreparer = new VocabularyModelRowPreparer();
+    this.vocabularyDefinitionModel = new VocabularyDefinitionModel();
   }
 
-  public async upserMultipleVocabulary(
+  public async upsertMultipleVocabulary(
     db: Knex,
     userId: string,
     vocabularySetIdPairs: [
@@ -54,6 +55,14 @@ export class VocabularyModel{
               vocabularySetIdPairs
             )
           );
+
+          // upsert VocabularyDefinition (s)
+          queries.push(
+            this.vocabularyDefinitionModel(
+
+            )
+          )
+
         }
         resolve()
         }catch(error){
@@ -95,14 +104,14 @@ export class VocabularyModel{
         try{
           const queries = [];
 
-          const vocabularyRows = this.vocabularyModelRowPreparer.prepareUpsert(
+          const vocabularyRow = this.vocabularyModelRowPreparer.prepareUpsert(
             vocabulary,
             setId,
             userId
           );
       
-          const fieldsToUpdate = _.omit(vocabularyRows, ['vocabularyId, userId']);
-          const { vocabularyId } = vocabularyRows;
+          const fieldsToUpdate = _.omit(vocabularyRow, ['vocabularyId, userId']);
+          const { vocabularyId } = vocabularyRow;
       
           if(!_.isEmpty(fieldsToUpdate)){
             queries.push(

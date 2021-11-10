@@ -1,7 +1,6 @@
 import { SetStatus } from "../../enums/SetStatus";
 import { SetExtraDataItem } from "../../types/SetExtraDataItem";
 
-
 export interface Set {
   readonly userId: string,
   readonly setId: string,
