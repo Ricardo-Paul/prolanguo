@@ -58,7 +58,8 @@ export class VocabularyDefinitionModel{
                 this.updateDefinition(
                   definition,
                   vocabularyId,
-                  userId
+                  userId,
+                  db
                 )
               }
             )
@@ -74,19 +75,36 @@ export class VocabularyDefinitionModel{
   }
 
   private updateDefinition(
-    definition,
-    vocabularyId,
-    userId
+    definition: DeepPartial<Definition>,
+    vocabularyId: string,
+    userId: string,
+    db: Knex
   ): Promise<void>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
+        const queries = [];
         try{
           // prepare definition row for update
           const definitionRow = this.vocabularyDefinitionRowPreparer.prepareUpdate(
-            definition, vocabularyId, userId
+            definition as Definition, vocabularyId, userId
           );
 
-          const fieldsToUpdate = _.omit(definitionRow, 'definitionId')
+          const fieldsToUpdate = _.omit(definitionRow, 'definitionId, vocabularyId, userId');
+          const { definitionId } = definitionRow;
+
+          queries.push(
+            await promisifyQuery(
+              db.update(fieldsToUpdate)
+              .table(TableName.DEFINITION)
+              .where({
+                userId,
+                vocabularyId,
+                definitionId
+              })
+            )
+          );
+
+        Promise.all(queries);
         resolve()
         }catch(error){
           reject(error)
