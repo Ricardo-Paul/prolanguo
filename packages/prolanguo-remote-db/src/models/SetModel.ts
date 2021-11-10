@@ -2,7 +2,7 @@ import { Knex } from "knex"
 import { Set } from "@prolanguo/prolanguo-common/interfaces";
 import { promisifyQuery } from "./PromisifyQuery";
 import { TableName } from "../enums/tableName";
-import { DeepPartial } from "@prolanguo/prolanguo-common/dist/extended-types";
+import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 import * as _ from "lodash";
 import { assertExists } from "../utils/assertExists";
 import { SetRowPreparer } from "../preparers/SetRowPreparer";
@@ -12,7 +12,6 @@ import { SetExtraDataModel } from "./SetExtraDataModel";
 import { SetRowConverter } from "../converters/SetRowConverter";
 import { SetExtraDataItem } from "@prolanguo/prolanguo-common/types";
 import * as moment from "moment";
-
 
 export class SetModel{
   private setRowPreparer: SetRowPreparer;
