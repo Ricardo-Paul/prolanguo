@@ -16,7 +16,7 @@ export class SetBuilder{
       })
     }
     
-    return {
+    return _.merge({
       userId: uuid.v4(),
       setId: uuid.v4(),
       setName: "Learn German",
@@ -29,6 +29,6 @@ export class SetBuilder{
       firstSyncedAt: null,
       lastSyncedAt: null,
       extraData
-    }
+    }, set);
   }
 }
