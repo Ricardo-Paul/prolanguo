@@ -3,7 +3,7 @@ import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
-import { Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
+import { Definition, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
 import { VocabularyModelRowPreparer } from "../preparers/VocabularyRowPreparer";
 import { VocabularyDefinitionModel } from "./VocabularyDefinitionModel";
 
@@ -58,10 +58,23 @@ export class VocabularyModel{
 
           // upsert VocabularyDefinition (s)
           queries.push(
-            this.vocabularyDefinitionModel(
-
-            )
-          )
+            this.vocabularyDefinitionModel.upsertDefinitions(
+              db,
+              userId,
+              _.flatMap(vocabularySetIdPairs, ([vocabulary]) => {
+                if(typeof vocabulary.definitions !== 'undefined'){
+                  return vocabulary.definitions?.map(
+                    (definition): [ DeepPartial<Definition>, string ] => [
+                      definition,
+                      vocabulary.vocabularyId as string
+                    ]
+                  )
+                } else {
+                  return []
+                }
+              })
+            );; //Test Upserting Vocabularies with Definitions
+          );
 
         }
         resolve()
