@@ -6,6 +6,7 @@ import { SetModel } from "./SetModel";
 import { SetBuilder } from "@prolanguo/prolanguo-common/builders";
 import { SetExtraDataItemBuilder } from "@prolanguo/prolanguo-common/builders";
 import { ModelFactory } from "../factories/ModelFactory";
+import { Set } from "@prolanguo/prolanguo-common/dist/interfaces";
 
 describe("Set Model", () => {
   const env = resolveEnv();
