@@ -44,7 +44,7 @@ export class VocabularyDefinitionModel{
            .toSQL();
 
           queries.push(
-            await promisifyQuery(
+            promisifyQuery(
               db.raw(
                 sql.replace('insert', 'insert ignore'), bindings
               )
@@ -93,7 +93,7 @@ export class VocabularyDefinitionModel{
           const { definitionId } = definitionRow;
 
           queries.push(
-            await promisifyQuery(
+            promisifyQuery(
               db.update(fieldsToUpdate)
               .table(TableName.DEFINITION)
               .where({

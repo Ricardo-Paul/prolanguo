@@ -3,10 +3,12 @@ import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
 import { SetModel } from "./SetModel";
-import { SetBuilder } from "@prolanguo/prolanguo-common/builders";
+import { SetBuilder, VocabularyBuilder } from "@prolanguo/prolanguo-common/builders";
 import { SetExtraDataItemBuilder } from "@prolanguo/prolanguo-common/builders";
 import { ModelFactory } from "../factories/ModelFactory";
-import { Set } from "@prolanguo/prolanguo-common/dist/interfaces";
+import { Set, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
+import { VocabularyModel } from "./VocabularyModel";
+import moment = require("moment");
 
 describe("Set Model", () => {
   const env = resolveEnv();
@@ -102,6 +104,23 @@ describe("Set Model", () => {
 
       console.log("set list by sync time", setList);
       // TODO: write expected output
+    })
+
+  
+    test("tests vocabulary model", async () => {
+      const vocabularySetIdPairs = new Array(3).fill(null).map(
+          (index, _): [Vocabulary, string] => {
+            return [
+              new VocabularyBuilder().build({
+                vocabularyText: "UDP" + index,
+                lastLearnedAt: moment.utc().toDate()
+              }),
+              'random set id'
+            ]
+          }
+        );
+
+        await new VocabularyModel().upsertMultipleVocabulary(shardDb, 'userid', vocabularySetIdPairs);
     })
 
   });
