@@ -1,4 +1,4 @@
-import { Vocabulary } from "../interfaces/index";
+import { Category, Vocabulary, VocabularyWriting } from "../interfaces/index";
 import { DeepPartial } from "../extended-types";
 import _ from "lodash";
 import * as uuid from "uuid";
@@ -6,13 +6,14 @@ import { VocabularyStatus } from "../enums";
 import * as moment from "moment";
 import { Definition } from "../interfaces";
 
+
 // builders
 import { DefinitionBuilder } from "./DefinitionBuilder";
 import { VocabularyCategoryBuilder } from "./VocabularyCategoryBuilder";
 import { VocabularyWritingBuilder } from "./VocabularyWritingBuilder";
 
 export class VocabularyBuilder{
-  public build(vocabulary: DeepPartial<Vocabulary>){
+  public build(vocabulary: DeepPartial<Vocabulary>): Vocabulary{
     let definitions: Definition[] = [];
     let category;
     let writing;
@@ -25,7 +26,7 @@ export class VocabularyBuilder{
       })
     };
 
-    if(vocabulary.category !== undefined){
+    if(typeof vocabulary.category !== "undefined"){
       category = new VocabularyCategoryBuilder().build(
         vocabulary.category
       );

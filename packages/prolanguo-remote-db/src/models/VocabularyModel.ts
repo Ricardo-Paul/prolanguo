@@ -73,7 +73,7 @@ export class VocabularyModel{
                   return []
                 }
               })
-            );; //Test Upserting Vocabularies with Definitions
+            ) //Test Upserting Vocabularies
           );
 
         }

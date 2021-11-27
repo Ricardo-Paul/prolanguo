@@ -63,7 +63,7 @@ export class VocabularyDefinitionModel{
                 )
               }
             )
-          )
+          );
 
         Promise.all(queries)
         resolve()

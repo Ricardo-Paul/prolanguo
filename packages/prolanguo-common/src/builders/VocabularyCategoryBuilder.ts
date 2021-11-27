@@ -4,14 +4,15 @@ import * as _ from "lodash";
 import * as moment from "moment";
 
 export class VocabularyCategoryBuilder{
-  public build(category: DeepPartial<Category>){
+  public build(category: DeepPartial<Category>): Category{
     return _.merge({
       categoryName: 'Commercial English',
       createdAt: moment.utc().toDate(),
       updatedAt: moment.utc().toDate(),
       lastLearnedAt: null,
       firstSyncedAt: null,
-    }, category);
+      lastSyncedAt: null
+    }, category)
   }
 }
 

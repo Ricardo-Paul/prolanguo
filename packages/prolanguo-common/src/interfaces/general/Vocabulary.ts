@@ -10,8 +10,8 @@ export interface Vocabulary {
   readonly vocabularyStatus: VocabularyStatus,
   readonly level: number,
   readonly definitions: Definition[],
-  readonly category: Category,
-  readonly writing: VocabularyWriting,
+  readonly category?: Category,
+  readonly writing?: VocabularyWriting,
   readonly lastLearnedAt: null | Date,
   readonly createdAt: Date;
   readonly updatedAt: Date;
