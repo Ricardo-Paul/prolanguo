@@ -1,77 +1,62 @@
+import { SetExtraDataName, SetStatus } from "@prolanguo/prolanguo-common/enums";
 import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
-import { VocabularyModel } from "../models/VocabularyModel";
-import { SetBuilder } from "@prolanguo/prolanguo-common/builders";
-import { SetModel } from "../models/SetModel";
-import { Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
-import { VocabularyBuilder } from "@prolanguo/prolanguo-common/builders";
-import { Set } from "@prolanguo/prolanguo-common/interfaces";
+import { SetModel } from "./SetModel";
+import { SetBuilder, VocabularyBuilder } from "@prolanguo/prolanguo-common/builders";
+import { ModelFactory } from "../factories/ModelFactory";
+import { Set, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
+import { VocabularyModel } from "./VocabularyModel";
+import moment = require("moment");
 
-// tasks: make sure multiple vocabularies are upserted correctly;
-describe('Test vocabulary model', () => {
-  let vocabularyModel = new VocabularyModel();
-  let setModel = new SetModel();
-  let userId = "random UserID"
-  // should we connect to db first?
-  describe('tests start with db connected', () => {
+describe("Set Model", () => {
+  const env = resolveEnv();
+
+  describe("Tests start after connecting to db", () => {
     let databaseFacade: DatabaseFacade;
-    let shardDb: Knex
-    let env = resolveEnv();
+    let shardDb: Knex;
+    let authDb: Knex;
+    let shardId: number;
+    let modelFactory = new ModelFactory();
+    const setModel = modelFactory.createModel('setModel');
 
-    beforeEach(() => {
+    beforeEach(async () => {
       databaseFacade = new DatabaseFacade(
         env.AUTH_DATABASE_CONFIG,
         env.ALL_SHARD_DATABASE_CONFIG,
         env.SHARD_DATABASE_PREFIX_NAME
-      );
-
+        );
+        
+      // correct tables spelling here
+      databaseFacade.checkShardDatabaseTables()
       shardDb = databaseFacade.getDb(env.ALL_SHARD_DATABASE_CONFIG[0].shardId);
+      authDb = databaseFacade.getDb('auth');
+      shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
+
     });
 
     afterEach(async () => {
       await shardDb.destroy();
+      await authDb.destroy();
     });
 
-    describe('test starts after inserting sets in the db', () => {
-      let setList: any;
-
-      beforeEach(async (): Promise<void> => {
-        setList = new Array(3)
-        .fill(null)
-        .map((_, index): Set => {
-          return new SetBuilder().build({
-            setName: "Commercial English" + index,
-          })
-        })
-  
-        await shardDb.transaction(async (tx) => {
-          await setModel.upsertSets(
-            tx, 
-            userId,
-            setList
-          )
-        });
-      })
-
-      test('upserts multiple vocabularies', async () => {
-        const vocabularySetIdPairs = new Array(3).fill(null).map(
+    test("tests vocabulary model", async () => {
+      const vocabularySetIdPairs = new Array(1).fill(null).map(
           (index, _): [Vocabulary, string] => {
             return [
               new VocabularyBuilder().build({
-                vocabularyText: "UDP" + index,
+                vocabularyText: "UDP",
+                lastLearnedAt: moment.utc().toDate()
               }),
-              setList[0].setId
+              '00a64a41-165f-41ac-a140-a070e85e635f'
             ]
           }
         );
-        await vocabularyModel.upsertMultipleVocabulary(
-          shardDb,
-          userId,
-          vocabularySetIdPairs
-        );
-      });
+
+        await shardDb.transaction(async (tx) => {
+          await new VocabularyModel().upsertMultipleVocabulary(tx, 'usr id', vocabularySetIdPairs);
+        });
     });
 
-  })
-})
+  });
+});

@@ -25,7 +25,8 @@ export class VocabularyModel{
   ): Promise<void>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
-        const queries = [];
+        const queries: Promise<void[] | void>[]= [];
+        console.log("vocabulary and set Id received :", vocabularySetIdPairs);
 
         try{
           // bulk insert vocabularies
@@ -39,45 +40,45 @@ export class VocabularyModel{
                     const [ vocabulary, setId ] = pair;
                     return this.vocabularyModelRowPreparer.canBeInserted(
                       vocabulary as Vocabulary,
-                      setId,
-                      userId
+                      userId,
+                      setId
                     )
                   }
                 )
               )
             );
 
-          // bulk update vocabularies
-          queries.push(
-            this.updateVocabularies(
-              db,
-              userId,
-              vocabularySetIdPairs
-            )
-          );
+          // // bulk update vocabularies
+          // queries.push(
+          //   this.updateVocabularies(
+          //     db,
+          //     userId,
+          //     vocabularySetIdPairs
+          //   )
+          // );
 
-          // upsert VocabularyDefinition (s)
-          queries.push(
-            this.vocabularyDefinitionModel.upsertDefinitions(
-              db,
-              userId,
-              _.flatMap(vocabularySetIdPairs, ([vocabulary]) => {
-                if(typeof vocabulary.definitions !== 'undefined'){
-                  return vocabulary.definitions?.map(
-                    (definition): [ DeepPartial<Definition>, string ] => [
-                      definition,
-                      vocabulary.vocabularyId as string
-                    ]
-                  )
-                } else {
-                  return []
-                }
-              })
-            ) //Test Upserting Vocabularies
-          );
-
+          // // upsert VocabularyDefinition (s)
+          // queries.push(
+          //   this.vocabularyDefinitionModel.upsertDefinitions(
+          //     db,
+          //     userId,
+          //     _.flatMap(vocabularySetIdPairs, ([vocabulary]) => {
+          //       if(typeof vocabulary.definitions !== 'undefined'){
+          //         return vocabulary.definitions?.map(
+          //           (definition): [ DeepPartial<Definition>, string ] => [
+          //             definition,
+          //             vocabulary.vocabularyId as string
+          //           ]
+          //         )
+          //       } else {
+          //         return []
+          //       }
+          //     })
+          //   ) //Test Upserting Vocabularies
+          // );
+          await Promise.all(queries)
+          resolve()
         }
-        resolve()
         }catch(error){
           reject(error)
         }
@@ -128,7 +129,7 @@ export class VocabularyModel{
       
           if(!_.isEmpty(fieldsToUpdate)){
             queries.push(
-              await promisifyQuery(
+              promisifyQuery(
                 db
                 .update(fieldsToUpdate)
                 .from(TableName.VOCABULARY)
@@ -155,36 +156,47 @@ export class VocabularyModel{
       Vocabulary, string
     ][]
   ): Promise<void>{
+    console.log("vocabulary and set Id received for insert:", vocabularySetIdPairs);
+
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
+          console.log("running inserting vocabuary");
           const queries = []
           const vocabularyRows = vocabularySetIdPairs.map(
             ([vocabulary, setId]) => {
               return this.vocabularyModelRowPreparer.prepareInsert(
                 vocabulary,
-                setId,
-                userId
+                userId,
+                setId
               );
             }
           );
 
-          const { sql, bindings } = db
-            .insert(vocabularyRows)
-            .into(TableName.VOCABULARY)
-            .toSQL();
+          // 
+          const {sql, bindings} = db
+          .insert(vocabularyRows)
+          .into(TableName.VOCABULARY)
+          .toSQL();
 
+          console.log("Vocabulary Rows to insert :", vocabularyRows);
+          console.log("insert queries :", sql);
+
+        
+          const replaceSql = sql.replace('insert', 'insert ignore');
+
+          // bulk insert all rows
           queries.push(
             await promisifyQuery(
               db.raw(
-                sql.replace('insert', 'insert ignore'), 
-                bindings
+                replaceSql, bindings
               )
             )
           );
 
-        Promise.all(queries);
-        resolve()
+          await Promise.all(queries);
+          resolve()
+        //
         }catch(error){
           reject(error)
         }
@@ -192,3 +204,5 @@ export class VocabularyModel{
     );
   }
 };
+
+// INSERT INTO prolanguo_vocabulary (vocabularyId, vocabularyText, vocabularyStatus, level, definitions, category, writing, createdAt, updatedAt, lastLearnedAt) VALUES('a6503e34-a7c0-46d6-a4ec-9d9d36a88b20', 'my text', 'ACTIVE', 1, [], undefined, undefined, '2021-11-27T13:01:45.059Z', '2021-11-27T13:01:45.059Z', '2021-11-27T13:01:45.059Z');
