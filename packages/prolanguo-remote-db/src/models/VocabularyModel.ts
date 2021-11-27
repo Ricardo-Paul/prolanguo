@@ -49,13 +49,13 @@ export class VocabularyModel{
             );
 
           // // bulk update vocabularies
-          // queries.push(
-          //   this.updateVocabularies(
-          //     db,
-          //     userId,
-          //     vocabularySetIdPairs
-          //   )
-          // );
+          queries.push(
+            this.updateVocabularies(
+              db,
+              userId,
+              vocabularySetIdPairs
+            )
+          );
 
           // // upsert VocabularyDefinition (s)
           // queries.push(
@@ -99,8 +99,8 @@ export class VocabularyModel{
           return this.updateVocabulary(
             db,
             vocabulary,
-            setId,
-            userId
+            userId,
+            setId
           )
         }
       )
@@ -204,5 +204,3 @@ export class VocabularyModel{
     );
   }
 };
-
-// INSERT INTO prolanguo_vocabulary (vocabularyId, vocabularyText, vocabularyStatus, level, definitions, category, writing, createdAt, updatedAt, lastLearnedAt) VALUES('a6503e34-a7c0-46d6-a4ec-9d9d36a88b20', 'my text', 'ACTIVE', 1, [], undefined, undefined, '2021-11-27T13:01:45.059Z', '2021-11-27T13:01:45.059Z', '2021-11-27T13:01:45.059Z');
