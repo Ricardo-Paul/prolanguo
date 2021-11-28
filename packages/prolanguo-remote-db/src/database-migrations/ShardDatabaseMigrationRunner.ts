@@ -25,7 +25,7 @@ export class ShardDatabaseMigrationRunner{
       console.log(`databaseVersion: ${databaseVersion}, migrationVersion: ${version}`);
       if(databaseVersion < version){
         this.shardDb.transaction(async (tx) => {
-          await migration(tx);
+          migration(tx);
           await this.updateDatabaseVersion(tx, version);
         })
       }
@@ -77,4 +77,4 @@ export class ShardDatabaseMigrationRunner{
       }
     );
   }
-}
+};
