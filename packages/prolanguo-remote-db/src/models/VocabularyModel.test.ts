@@ -2,7 +2,6 @@ import { SetExtraDataName, SetStatus } from "@prolanguo/prolanguo-common/enums";
 import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
-import { SetModel } from "./SetModel";
 import { SetBuilder, VocabularyBuilder, DefinitionBuilder } from "@prolanguo/prolanguo-common/builders";
 import { ModelFactory } from "../factories/ModelFactory";
 import { Set, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
@@ -19,6 +18,7 @@ describe("Set Model", () => {
     let shardId: number;
     let modelFactory = new ModelFactory();
     const setModel = modelFactory.createModel('setModel');
+    const vocabularyModel = modelFactory.createModel('vocabularyModel');
 
     beforeEach(async () => {
       databaseFacade = new DatabaseFacade(
@@ -49,18 +49,11 @@ describe("Set Model", () => {
               return new SetBuilder().build({
                 setName: "Networking terms"
           })
-        })
-
-        // await shardDb.transaction(async (tx) => {
-        //   await setModel.upsertSets(
-        //     tx, 'user id', setList
-        //   )
-        // });
-        console.log("Set list from test :", setList);
+        });
         await setModel.upsertSets(shardDb,"usr id", setList);
       });
 
-      test("tests vocabulary model", async () => {
+      test("insert multiple vocabularies", async () => {
         const vocabularySetIdPairs = new Array(1).fill(null).map(
             (index, _): [Vocabulary, string] => {
               return [
@@ -83,6 +76,10 @@ describe("Set Model", () => {
           await shardDb.transaction(async (tx) => {
             await new VocabularyModel().upsertMultipleVocabulary(tx, 'usr id', vocabularySetIdPairs);
           });
+
+          // pull the vocabularies from the db using their ids
+          // compare them with the vocabularies we built up there
+          const { vocabulariesFromDb } = 
       });
     })
 

@@ -48,7 +48,6 @@ export class VocabularyDefinitionModel{
            .toSQL();
           console.log("SQL line :", sql);
 
-
           queries.push(
             await promisifyQuery(
               db.raw(
@@ -57,7 +56,6 @@ export class VocabularyDefinitionModel{
               )
             )
           );
-
 
           // bulk update definitions
           queries.push(
@@ -121,4 +119,4 @@ export class VocabularyDefinitionModel{
       }
     );
   }
-}
+};

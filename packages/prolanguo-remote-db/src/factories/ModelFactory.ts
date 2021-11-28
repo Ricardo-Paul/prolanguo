@@ -1,6 +1,8 @@
 import { UserModel } from "../models/UserModel";
 import { ModelList } from "../interfaces/ModelList";
 import { SetModel } from "../models/SetModel";
+import { VocabularyModel } from "../models/VocabularyModel";
+import { VocabularyDefinitionModel } from "../models/VocabularyDefinitionModel";
 
 export class ModelFactory{
   public createAllModels(){
@@ -16,8 +18,12 @@ export class ModelFactory{
       model = new UserModel();
     } else if(modelName === 'setModel') {
       model = new SetModel()
+    } else if(modelName === 'vocabularyModel'){
+      model = new VocabularyModel
+    } else if(modelName === 'vocabularyDefinitionModel'){
+      model = new VocabularyDefinitionModel
     } else {
-      throw new Error('Model nane is not existed')
+      throw new Error('Model nane not exised');
     }
 
     return model as ModelList[K]
