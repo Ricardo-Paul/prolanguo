@@ -79,7 +79,7 @@ describe("Set Model", () => {
 
           // pull the vocabularies from the db using their ids
           // compare them with the vocabularies we built up there
-          const { vocabulariesFromDb } = 
+          // const { vocabulariesFromDb } = vocabularyModel.
       });
     })
 
