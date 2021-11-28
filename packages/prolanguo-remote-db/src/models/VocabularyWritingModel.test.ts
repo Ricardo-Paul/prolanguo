@@ -52,7 +52,17 @@ describe("Test Writing Model", () => {
           ]
         });
       await vocabularyWritingModel.upsertVocabularyWritings(shardDb, 'usr id', writingAndVocabularyIdPairs);
-    })
+    });
+
+    test("get vocabulary writings per vocabulary id", async () => {
+      const vocabularyWritingsPerVocabularyId = await vocabularyWritingModel.getVocabularyWritingsByVocabularyIds(
+        shardDb,
+        'usr id',
+        ['05ce99e6-d1b8-497e-b9ef-7fbbbe4e28c0']
+      );
+
+      console.log("Vocabulary writing :", vocabularyWritingsPerVocabularyId);
+    });
 
   });
 });
