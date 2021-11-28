@@ -2,12 +2,12 @@ import { Knex } from "knex";
 import { TableName } from "../../enums/tableName";
 
 export async function migration_01(tx: Knex.Transaction){
+  await createVocabularyTableIfNotExists(tx);
+  await createVocabularyWritingTableIfNotExists(tx);
   await createSetTableIfNotExists(tx);
   await createSetExtraDataTableIfNotExists(tx);
-  await createVocabularyTableIfNotExists(tx);
   await createDefinitionTableIfNotExists(tx);
   await createVocalaryCategoryTableIfNotExists(tx);
-  await createVocabularyWritingTableIfNotExists(tx);
   await createLockTableIfNotExists(tx);
 }
 
@@ -119,7 +119,7 @@ function createVocabularyWritingTableIfNotExists(db: Knex.Transaction): Knex.Raw
       firstSyncedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       lastSyncedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (userId, vocabularyId),
-      FOREIGN KEY (userId,  vocabularyId) REFERENCES ${TableName.VOCABULARY}
+      FOREIGN KEY (userId,  vocabularyId) REFERENCES ${TableName.VOCABULARY}(userId, vocabularyId)
     ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
   `)
 }
