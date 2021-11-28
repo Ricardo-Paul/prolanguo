@@ -5,7 +5,7 @@ export interface Definition{
   readonly definitionId: string,
   readonly meaning: string,
   readonly source: string,
-  // readonly wordClasses: readonly WordClasses[],
+  readonly wordClasses: readonly WordClasses[],
   readonly definitionStatus: DefinitionStatus,
   readonly createdAt: Date;
   readonly updatedAt: Date;

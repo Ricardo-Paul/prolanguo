@@ -11,7 +11,7 @@ export class DefinitionBuilder{
       definitionId: uuid.v4(),
       meaning: "something that produces sound",
       source: "wikipedia",
-      // wordClasses: [WordClasses.ADJECTIVE],
+      wordClasses: [WordClasses.ADJECTIVE],
       definitionStatus: DefinitionStatus.ACTIVE,
       createdAt: moment.utc().toDate(),
       updatedAt: moment.utc().toDate(),
