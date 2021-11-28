@@ -48,7 +48,7 @@ describe("Test Category Model", () => {
         .map((index, _): [ Category, string ] => {
           return [
             new VocabularyCategoryBuilder().build({
-              categoryName: 'Load Balancing category'
+              categoryName: 'Load Balancer'
             }),
             '05ce99e6-d1b8-497e-b9ef-7fbbbe4e28c0' //insert a vocabulary for this purpose
           ]
