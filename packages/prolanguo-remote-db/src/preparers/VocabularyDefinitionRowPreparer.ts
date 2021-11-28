@@ -1,11 +1,10 @@
 import { Definition } from "@prolanguo/prolanguo-common/interfaces";
 import { AbstractPreparer } from "./AbstractPreparer";
 import * as Joi from 'joi';
-import { WordClass, DefinitionStatus } from "@prolanguo/prolanguo-common/enums";
+import { WordClasses, DefinitionStatus } from "@prolanguo/prolanguo-common/enums";
 import * as _ from "lodash";
 
-export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition>{
-
+export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition> {
   // kinda redundant to have insert when we have upsert
   protected insertRules = {
     userId: Joi.string(),
@@ -13,7 +12,7 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     vocabularyId: Joi.string(),
     meaning: Joi.string(),
     source: Joi.string(),
-    wordClasses: Joi.string().valid(..._.values(WordClass)),
+    // wordClasses: Joi.string(),
     definitionStatus: Joi.string().valid(..._.values(DefinitionStatus)),
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
@@ -22,7 +21,7 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     // leave them for compliance with VocabularyRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
     lastSyncedAt: Joi.forbidden().strip().optional(),
-    extraData: Joi.array()
+    // extraData: Joi.array()
   }
 
   protected upsertRules = {
@@ -31,7 +30,7 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     definitionId: Joi.string(),
     meaning: Joi.string().optional(),
     source: Joi.string().optional(),
-    wordClasses: Joi.string(), // we'll convert the wordClasses array into a JSON string
+    // wordClasses: Joi.string(), // we'll convert the wordClasses array into a JSON string
     definitionStatus: Joi.string().valid(..._.values(DefinitionStatus)).optional(),
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
@@ -40,7 +39,7 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     // leave them for compliance with VocabularyRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
     lastSyncedAt: Joi.forbidden().strip().optional(),
-    extraData: Joi.array()
+    // extraData: Joi.array()
   }
   public prepareInsert(
     definition: Definition,
@@ -66,25 +65,27 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     const {
       definitionId,
       meaning,
-      wordClasses,
+      // wordClasses,
       source,
       definitionStatus,
       updatedStatusAt,
       createdAt,
-      updatedAt
+      updatedAt,
+      // extraData
     } = definition;
 
     return {
       definitionId,
       meaning,
-      wordClasses: JSON.stringify(wordClasses), //stored as JSON string
+      // wordClasses: JSON.stringify(wordClasses), //stored as JSON string
       source,
       definitionStatus,
       updatedStatusAt,
       createdAt,
       updatedAt,
       vocabularyId,
-      userId
+      userId,
+      // extraData
     }
   };
 
@@ -111,21 +112,23 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     const {
       definitionId,
       meaning,
-      wordClasses,
+      // wordClasses,
       source,
       definitionStatus,
-      updatedStatusAt
+      updatedStatusAt,
+      // extraData
     } = definition;
 
     const definitionRow = {
       definitionId,
       meaning,
-      wordClasses,
+      // wordClasses: JSON.stringify(wordClasses),
       source,
       definitionStatus,
       updatedStatusAt,
       vocabularyId,
-      userId
+      userId,
+      // extraData
     }
     
     return definitionRow;

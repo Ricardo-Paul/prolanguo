@@ -41,8 +41,8 @@ export class VocabularyDefinitionModel{
             return definitionRows.map((definition): Definition => {
               return {
                 ...definition,
-                wordClasses: JSON.parse(definition.wordClasses), //wordclasses array were stored as a json string
-                extraData: []
+                // wordClasses: JSON.parse(definition.wordclasses), //wordclasses array were stored as a json string
+                // extraData: []
               }
             })
           });
@@ -83,10 +83,9 @@ export class VocabularyDefinitionModel{
           console.log("Definition Row :", definitionRows);
 
           // bulk insert definitions
-          const {
-            sql, bindings
-          } = 
-           db
+
+
+           const {sql, bindings} = db
            .insert(definitionRows)
            .into(TableName.DEFINITION)
            .toSQL();
