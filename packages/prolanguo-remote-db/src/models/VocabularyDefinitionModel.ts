@@ -41,7 +41,7 @@ export class VocabularyDefinitionModel{
             return definitionRows.map((definition): Definition => {
               return {
                 ...definition,
-                // wordClasses: JSON.parse(definition.wordclasses), //wordclasses array were stored as a json string
+                wordClasses: JSON.parse(definition.wordclasses), //wordclasses array were stored as a json string
                 // extraData: []
               }
             })

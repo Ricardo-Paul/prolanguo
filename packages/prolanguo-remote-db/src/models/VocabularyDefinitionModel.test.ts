@@ -40,10 +40,8 @@ describe("Set Model", () => {
         shardDb,
         'usr id',
         [
-          'c12b17cc-bcb4-45dc-bf54-7448dd6e3981', 
-          '6b01e70b-e16c-4fcd-a852-5989aa04de52',
           '662a33a8-1805-4be3-8901-fda4de16ac80'
-        ] //create vocabularies and remove hardcoded values
+        ] //TODO: create vocabularies and remove hardcoded values
       );
 
       console.log("Definitions :", definitionsPerVocabularyIds);
