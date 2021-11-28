@@ -62,9 +62,8 @@ describe("Set Model", () => {
                   lastLearnedAt: moment.utc().toDate(),
                   definitions: [
                     new DefinitionBuilder().build({
-                      meaning: "User Datagram Protocol",
                       createdAt: moment.utc().toDate(),
-                      updatedAt: moment.utc().toDate()
+                      meaning: "Casa de papel"
                     })
                   ]
                 }),
