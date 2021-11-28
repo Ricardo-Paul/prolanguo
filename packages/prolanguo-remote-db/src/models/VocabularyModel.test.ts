@@ -3,7 +3,7 @@ import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
 import { SetModel } from "./SetModel";
-import { SetBuilder, VocabularyBuilder } from "@prolanguo/prolanguo-common/builders";
+import { SetBuilder, VocabularyBuilder, DefinitionBuilder } from "@prolanguo/prolanguo-common/builders";
 import { ModelFactory } from "../factories/ModelFactory";
 import { Set, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
 import { VocabularyModel } from "./VocabularyModel";
@@ -46,7 +46,14 @@ describe("Set Model", () => {
             return [
               new VocabularyBuilder().build({
                 vocabularyText: "UDP",
-                lastLearnedAt: moment.utc().toDate()
+                lastLearnedAt: moment.utc().toDate(),
+                definitions: [
+                  new DefinitionBuilder().build({
+                    meaning: "User Datagram Protocol",
+                    createdAt: moment.utc().toDate(),
+                    updatedAt: moment.utc().toDate()
+                  })
+                ]
               }),
               '00a64a41-165f-41ac-a140-a070e85e635f'
             ]

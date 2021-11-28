@@ -5,8 +5,12 @@ import { WordClass, DefinitionStatus } from "@prolanguo/prolanguo-common/enums";
 import * as _ from "lodash";
 
 export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition>{
+
+  // kinda redundant to have insert when we have upsert
   protected insertRules = {
+    userId: Joi.string(),
     definitionId: Joi.string(),
+    vocabularyId: Joi.string(),
     meaning: Joi.string(),
     source: Joi.string(),
     wordClasses: Joi.string().valid(..._.values(WordClass)),
@@ -21,6 +25,8 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
   }
 
   protected upsertRules = {
+    userId: Joi.string(),
+    vocabularyId: Joi.string(),
     definitionId: Joi.string(),
     meaning: Joi.string().optional(),
     source: Joi.string().optional(),
@@ -39,6 +45,8 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     vocabularyId: string,
     userId: string
   ){
+
+    console.log("Definition in prepare insert :", definition);
     const definitionRowForInsert = this.convertToInsertRow(
       definition,
       vocabularyId,
@@ -59,7 +67,9 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
       wordClasses,
       source,
       definitionStatus,
-      updatedStatusAt
+      updatedStatusAt,
+      createdAt,
+      updatedAt
     } = definition;
 
     return {
@@ -69,6 +79,8 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
       source,
       definitionStatus,
       updatedStatusAt,
+      createdAt,
+      updatedAt,
       vocabularyId,
       userId
     }

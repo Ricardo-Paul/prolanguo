@@ -14,7 +14,7 @@ export interface VocabularyRow {
   readonly lastLearnedAt: null | Date,
   readonly createdAt: Date;
   readonly updatedAt: Date;
-  readonly updatedStatusAt: null | Date;
+  // readonly updatedStatusAt: null | Date;
   readonly firstSyncedAt: null | Date;
   readonly lastSyncedAt: null | Date;
 }

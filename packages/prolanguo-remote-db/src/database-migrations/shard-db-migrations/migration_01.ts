@@ -63,8 +63,8 @@ function createVocabularyTableIfNotExists(db: Knex.Transaction): Knex.Raw{
       updatedAt DATETIME NOT NULL,
       firstSyncedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       lastSyncedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-      PRIMARY KEY(userId, vocabularyId),
-      FOREIGN KEY(userId, setId) REFERENCES ${TableName.SET}(userId, setId)
+      PRIMARY KEY (userId, vocabularyId),
+      FOREIGN KEY (userId, setId) REFERENCES ${TableName.SET}(userId, setId)
     ) ENGINE=InnoDB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
   `)
 }

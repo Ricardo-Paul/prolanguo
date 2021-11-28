@@ -48,7 +48,7 @@ export class VocabularyBuilder{
       writing,
       createdAt: moment.utc().toDate(),
       updatedAt: moment.utc().toDate(),
-      updatedStatusAt: moment.utc().toDate(),
+      // updatedStatusAt: moment.utc().toDate(),
       lastLearnedAt: null,
       firstSyncedAt: null,
       lastSyncedAt: null,
