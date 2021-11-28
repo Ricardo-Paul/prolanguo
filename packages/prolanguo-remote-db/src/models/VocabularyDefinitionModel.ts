@@ -6,7 +6,6 @@ import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
 
-
 export class VocabularyDefinitionModel{
   private vocabularyDefinitionRowPreparer: VocabularyDefinitionRowPreparer;
 
@@ -26,13 +25,18 @@ export class VocabularyDefinitionModel{
       async (resolve, reject): Promise<void> => {
         try{
           const queries = [];
+          console.log("User id for definition :", userId);
           const definitionRows = definitionAndVocabularyIdPairs.map(
-            ([definition, vocabularyId]) => this.vocabularyDefinitionRowPreparer.prepareInsert(
-              definition as Definition,
-              vocabularyId,
-              userId
-            )
+            ([definition, vocabularyId]) => {
+              console.log("Definition as received :", definition);
+              return this.vocabularyDefinitionRowPreparer.prepareInsert(
+                definition as Definition,
+                vocabularyId,
+                userId
+              )
+            }
           );
+          console.log("Definition Row :", definitionRows);
 
           // bulk insert definitions
           const {
@@ -42,17 +46,22 @@ export class VocabularyDefinitionModel{
            .insert(definitionRows)
            .into(TableName.DEFINITION)
            .toSQL();
+          console.log("SQL line :", sql);
+
 
           queries.push(
-            promisifyQuery(
+            await promisifyQuery(
               db.raw(
-                sql.replace('insert', 'insert ignore'), bindings
+                // replace insert by insert ignore
+                sql, bindings
               )
             )
           );
 
+
           // bulk update definitions
           queries.push(
+            // spread an array of promise inside queries
             ...definitionAndVocabularyIdPairs.map(
               ([definition, vocabularyId]) => {
                 this.updateDefinition(
@@ -65,7 +74,7 @@ export class VocabularyDefinitionModel{
             )
           );
 
-        Promise.all(queries)
+        await Promise.all(queries);
         resolve()
         }catch(error){
           reject(error)
@@ -93,7 +102,7 @@ export class VocabularyDefinitionModel{
           const { definitionId } = definitionRow;
 
           queries.push(
-            promisifyQuery(
+            await promisifyQuery(
               db.update(fieldsToUpdate)
               .table(TableName.DEFINITION)
               .where({

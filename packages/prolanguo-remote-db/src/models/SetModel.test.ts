@@ -121,7 +121,7 @@ describe("Set Model", () => {
         );
 
         await new VocabularyModel().upsertMultipleVocabulary(shardDb, 'userid', vocabularySetIdPairs);
-    })
+    });
 
   });
 });

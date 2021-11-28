@@ -21,7 +21,7 @@ export class VocabularyModelRowPreparer extends AbstractPreparer<VocabularyRow> 
     lastLearnedAt: Joi.date().optional(),
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
-    updatedStatusAt: Joi.date(),
+    // updatedStatusAt: Joi.date(),
     // might as well remove these lines
     // leave them for compliance with VocabularyRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
@@ -38,7 +38,7 @@ export class VocabularyModelRowPreparer extends AbstractPreparer<VocabularyRow> 
     lastLearnedAt: Joi.date().optional(),
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
-    updatedStatusAt: Joi.date(),
+    // updatedStatusAt: Joi.date(),
     // might as well remove these lines
     // leave them for compliance with VocabularyRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
@@ -75,8 +75,9 @@ export class VocabularyModelRowPreparer extends AbstractPreparer<VocabularyRow> 
       lastLearnedAt: vocabulary.lastLearnedAt,
       createdAt: vocabulary.createdAt,
       updatedAt: vocabulary.updatedAt,
-      updatedStatusAt: vocabulary.updatedStatusAt
+      // updatedStatusAt: vocabulary.updatedStatusAt
     };
+    console.log("Converted to insert row :", "userId: ", userId, "setId :", setId)
     return vocabularyRowForInsert;
   }
 
@@ -85,6 +86,9 @@ export class VocabularyModelRowPreparer extends AbstractPreparer<VocabularyRow> 
     userId: string,
     setId: string
   ): boolean{
+
+    console.log("Converted to insert row can be inserted:", "userId: ", userId, "setId :", setId)
+    
     const row = this.convertToInsertRow(
       vocabulary,
       userId,
@@ -122,7 +126,7 @@ export class VocabularyModelRowPreparer extends AbstractPreparer<VocabularyRow> 
       lastLearnedAt: vocabulary.lastLearnedAt,
       createdAt: vocabulary.createdAt,
       updatedAt: vocabulary.updatedAt,
-      updatedStatusAt: vocabulary.updatedStatusAt
+      // updatedStatusAt: vocabulary.updatedStatusAt
     }
   }
 }
