@@ -3,7 +3,7 @@ import { UserModel } from "../models/UserModel";
 import { VocabularyModel } from "../models/VocabularyModel";
 import { VocabularyDefinitionModel } from "../models/VocabularyDefinitionModel";
 import { VocabularyCategoryModel } from "../models/VocabularyCategoryModel";
-
+import { VocabularyWritingModel } from "../models/VocabularyWritingModel";
 
 export interface ModelList{
   userModel: UserModel;
@@ -11,4 +11,5 @@ export interface ModelList{
   vocabularyModel: VocabularyModel;
   vocabularyDefinitionModel: VocabularyDefinitionModel;
   vocabularyCategoryModel: VocabularyCategoryModel;
+  vocabularyWritingModel: VocabularyWritingModel;
 };
