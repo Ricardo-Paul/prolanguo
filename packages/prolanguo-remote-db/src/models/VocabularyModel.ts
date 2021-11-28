@@ -16,6 +16,29 @@ export class VocabularyModel{
     this.vocabularyDefinitionModel = new VocabularyDefinitionModel();
   }
 
+  public async getVocabulariesByIds(
+    db: Knex,
+    userId: string,
+    vocabuaryIds: string[]
+  ): Promise<void>{
+    return new Promise(async (resolve, reject): Promise<void> => {
+      try{
+        const result = await db.
+          select()
+          .from(TableName.VOCABULARY)
+          .where('userId', userId)
+          .whereIn('vocabularyId', vocabuaryIds.slice());
+          // pause to implement other methods
+        
+          // get complete vocabularies by row
+          // meaning get associated definitions, category and writing.
+
+      } catch(err){
+        reject(err)
+      }
+    })
+  }
+
   public async upsertMultipleVocabulary(
     db: Knex,
     userId: string,
@@ -75,8 +98,11 @@ export class VocabularyModel{
                   return []
                 }
               })
-            ) //Test Upserting Vocabularies
+            )
           );
+
+          // upsert vocabulary categories
+          queries.push()
 
           await Promise.all(queries)
           resolve()

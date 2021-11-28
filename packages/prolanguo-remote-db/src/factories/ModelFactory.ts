@@ -3,6 +3,7 @@ import { ModelList } from "../interfaces/ModelList";
 import { SetModel } from "../models/SetModel";
 import { VocabularyModel } from "../models/VocabularyModel";
 import { VocabularyDefinitionModel } from "../models/VocabularyDefinitionModel";
+import { VocabularyCategoryModel } from "../models/VocabularyCategoryModel";
 
 export class ModelFactory{
   public createAllModels(){
@@ -19,9 +20,11 @@ export class ModelFactory{
     } else if(modelName === 'setModel') {
       model = new SetModel()
     } else if(modelName === 'vocabularyModel'){
-      model = new VocabularyModel
+      model = new VocabularyModel()
     } else if(modelName === 'vocabularyDefinitionModel'){
-      model = new VocabularyDefinitionModel
+      model = new VocabularyDefinitionModel()
+    } else if( modelName === 'vocabularyCategoryModel'){
+      model = new VocabularyCategoryModel()
     } else {
       throw new Error('Model nane not exised');
     }
