@@ -106,22 +106,5 @@ describe("Set Model", () => {
       // TODO: write expected output
     })
 
-  
-    test("tests vocabulary model", async () => {
-      const vocabularySetIdPairs = new Array(3).fill(null).map(
-          (index, _): [Vocabulary, string] => {
-            return [
-              new VocabularyBuilder().build({
-                vocabularyText: "UDP" + index,
-                lastLearnedAt: moment.utc().toDate()
-              }),
-              'random set id'
-            ]
-          }
-        );
-
-        await new VocabularyModel().upsertMultipleVocabulary(shardDb, 'userid', vocabularySetIdPairs);
-    });
-
   });
 });
