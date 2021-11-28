@@ -13,6 +13,50 @@ export class VocabularyDefinitionModel{
     this.vocabularyDefinitionRowPreparer = new VocabularyDefinitionRowPreparer();
   }
 
+  public async getDefinitionsByVocabularyIds(
+    db: Knex,
+    userId: string,
+    vocabularyIds: string[]
+  ): Promise<{ definitionsPerVocabularyIds: {[P in string]: Definition[]} }>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db
+            .select()
+            .from(TableName.DEFINITION)
+            .where({userId})
+            .whereIn('vocabularyId', vocabularyIds.slice())
+          );
+
+            // resolve the result array
+          const definitionRows = result;
+
+          // data structure: {string: [{}], string: [{}]}
+          // values are arrays of objects
+          const definitionRowsPerVocabularyIds = _.groupBy(
+            definitionRows, (row) => row.vocabularyId
+          );
+          const definitionsPerVocabularyIds = _.mapValues(definitionRowsPerVocabularyIds, (definitionRows) => {
+            return definitionRows.map((definition): Definition => {
+              return {
+                ...definition,
+                wordClasses: JSON.parse(definition.wordClasses), //wordclasses array were stored as a json string
+                extraData: []
+              }
+            })
+          });
+
+        resolve({
+          definitionsPerVocabularyIds
+        })
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  };;
+
   public upsertDefinitions(
     db: Knex,
     userId: string,

@@ -21,7 +21,8 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     // might as well remove these lines
     // leave them for compliance with VocabularyRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
-    lastSyncedAt: Joi.forbidden().strip().optional()
+    lastSyncedAt: Joi.forbidden().strip().optional(),
+    extraData: Joi.array()
   }
 
   protected upsertRules = {
@@ -30,7 +31,7 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     definitionId: Joi.string(),
     meaning: Joi.string().optional(),
     source: Joi.string().optional(),
-    wordClasses: Joi.string().valid(..._.values(WordClass)).optional(),
+    wordClasses: Joi.string(), // we'll convert the wordClasses array into a JSON string
     definitionStatus: Joi.string().valid(..._.values(DefinitionStatus)).optional(),
     createdAt: Joi.date().optional(),
     updatedAt: Joi.date().optional(),
@@ -38,7 +39,8 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     // might as well remove these lines
     // leave them for compliance with VocabularyRow interface
     firstSyncedAt: Joi.forbidden().strip().optional(),
-    lastSyncedAt: Joi.forbidden().strip().optional()
+    lastSyncedAt: Joi.forbidden().strip().optional(),
+    extraData: Joi.array()
   }
   public prepareInsert(
     definition: Definition,
@@ -53,7 +55,7 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
       userId
     );
 
-    return this.validateData(definitionRowForInsert, Joi.object(this.insertRules))
+    return this.validateData(definitionRowForInsert, Joi.object(this.insertRules));
   };
 
   private convertToInsertRow(
@@ -75,7 +77,7 @@ export class VocabularyDefinitionRowPreparer extends AbstractPreparer<Definition
     return {
       definitionId,
       meaning,
-      wordClasses,
+      wordClasses: JSON.stringify(wordClasses), //stored as JSON string
       source,
       definitionStatus,
       updatedStatusAt,

@@ -107,4 +107,4 @@ async function exec() {
   shardDatabase.checkAllShardDatabaseTables();
 }
 
-exec();
+exec(); 

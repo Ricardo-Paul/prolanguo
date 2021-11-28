@@ -18,6 +18,7 @@ export class DefinitionBuilder{
       updatedStatusAt: moment.utc().toDate(),
       firstSyncedAt: null,
       lastSyncedAt: null,
+      extraData: []
     }, definition );
   }
 };
