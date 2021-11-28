@@ -51,8 +51,7 @@ export class VocabularyDefinitionModel{
           queries.push(
             await promisifyQuery(
               db.raw(
-                // replace insert by insert ignore
-                sql, bindings
+                sql.replace('insert', 'insert ignore'), bindings
               )
             )
           );
