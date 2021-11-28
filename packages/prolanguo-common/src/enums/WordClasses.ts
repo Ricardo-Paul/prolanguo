@@ -1,4 +1,4 @@
-export enum WordClass {
+export enum WordClasses {
   NOUN = 'NOUN',
   VERB = 'VERB',
   ADJECTIVE = 'ADJECTIVE',

@@ -7,7 +7,7 @@ export enum TableName {
   API_KEY = 'prolanguo_api_key',
   PURCHASE = 'prolanguo_purchase',
 
-  // table names for shard database
+  // table names for shard databases
   SHARD_DB_INFO = "prolanguo_shard_db_info",
   SET = "prolanguo_set",
   SET_EXTRA_DATA = "prolanguo_set_extra_data",

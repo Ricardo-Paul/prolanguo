@@ -26,10 +26,7 @@ export class UserExtraDataModel{
         });
     
         const { sql, bindings } = db.insert(userExtraDataRows).into(TableName.USER_EXTRA_DATA).toSQL();
-        
-        console.log('Extra Data Row for upsert :', userExtraDataRows);
-        // console.log('SQL to insert :', sql, bindings);
-
+      
         // insert extra data array in bulk
         queries.push( 
             await promisifyQuery(
@@ -83,9 +80,6 @@ export class UserExtraDataModel{
                 lastSyncedAt: row.lastSyncedAt
               };
             });
-
-            console.log('EXTRA DATA :', extraData)
-
             resolve({
               extraData
             });
