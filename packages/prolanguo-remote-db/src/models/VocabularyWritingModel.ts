@@ -12,6 +12,50 @@ export class VocabularyWritingModel{
   constructor(){
     this.vocabularyWritingRowPreparer = new VocabularyWritingRowPreparer();
   }
+
+  public async getVocabularyWritingsByVocabularyIds(
+    db: Knex,
+    userId: string,
+    vocabularyIds: string[]
+  ): Promise<{ vocabularyWritingsPerVocabularyId: {[P in string]: VocabularyWriting[]} }>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db 
+            .select()
+            .from(TableName.VOCABULARY_WRITING)
+            .where({userId})
+            .whereIn('vocabularyId', vocabularyIds)
+          );
+
+          // resolve this array
+          const vocabularyWritingRows = result;
+          const vocabularyWritingRowsPerVocabularyId = _.groupBy(vocabularyWritingRows, (row) => row.vocabularyId);
+          const vocabularyWritingsPerVocabularyId = _.mapValues(vocabularyWritingRowsPerVocabularyId, (rows) => {
+            return rows.map((v): VocabularyWriting => {
+              return {
+                level: v.level,
+                lastWrittenAt: v.lastWrittenAt,
+                disabled: v.disabled,
+                createdAt: v.createdAt,
+                updatedAt: v.updatedAt,
+                firstSyncedAt: v.firstSyncedAt,
+                lastSyncedAt: v.lastSyncedAt
+              }
+            })
+          });
+
+        resolve({
+          vocabularyWritingsPerVocabularyId
+        })
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
+
   public async upsertVocabularyWritings(
     db: Knex,
     userId: string,
@@ -74,8 +118,4 @@ export class VocabularyWritingModel{
       }
     );
   };
-
-  public async getVocabularyWritingsByIds(){
-    
-  }
 };
