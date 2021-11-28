@@ -42,7 +42,7 @@ describe("Test Category Model", () => {
 
     describe
 
-    test("upserts vocabulary category properly", async () => {
+    test("upserts category properly", async () => {
       const categoryAndVocabularyIdPairs = new Array(1)
         .fill(null)
         .map((index, _): [ Category, string ] => {
@@ -56,5 +56,14 @@ describe("Test Category Model", () => {
       await vocabuaryCategoryModel.upsertVocabularyCategories(shardDb, 'usr id', categoryAndVocabularyIdPairs)
     })
 
+    test("retrieve categories using vocabulary ids", async () => {
+      const categoriesPerVocabularyIds = await vocabuaryCategoryModel.getCategoriesByVocabularyIds(
+        shardDb,
+        'usr id',
+        ['05ce99e6-d1b8-497e-b9ef-7fbbbe4e28c0']
+      );
+
+      console.log("Category retrieved :", categoriesPerVocabularyIds)
+    });
   });
 });
