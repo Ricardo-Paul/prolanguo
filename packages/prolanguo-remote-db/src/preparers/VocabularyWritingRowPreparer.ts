@@ -23,11 +23,11 @@ export class VocabularyWritingRowPreparer extends AbstractPreparer<VocabularyWri
   public prepareUpsert(
     vocabularyWriting: VocabularyWriting,
     userId: string,
-    vocabuaryId: string
+    vocabularyId: string
   ): WritingRowForUpsert{
     const rowForUpsert = {
       userId,
-      vocabuaryId,
+      vocabularyId,
       level: vocabularyWriting.level,
       lastWrittenAt: vocabularyWriting.lastWrittenAt,
       disabled: vocabularyWriting.disabled,

@@ -8,7 +8,7 @@ export class VocabularyWritingBuilder{
     return _.merge({
       level: 1,
       disabled: false,
-      lastWrittenAt: null,
+      lastWrittenAt: moment.utc().toDate(),
       createdAt: moment.utc().toDate(),
       updatedAt: moment.utc().toDate(),
       firstSyncedAt: null,

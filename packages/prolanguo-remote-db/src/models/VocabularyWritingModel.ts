@@ -25,11 +25,11 @@ export class VocabularyWritingModel{
           const queries = [];
 
           const vocabularyWritingRows = writingAndVocabularyIdPairs.map(
-            ([vocabularyWriting, vocabuaryId]) => {
+            ([vocabularyWriting, vocabularyId]) => {
               return this.vocabularyWritingRowPreparer.prepareUpsert(
                 vocabularyWriting as VocabularyWriting,
                 userId,
-                vocabuaryId
+                vocabularyId
               )
           });
 
