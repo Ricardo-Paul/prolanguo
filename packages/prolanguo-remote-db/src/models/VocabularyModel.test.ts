@@ -40,30 +40,51 @@ describe("Set Model", () => {
       await authDb.destroy();
     });
 
-    test("tests vocabulary model", async () => {
-      const vocabularySetIdPairs = new Array(1).fill(null).map(
-          (index, _): [Vocabulary, string] => {
-            return [
-              new VocabularyBuilder().build({
-                vocabularyText: "UDP",
-                lastLearnedAt: moment.utc().toDate(),
-                definitions: [
-                  new DefinitionBuilder().build({
-                    meaning: "User Datagram Protocol",
-                    createdAt: moment.utc().toDate(),
-                    updatedAt: moment.utc().toDate()
-                  })
-                ]
-              }),
-              '00a64a41-165f-41ac-a140-a070e85e635f'
-            ]
-          }
-        );
+    describe("tests start with inserting sets in the database", () => {
+      let setList: Set[];
+      beforeEach(async () => {
+        setList = new Array(1)
+            .fill(null)
+            .map((index, _): Set => {
+              return new SetBuilder().build({
+                setName: "Networking terms"
+          })
+        })
 
-        await shardDb.transaction(async (tx) => {
-          await new VocabularyModel().upsertMultipleVocabulary(tx, 'usr id', vocabularySetIdPairs);
-        });
-    });
+        // await shardDb.transaction(async (tx) => {
+        //   await setModel.upsertSets(
+        //     tx, 'user id', setList
+        //   )
+        // });
+        console.log("Set list from test :", setList);
+        await setModel.upsertSets(shardDb,"usr id", setList);
+      });
+
+      test("tests vocabulary model", async () => {
+        const vocabularySetIdPairs = new Array(1).fill(null).map(
+            (index, _): [Vocabulary, string] => {
+              return [
+                new VocabularyBuilder().build({
+                  vocabularyText: "UDP",
+                  lastLearnedAt: moment.utc().toDate(),
+                  definitions: [
+                    new DefinitionBuilder().build({
+                      meaning: "User Datagram Protocol",
+                      createdAt: moment.utc().toDate(),
+                      updatedAt: moment.utc().toDate()
+                    })
+                  ]
+                }),
+                setList[0].setId
+              ]
+            }
+          );
+  
+          await shardDb.transaction(async (tx) => {
+            await new VocabularyModel().upsertMultipleVocabulary(tx, 'usr id', vocabularySetIdPairs);
+          });
+      });
+    })
 
   });
 });

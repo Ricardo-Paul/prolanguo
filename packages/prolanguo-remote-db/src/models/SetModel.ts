@@ -236,13 +236,19 @@ export class SetModel{
               }
             });
 
-            queries.push(
-              this.setExtraDataModel.upsertMultipleExtraData(
-                db, 
-                userId,
-                extraDataItemAndSetPairs
-              )
-            )
+            // only call upsertMultipleExtraData when they exist to prevent 'query is empty error'
+            sets.forEach((set) => {
+              if(set.extraData !== undefined && set.extraData.length > 0){
+                queries.push(
+                  this.setExtraDataModel.upsertMultipleExtraData(
+                    db, 
+                    userId,
+                    extraDataItemAndSetPairs
+                  )
+                );
+              }
+            });
+
           };
 
         await Promise.all(queries);
