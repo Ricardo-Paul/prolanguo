@@ -8,7 +8,6 @@ import { promisifyQuery } from "./PromisifyQuery";
 import { UserRowResolver } from "../resolvers/UserRowResolver";
 import * as _ from "lodash";
 
-
 // TODO: move this function to an outer package
 // remove its duplicate from server
 export function assertExists<T>(value: T, message?: string): NonNullable<T>{
@@ -74,7 +73,6 @@ export class UserModel {
             }).limit(1)
           );
 
-          
           const first = _.first(result);
           console.log("retrieved by access key", first);
 

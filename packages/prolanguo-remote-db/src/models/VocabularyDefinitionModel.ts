@@ -73,7 +73,7 @@ export class VocabularyDefinitionModel{
           const definitionRows = definitionAndVocabularyIdPairs.map(
             ([definition, vocabularyId]) => {
               console.log("Definition as received :", definition);
-              return this.vocabularyDefinitionRowPreparer.prepareInsert(
+              return this.vocabularyDefinitionRowPreparer.prepareUpsert(
                 definition as Definition,
                 vocabularyId,
                 userId
@@ -83,8 +83,6 @@ export class VocabularyDefinitionModel{
           console.log("Definition Row :", definitionRows);
 
           // bulk insert definitions
-
-
            const {sql, bindings} = db
            .insert(definitionRows)
            .into(TableName.DEFINITION)
@@ -134,7 +132,7 @@ export class VocabularyDefinitionModel{
         const queries = [];
         try{
           // prepare definition row for update
-          const definitionRow = this.vocabularyDefinitionRowPreparer.prepareUpdate(
+          const definitionRow = this.vocabularyDefinitionRowPreparer.prepareUpsert(
             definition as Definition, vocabularyId, userId
           );
 
