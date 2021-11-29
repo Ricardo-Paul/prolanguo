@@ -71,8 +71,6 @@ export class SetModel{
             db, userId, setRows
           );
 
-          console.log("set list by sync time", setList)
-
         resolve({
           setList,
           noMore

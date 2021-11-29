@@ -1,4 +1,3 @@
-import { SetExtraDataName, SetStatus } from "@prolanguo/prolanguo-common/enums";
 import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
@@ -86,12 +85,17 @@ describe("Set Model", () => {
           await shardDb.transaction(async (tx) => {
             await new VocabularyModel().upsertMultipleVocabulary(tx, 'usr id', vocabularySetIdPairs);
           });
-
-          // pull the vocabularies from the db using their ids
-          // compare them with the vocabularies we built up there
-          // const { vocabulariesFromDb } = vocabularyModel.
       });
-    })
 
+      test("retrieve multiple vocabularies", async () => {
+        const vocabularies = await new VocabularyModel().getVocabulariesByIds(
+          shardDb,
+          'usr id',
+          ['cce78bdb-0591-4e94-a4ac-0a24a9db0078',
+           '05ce99e6-d1b8-497e-b9ef-7fbbbe4e28c0']
+        )
+        console.log("Vocabularies retrieved :", vocabularies);
+      });
+    });
   });
 });
