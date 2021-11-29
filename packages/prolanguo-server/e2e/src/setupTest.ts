@@ -1,2 +1,2 @@
 import 'jest-extended';
-jest.setTimeout(15000);
+jest.setTimeout(25000);

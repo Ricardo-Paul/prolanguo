@@ -30,22 +30,38 @@ export class VocabularyModel{
     db: Knex,
     userId: string,
     vocabuaryIds: string[]
-  ): Promise<void>{
+  ): Promise<{
+    vocabularyList: Vocabulary[],
+    vocabularyIdSetIdPairs: [string, string][]
+  }>{
     return new Promise(async (resolve, reject): Promise<void> => {
       try{
-        const result = await db.
+        const result = await promisifyQuery(
+          db.
           select()
           .from(TableName.VOCABULARY)
           .where('userId', userId)
-          .whereIn('vocabularyId', vocabuaryIds.slice());
+          .whereIn('vocabularyId', vocabuaryIds.slice())
+        );
         
           // resolve this array
-          const vocabularyRows = result;
+          const vocabularyRows: VocabularyRow[] = result;
           // get complete vocabularies by row
           // meaning get associated definitions, category and writing.
-          const { vocabularyList } = await this.getCompleteVocabularyByRow(db, userId, vocabularyRows); //fix this
+          const { vocabularyList } = await this.getCompleteVocabularyByRow(db, userId, vocabularyRows);
+          console.log("vocabulary List from get vocabularies :", vocabularyList);
 
-      } catch(err){
+          const vocabularyIdSetIdPairs = vocabularyRows.map(
+            (vocabularyRow): [string, string] => {
+              return [vocabularyRow.vocabularyId, vocabularyRow.setId];
+            }
+          );
+
+          resolve({
+            vocabularyList,
+            vocabularyIdSetIdPairs
+          });
+        } catch(err){
         reject(err)
       }
     })
@@ -108,9 +124,7 @@ export class VocabularyModel{
             }
           });
 
-          const vocabularyIdSetId = vocabularyRows.map((row): [string, string] => {
-            return [row.vocabularyId, row.setId]
-          });
+          console.log("The vocabulary list :", vocabularyList);
 
         resolve({ vocabularyList })
         }catch(error){
