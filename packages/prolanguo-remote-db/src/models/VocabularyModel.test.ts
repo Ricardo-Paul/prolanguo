@@ -96,6 +96,18 @@ describe("Set Model", () => {
         )
         console.log("Vocabularies retrieved :", vocabularies);
       });
+
+      test("get vocabularies by last sync time", async () => {
+        const vocabularies = await new VocabularyModel().getVocabulariesByLastSyncTime(
+          shardDb,
+          'usr id',
+          undefined, //for startAt
+          4,
+          undefined //for setId
+        );
+
+        console.log("vocabularies retrieved by last synced time :", vocabularies);
+      })
     });
   });
 });

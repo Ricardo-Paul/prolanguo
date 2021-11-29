@@ -32,7 +32,7 @@ export class VocabularyModel{
     userId: string,
     startAt: Date | undefined,
     softLimit: number,
-    setId: string
+    setId: string | undefined
   ): Promise<{ 
     vocabularyList: Vocabulary[];
     vocabularyIdSetIdPairs: [string, string][],
