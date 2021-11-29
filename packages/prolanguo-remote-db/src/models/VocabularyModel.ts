@@ -3,7 +3,7 @@ import { DeepPartial } from "@prolanguo/prolanguo-common/extended-types";
 import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
-import { Definition, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
+import { Category, Definition, Vocabulary, VocabularyWriting } from "@prolanguo/prolanguo-common/interfaces";
 import { VocabularyModelRowPreparer } from "../preparers/VocabularyRowPreparer";
 import { VocabularyRow } from "../interfaces/VocabularyRow";
 
@@ -11,7 +11,8 @@ import { VocabularyRow } from "../interfaces/VocabularyRow";
 import { VocabularyDefinitionModel } from "./VocabularyDefinitionModel";
 import { VocabularyCategoryModel } from "./VocabularyCategoryModel";
 import { VocabularyWritingModel } from "./VocabularyWritingModel";
- 
+import { assertExists } from "../utils/assertExists";
+
 export class VocabularyModel{
   private vocabularyModelRowPreparer: VocabularyModelRowPreparer;
   private vocabularyDefinitionModel: VocabularyDefinitionModel;
@@ -42,7 +43,7 @@ export class VocabularyModel{
           const vocabularyRows = result;
           // get complete vocabularies by row
           // meaning get associated definitions, category and writing.
-          const vocabuaryList = this.getCompleteVocabularyByRow(db, userId, vocabularyRows);
+          const { vocabularyList } = await this.getCompleteVocabularyByRow(db, userId, vocabularyRows); //fix this
 
       } catch(err){
         reject(err)
@@ -53,19 +54,19 @@ export class VocabularyModel{
   private getCompleteVocabularyByRow(
     db: Knex,
     userId: string,
-    vocabuaryRows: VocabularyRow[],
-  ){
+    vocabularyRows: VocabularyRow[],
+  ): Promise<{ vocabularyList: Vocabulary[] }>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
-          const vocabuaryIds = vocabuaryRows.map((row) => row.vocabularyId);
+          const vocabularyIds = vocabularyRows.map((row) => row.vocabularyId);
           // get associated vocabulary definitions using vocabulary ids
           const {
             definitionsPerVocabularyIds
           } = await this.vocabularyDefinitionModel.getDefinitionsByVocabularyIds(
             db,
             userId,
-            vocabuaryIds
+            vocabularyIds
           );
 
           // get associated vocabulary categories using vocabulary ids
@@ -74,7 +75,7 @@ export class VocabularyModel{
           } = await this.vocabularyCategoryModel.getCategoriesByVocabularyIds(
             db, 
             userId,
-            vocabuaryIds
+            vocabularyIds
           );
 
           // get associated vocabulary writings using vocabulary ids
@@ -83,13 +84,13 @@ export class VocabularyModel{
           } = await this.vocabularyWritingModel.getVocabularyWritingsByVocabularyIds(
             db,
             userId,
-            vocabuaryIds
+            vocabularyIds
           );
 
-          const vocabuaryList = vocabuaryRows.map((row): Vocabulary => {
+          const vocabularyList = vocabularyRows.map((row): Vocabulary => {
             const definitions = definitionsPerVocabularyIds[row.vocabularyId];
-            const categories = categoriesPerVocabularyIds[row.vocabularyId];
-            const writings = vocabularyWritingsPerVocabularyId[row.vocabularyId];
+            const category = categoriesPerVocabularyIds[row.vocabularyId];
+            const writing = vocabularyWritingsPerVocabularyId[row.vocabularyId];
 
             return {
               vocabularyId: row.vocabularyId,
@@ -97,23 +98,27 @@ export class VocabularyModel{
               vocabularyStatus: row.vocabularyStatus,
               level: row.level,
               definitions,
-              // writing,
+              category,
+              writing,
               lastLearnedAt: row.lastLearnedAt,
               createdAt: row.createdAt,
               updatedAt: row.updatedAt,
               firstSyncedAt: row.firstSyncedAt,
               lastSyncedAt: row.lastSyncedAt
             }
-          })
+          });
 
+          const vocabularyIdSetId = vocabularyRows.map((row): [string, string] => {
+            return [row.vocabularyId, row.setId]
+          });
 
-        // resolve()
+        resolve({ vocabularyList })
         }catch(error){
           reject(error)
         }
       }
     );
-  }
+  };
 
   public async upsertMultipleVocabulary(
     db: Knex,
@@ -163,7 +168,6 @@ export class VocabularyModel{
               userId,
               _.flatMap(vocabularySetIdPairs, ([vocabulary]) => {
                 if(typeof vocabulary.definitions !== 'undefined'){
-                  console.log("Definition content :", vocabulary.definitions)
                   return vocabulary.definitions?.map(
                     (definition): [ DeepPartial<Definition>, string ] => [
                       definition,
@@ -178,7 +182,33 @@ export class VocabularyModel{
           );
 
           // upsert vocabulary categories
-          queries.push()
+          queries.push(
+            this.vocabularyCategoryModel.upsertVocabularyCategories(
+              db,
+              userId,
+              vocabularySetIdPairs.map(([vocabulary]): [DeepPartial<Category>, string] => {
+                return [assertExists(vocabulary.category), assertExists(vocabulary.vocabularyId)]
+              }).filter((pair) => {
+                return pair[0] !== undefined
+              })
+            )
+          );
+
+          // upsert vocabulary writings
+          queries.push(
+            this.vocabularyWritingModel.upsertVocabularyWritings(
+              db,
+              userId,
+              vocabularySetIdPairs.map(([vocabulary]): [DeepPartial<VocabularyWriting>, string] => {
+                return [
+                  assertExists(vocabulary.writing),
+                  assertExists(vocabulary.vocabularyId)
+                ] 
+              }).filter((pair) => {
+                return pair[0] !== undefined
+              })
+            )
+          );
 
           await Promise.all(queries)
           resolve()
