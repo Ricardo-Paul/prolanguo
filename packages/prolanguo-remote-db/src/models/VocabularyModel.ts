@@ -12,6 +12,7 @@ import { VocabularyDefinitionModel } from "./VocabularyDefinitionModel";
 import { VocabularyCategoryModel } from "./VocabularyCategoryModel";
 import { VocabularyWritingModel } from "./VocabularyWritingModel";
 import { assertExists } from "../utils/assertExists";
+import * as moment from "moment";
 
 export class VocabularyModel{
   private vocabularyModelRowPreparer: VocabularyModelRowPreparer;
@@ -24,6 +25,87 @@ export class VocabularyModel{
     this.vocabularyDefinitionModel = new VocabularyDefinitionModel();
     this.vocabularyCategoryModel = new VocabularyCategoryModel();
     this.vocabularyWritingModel = new VocabularyWritingModel();
+  }
+
+  public async getVocabulariesByLastSyncTime(
+    db: Knex,
+    userId: string,
+    startAt: Date | undefined,
+    softLimit: number,
+    setId: string
+  ): Promise<{ 
+    vocabularyList: Vocabulary[];
+    vocabularyIdSetIdPairs: [string, string][],
+    noMore: boolean
+  }>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+
+          // first query (start time)
+          let firstQueryBuilder = db 
+            .select()
+            .from(TableName.VOCABULARY)
+            .where('userId', userId)
+            .where(
+              'lastSyncedAt',
+              '=',
+              typeof startAt === "undefined"? moment.unix(0).toDate() : startAt
+            );
+
+          if(typeof setId !== "undefined"){
+            firstQueryBuilder = firstQueryBuilder.where('setId', setId);
+          };
+          firstQueryBuilder = firstQueryBuilder.orderBy('lastSyncedAt', 'asc');
+
+          // second query (limit)
+          let secondQueryBuilder = db 
+            .select()
+            .from(TableName.VOCABULARY)
+            .where('userId', userId)
+            .where(
+              'lastSyncedAt',
+              '>',
+              typeof startAt === "undefined"? moment.unix(0).toDate() : startAt
+            );
+            if(typeof setId !== "undefined"){
+              secondQueryBuilder = secondQueryBuilder.where('setId', setId);
+            }
+            secondQueryBuilder = secondQueryBuilder
+                .orderBy('lastSyncedAt', 'asc')
+                .limit(softLimit);
+
+          const firstQuery = promisifyQuery(firstQueryBuilder);
+          const secondQuery = promisifyQuery(secondQueryBuilder);
+
+          const [firstResut, secondResult] = await Promise.all([
+            firstQuery, 
+            secondQuery
+          ]);
+
+          // TODO: might have to resolve these rows
+          const vocabularyRows: VocabularyRow[] = _.union(firstResut, secondResult);
+          const { vocabularyList } = await this.getCompleteVocabularyByRow(
+            db,
+            userId,
+            vocabularyRows
+          );
+          const noMore = secondResult.length === 0;
+          const vocabularyIdSetIdPairs = vocabularyRows.map((row): [string, string] => {
+            return [row.vocabularyId, row.setId]
+          });
+
+          resolve({
+            vocabularyList,
+            vocabularyIdSetIdPairs,
+            noMore
+          });
+
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
   }
 
   public async getVocabulariesByIds(
