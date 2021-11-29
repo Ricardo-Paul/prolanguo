@@ -17,7 +17,7 @@ export class VocabularyWritingModel{
     db: Knex,
     userId: string,
     vocabularyIds: string[]
-  ): Promise<{ vocabularyWritingsPerVocabularyId: {[P in string]: VocabularyWriting[]} }>{
+  ): Promise<{ vocabularyWritingsPerVocabularyId: {[P in string]: VocabularyWriting} }>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -31,24 +31,25 @@ export class VocabularyWritingModel{
 
           // resolve this array
           const vocabularyWritingRows = result;
-          const vocabularyWritingRowsPerVocabularyId = _.groupBy(vocabularyWritingRows, (row) => row.vocabularyId);
-          const vocabularyWritingsPerVocabularyId = _.mapValues(vocabularyWritingRowsPerVocabularyId, (rows) => {
-            return rows.map((v): VocabularyWriting => {
-              return {
-                level: v.level,
-                lastWrittenAt: v.lastWrittenAt,
-                disabled: v.disabled,
-                createdAt: v.createdAt,
-                updatedAt: v.updatedAt,
-                firstSyncedAt: v.firstSyncedAt,
-                lastSyncedAt: v.lastSyncedAt
-              }
-            })
+          const vocabularyWritingRowsAndVocabularyId = _.fromPairs(vocabularyWritingRows.map((row: any): [string, VocabularyWriting] => {
+            return [row.vocabularyId, row]
+          }));
+
+          const vocabularyWritingsPerVocabularyId = _.mapValues(vocabularyWritingRowsAndVocabularyId, (v: any) => {
+            return {
+              level: v.level,
+              lastWrittenAt: v.lastWrittenAt,
+              disabled: v.disabled,
+              createdAt: v.createdAt,
+              updatedAt: v.updatedAt,
+              firstSyncedAt: v.firstSyncedAt,
+              lastSyncedAt: v.lastSyncedAt
+            }
           });
 
         resolve({
           vocabularyWritingsPerVocabularyId
-        })
+        });
         }catch(error){
           reject(error)
         }
