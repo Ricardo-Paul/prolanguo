@@ -5,15 +5,24 @@ import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
 import { Definition, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
 import { VocabularyModelRowPreparer } from "../preparers/VocabularyRowPreparer";
-import { VocabularyDefinitionModel } from "./VocabularyDefinitionModel";
+import { VocabularyRow } from "../interfaces/VocabularyRow";
 
+// models
+import { VocabularyDefinitionModel } from "./VocabularyDefinitionModel";
+import { VocabularyCategoryModel } from "./VocabularyCategoryModel";
+import { VocabularyWritingModel } from "./VocabularyWritingModel";
+ 
 export class VocabularyModel{
   private vocabularyModelRowPreparer: VocabularyModelRowPreparer;
   private vocabularyDefinitionModel: VocabularyDefinitionModel;
+  private vocabularyCategoryModel: VocabularyCategoryModel;
+  private vocabularyWritingModel: VocabularyWritingModel;
 
   constructor(){
     this.vocabularyModelRowPreparer = new VocabularyModelRowPreparer();
     this.vocabularyDefinitionModel = new VocabularyDefinitionModel();
+    this.vocabularyCategoryModel = new VocabularyCategoryModel();
+    this.vocabularyWritingModel = new VocabularyWritingModel();
   }
 
   public async getVocabulariesByIds(
@@ -28,15 +37,82 @@ export class VocabularyModel{
           .from(TableName.VOCABULARY)
           .where('userId', userId)
           .whereIn('vocabularyId', vocabuaryIds.slice());
-          // pause to implement other methods
         
+          // resolve this array
+          const vocabularyRows = result;
           // get complete vocabularies by row
           // meaning get associated definitions, category and writing.
+          const vocabuaryList = this.getCompleteVocabularyByRow(db, userId, vocabularyRows);
 
       } catch(err){
         reject(err)
       }
     })
+  }
+
+  private getCompleteVocabularyByRow(
+    db: Knex,
+    userId: string,
+    vocabuaryRows: VocabularyRow[],
+  ){
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const vocabuaryIds = vocabuaryRows.map((row) => row.vocabularyId);
+          // get associated vocabulary definitions using vocabulary ids
+          const {
+            definitionsPerVocabularyIds
+          } = await this.vocabularyDefinitionModel.getDefinitionsByVocabularyIds(
+            db,
+            userId,
+            vocabuaryIds
+          );
+
+          // get associated vocabulary categories using vocabulary ids
+          const { 
+            categoriesPerVocabularyIds 
+          } = await this.vocabularyCategoryModel.getCategoriesByVocabularyIds(
+            db, 
+            userId,
+            vocabuaryIds
+          );
+
+          // get associated vocabulary writings using vocabulary ids
+          const { 
+            vocabularyWritingsPerVocabularyId 
+          } = await this.vocabularyWritingModel.getVocabularyWritingsByVocabularyIds(
+            db,
+            userId,
+            vocabuaryIds
+          );
+
+          const vocabuaryList = vocabuaryRows.map((row): Vocabulary => {
+            const definitions = definitionsPerVocabularyIds[row.vocabularyId];
+            const categories = categoriesPerVocabularyIds[row.vocabularyId];
+            const writings = vocabularyWritingsPerVocabularyId[row.vocabularyId];
+
+            return {
+              vocabularyId: row.vocabularyId,
+              vocabularyText: row.vocabularyText,
+              vocabularyStatus: row.vocabularyStatus,
+              level: row.level,
+              definitions,
+              // writing,
+              lastLearnedAt: row.lastLearnedAt,
+              createdAt: row.createdAt,
+              updatedAt: row.updatedAt,
+              firstSyncedAt: row.firstSyncedAt,
+              lastSyncedAt: row.lastSyncedAt
+            }
+          })
+
+
+        // resolve()
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
   }
 
   public async upsertMultipleVocabulary(

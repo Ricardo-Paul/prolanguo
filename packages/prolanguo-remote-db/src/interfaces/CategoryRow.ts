@@ -4,8 +4,8 @@ export interface CategoryRow {
   readonly userId: string;
   readonly vocabularyId: string;
   readonly categoryName: string;
-  readonly createdAt: Date | null;
-  readonly updatedAt: Date | null;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
   readonly firstSyncedAt: Date | null;
   readonly lastSyncedAt: Date | null;
 }

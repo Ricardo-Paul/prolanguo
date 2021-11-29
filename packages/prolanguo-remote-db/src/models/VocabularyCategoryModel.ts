@@ -5,6 +5,8 @@ import { VocabularyCategoryRowPreparer } from "../preparers/VocabularyCategoryRo
 import { TableName } from "../enums/tableName";
 import { promisifyQuery } from "./PromisifyQuery";
 import * as _ from "lodash";
+import { VocabularyRow } from "../interfaces/VocabularyRow";
+import { CategoryRow } from "../interfaces/CategoryRow";
 
 export class VocabularyCategoryModel{
   private vocabularyCategoryRowPreparer: VocabularyCategoryRowPreparer;
@@ -17,7 +19,7 @@ export class VocabularyCategoryModel{
     db: Knex,
     userId: string,
     vocabuaryIds: string[]
-  ): Promise<{ categoriesPerVocabularyIds: {[P in string]: Category[]} }>{
+  ): Promise<{ categoriesPerVocabularyIds: {[P in string]: Category } }>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -33,21 +35,28 @@ export class VocabularyCategoryModel{
 
           // resolve this array
           const categoryRows = result;
-          // data structure: {string: [{}, {}], string: [{}, {}]}
-          const categoryRowsPerVocabularyIds = _.groupBy(categoryRows, (row) => row.vocabularyId);
+          
+          // transfor categoryRows data structure from array objects to array of arrays
+          // to make it suitable for lodash _.fromPairs method
+          // result = {vocabularyId: {}, vocabularyId: {}}
+          const vocabularyIdAndCategory = _.fromPairs(categoryRows.map(
+            (row: any) => {
+              return [row.vocabularyId, row]
+            }
+          ));
 
           // map over values to remove vocabularyId and userId from the records
-          const categoriesPerVocabularyIds = _.mapValues(categoryRowsPerVocabularyIds, (categoryRows) => {
-            return categoryRows.map((category): Category => {
-              return {
-                categoryName: category.categoryName,
-                createdAt: category.createdAt,
-                updatedAt: category.updatedAt,
-                firstSyncedAt: category.firstSyncedAt,
-                lastSyncedAt: category.lasySyncedAt
-              }
-            })
+          const categoriesPerVocabularyIds = _.mapValues(vocabularyIdAndCategory, (row: any) => {
+            const { categoryName, createdAt, updatedAt, firstSyncedAt, lastSyncedAt } = row;
+            return {
+              categoryName,
+              createdAt,
+              updatedAt,
+              firstSyncedAt,
+              lastSyncedAt
+            }
           });
+
         resolve({
           categoriesPerVocabularyIds
         })

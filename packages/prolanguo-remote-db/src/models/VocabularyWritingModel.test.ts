@@ -5,7 +5,6 @@ import { resolveEnv } from "../utils/resolveEnv";
 import { VocabularyWritingBuilder } from "@prolanguo/prolanguo-common/builders";
 import { ModelFactory } from "../factories/ModelFactory";
 import { VocabularyWriting, Set, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
-import { VocabularyModel } from "./VocabularyModel";
 import moment = require("moment");
 
 describe("Test Writing Model", () => {
