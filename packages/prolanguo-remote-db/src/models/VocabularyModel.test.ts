@@ -2,7 +2,13 @@ import { SetExtraDataName, SetStatus } from "@prolanguo/prolanguo-common/enums";
 import { Knex } from "knex";
 import { DatabaseFacade } from "../facades/DatabaseFacade";
 import { resolveEnv } from "../utils/resolveEnv";
-import { SetBuilder, VocabularyBuilder, DefinitionBuilder } from "@prolanguo/prolanguo-common/builders";
+import { 
+  SetBuilder, 
+  VocabularyBuilder, 
+  DefinitionBuilder,
+  VocabularyCategoryBuilder,
+  VocabularyWritingBuilder
+} from "@prolanguo/prolanguo-common/builders";
 import { ModelFactory } from "../factories/ModelFactory";
 import { Set, Vocabulary } from "@prolanguo/prolanguo-common/interfaces";
 import { VocabularyModel } from "./VocabularyModel";
@@ -32,7 +38,6 @@ describe("Set Model", () => {
       shardDb = databaseFacade.getDb(env.ALL_SHARD_DATABASE_CONFIG[0].shardId);
       authDb = databaseFacade.getDb('auth');
       shardId = env.ALL_SHARD_DATABASE_CONFIG[0].shardId;
-
     });
 
     afterEach(async () => {
@@ -65,7 +70,13 @@ describe("Set Model", () => {
                       createdAt: moment.utc().toDate(),
                       meaning: "Casa de papel"
                     })
-                  ]
+                  ],
+                  category: new VocabularyCategoryBuilder().build({
+                    categoryName: "Movies"
+                  }),
+                  writing: new VocabularyWritingBuilder().build({
+                    level: 3
+                  })
                 }),
                 setList[0].setId
               ]
