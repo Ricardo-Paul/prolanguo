@@ -27,6 +27,33 @@ export class VocabularyModel{
     this.vocabularyWritingModel = new VocabularyWritingModel();
   }
 
+  public async getLastSyncedTime(
+    db: Knex,
+    userId: string
+  ): Promise<Date | null>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const result = await promisifyQuery(
+            db.max('lastSyncedAt as latestSyncTime')
+            .from(TableName.VOCABULARY)
+            .where('userId', userId)
+          );
+
+          console.log("synced time :", result)
+          if(result.length === 1){
+            const lastSyncedTime = result[0]['latestSyncTime'];
+            resolve(lastSyncedTime)
+          } else {
+            resolve(null)
+          };
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
+
   public async getVocabulariesByLastSyncTime(
     db: Knex,
     userId: string,
