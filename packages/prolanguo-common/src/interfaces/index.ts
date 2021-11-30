@@ -10,3 +10,4 @@ export { Vocabulary } from './general/Vocabulary';
 export { Category } from './general/Category';
 export { Definition } from './general/Definition';
 export { VocabularyWriting } from './general/VocabularyWriting';
+export { LessonResult } from './general/LessonResult';
