@@ -20,4 +20,4 @@ export class LessonResultBuilder{
       createdAt: moment().toDate()
     }, lessonResult)
   }
-}
+};
