@@ -2,6 +2,7 @@ import { LessonType } from "../../enums";
 
 export interface LessonResult{
   readonly lessonResultId: string;
+  readonly setId: string;
   readonly lessonType: LessonType;
   readonly poorCount: number;
   readonly fairCount: number;
