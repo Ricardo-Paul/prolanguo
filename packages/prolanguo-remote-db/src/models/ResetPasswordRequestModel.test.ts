@@ -66,9 +66,15 @@ describe('Test Reset Password Request Model', () => {
           resetPasswordKey: 'mypasswordresetkey'
         },
       );
-
       expect(isRequestValid).toBeBoolean();
     });
-  });
 
+    test("delete reset password request", async () => {
+      await new ResetPasswordRequestModel().deleteResetPasswordRequest(
+        authDb,
+        '074af367-080f-4908-beb8-01428f32e8b5'
+      )
+    });
+
+  });
 });
