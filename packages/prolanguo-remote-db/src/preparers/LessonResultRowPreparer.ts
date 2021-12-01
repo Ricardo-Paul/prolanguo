@@ -18,4 +18,15 @@ export class LessonResultRowPreparer extends AbstractPreparer<LessonResult> {
     totalCount: Joi.number(),
     createdAt: Joi.date(),
   }
+
+  public prepareInsert(
+    userId: string,
+    lessonResult: LessonResult
+  ){
+    const rowForInsert = {
+      ...lessonResult,
+      userId
+    };
+    return this.validateData(rowForInsert, Joi.object(this.insertRules));
+  }
 }

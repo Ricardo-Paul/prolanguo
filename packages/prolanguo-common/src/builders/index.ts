@@ -6,3 +6,4 @@ export { VocabularyBuilder } from "./VocabularyBuilder";
 export { DefinitionBuilder } from "./DefinitionBuilder";
 export { VocabularyCategoryBuilder } from "./VocabularyCategoryBuilder";
 export { VocabularyWritingBuilder } from "./VocabularyWritingBuilder";
+export { LessonResultBuilder } from "./LessonResultBuilder";
