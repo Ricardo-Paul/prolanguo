@@ -47,7 +47,7 @@ describe('Test Reset Password Request Model', () => {
       await shardDb.destroy();
     });
 
-    test("Reset password Request Model", async () => {
+    test("upsert reset password request ", async () => {
       await new ResetPasswordRequestModel().upsertRequestPasswordReset(
         authDb,
         {
@@ -58,6 +58,17 @@ describe('Test Reset Password Request Model', () => {
       );
     });
 
+    test("make sure password reset request is valid", async () => {
+      const isRequestValid = await new ResetPasswordRequestModel().isPasswordResetRequestValid(
+        authDb,
+        {
+          userId:'074af367-080f-4908-beb8-01428f32e8b5',
+          resetPasswordKey: 'mypasswordresetkey'
+        },
+      );
+
+      expect(isRequestValid).toBeBoolean();
+    });
   });
 
 });

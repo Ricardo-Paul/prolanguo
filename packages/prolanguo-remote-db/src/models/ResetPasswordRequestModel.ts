@@ -36,4 +36,35 @@ export class ResetPasswordRequestModel{
       }
     );
   };
+
+  public isPasswordResetRequestValid(
+    db: Knex,
+    resetPasswordRequestRow: Omit<ResetPasswordRequestRow, 'expiredAt'>
+  ): Promise<boolean>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          const { userId, resetPasswordKey, } = resetPasswordRequestRow;
+          const result = await promisifyQuery(
+            db 
+            .select()
+            .from(TableName.RESET_PASSWORD_REQUEST)
+            .where({
+              userId: userId,
+              resetPasswordKey: resetPasswordKey
+            })
+            .andWhereRaw('expiredAt > NOW()')
+          );
+          
+          if(result.length > 0){
+            resolve(true)
+          }else{
+            resolve(false)
+          }
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
+  }
 };
