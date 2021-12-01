@@ -66,5 +66,28 @@ export class ResetPasswordRequestModel{
         }
       }
     );
+  };
+
+  public deleteResetPasswordRequest(
+    db: Knex,
+    userId: string
+  ): Promise<void>{
+    return new Promise(
+      async (resolve, reject): Promise<void> => {
+        try{
+          await promisifyQuery(
+            db 
+            .delete()
+            .from(TableName.RESET_PASSWORD_REQUEST)
+            .where({
+              userId: userId
+            })
+          );
+        resolve()
+        }catch(error){
+          reject(error)
+        }
+      }
+    );
   }
 };
