@@ -6,7 +6,6 @@
     "@commitlint/config-conventional": "^13.1.0",
     "@types/app-root-path": "^1.2.4",
     "cz-conventional-changelog": "^3.3.0",
-    "husky": "^7.0.0",
     "lerna": "^4.0.0"
   },
   "husky": {
@@ -26,7 +25,7 @@
     }
   },
   "scripts": {
-    "prepare": "husky install"
-  },
-  "dependencies": {}
+    "prepare": "husky install",
+    "bootstrap": "lerna bootstrap"
+  }
 }
