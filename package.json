@@ -27,5 +27,8 @@
   "scripts": {
     "prepare": "husky install",
     "bootstrap": "lerna bootstrap"
+  },
+  "dependencies": {
+    "husky": "^7.0.4"
   }
 }
