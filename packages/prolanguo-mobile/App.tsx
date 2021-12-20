@@ -75,7 +75,8 @@ const App = () => {
           }}>
           <Section title="Step eighty">
             Edit <Text style={styles.highlight}>App.tsx</Text> 
-            I just want to learn a little bit more about that
+             App now running on an IOS simulator
+             which is really fine??
           </Section>
           <Section title="See Your Changes">
             <ReloadInstructions />
@@ -94,6 +95,7 @@ const App = () => {
   );
 };
 
+// which is one of the 
 const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
@@ -114,3 +116,12 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+// can I really do it with command as // can I really do it well still is not working as expected
+// what i want is for control + delete to behave like option + delete
+// control should plus forward delete should delete entire word as It should be 
+// control should plus forward delete should delete entire word as It should be 
+// control should plus forward delete should delete entire word as It should be 
+// control should plus forward delete should delete entire word as It should be 
+// control should plus forward delete should delete entire word as It should be 
+// control should plus forward delete should delete entire word as It should be 
+ 
