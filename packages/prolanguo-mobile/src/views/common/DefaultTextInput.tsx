@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextInput, TextInputProps, StyleSheet } from 'react-native';
+import { TextInput, TextInputProps, StyleSheet, Text } from 'react-native';
 
 
 class DecorateTextInput extends React.Component<TextInputProps & { forwardRef?: any }>{
