@@ -8,3 +8,5 @@ export { VocabularyStatus } from "./VocabularyStatus";
 export { WordClasses } from "./WordClasses";
 export { DefinitionStatus } from "./DefinitionStatus";
 export { LessonType } from "./LessonType";
+export { ScreenName } from "./ScreenName";
+export { ScreenState } from "./ScreenState";
