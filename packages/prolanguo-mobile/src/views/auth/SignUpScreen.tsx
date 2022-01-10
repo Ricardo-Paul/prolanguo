@@ -1,6 +1,7 @@
 import { ObservableSignUpScreen } from "@prolanguo/prolanguo-observable";
 import React from "react";
 import { View , Text} from "react-native";
+import { SignUpForm } from "./SignUpForm";
 
 
 export interface SignUpScreenProps {
@@ -12,7 +13,8 @@ export class SignUpScreen extends React.Component<SignUpScreenProps>{
     public render(){
         return (
             <View>
-                <Text> Hello there</Text>
+                <Text> Signup screen</Text>
+                <SignUpForm />
             </View>
         )
     }
