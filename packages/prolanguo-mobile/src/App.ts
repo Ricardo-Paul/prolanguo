@@ -1,18 +1,8 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+// import React from 'react';
 import { registerScreens } from './setup/registerScreens';
-// import { Navigation } from "react-native-navigation";
-import { Navigation } from "@ulangi/react-native-navigation";
-import { HomeScreen } from "./HomeScreen"
+import { Navigation } from "react-native-navigation";
+import { HomeScreen } from "./HomeScreen";
+import { ScreenName } from "@prolanguo/prolanguo-common/enums";
 
 
 
@@ -25,33 +15,36 @@ class App {
 
   public start(): void{
     console.log("App runs")
-    Navigation.registerComponent('ProlanguoMobile.Home', () => HomeScreen);
+    Navigation.events().registerAppLaunchedListener(async () => { 
+      if(!this.initialized){
+        this.init();
+      }
 
-    Navigation.events().registerAppLaunchedListener(async () => {
-      Navigation.setRoot({
-        root: {
-          stack: {
-            children: [
-              {
-                component: {
-                  name: 'ProlanguoMobile.Home'
-                }
-              }
-            ]
-          }
-        }
-      });
+      this.render();
     });
   }
 
   // register screens, services, run saga
   private init():void{
-    // registerScreens();
+    registerScreens();
+    // Navigation.registerComponent('ProlanguoMobile.Home', () => HomeScreen);
     this.initialized = true;
   };
 
   private render(): void{
-    
+    Navigation.setRoot({
+      root: {
+        stack: {
+          children: [
+            {
+              component: {
+                name: ScreenName.WELCOME_SCREEN
+              }
+            }
+          ]
+        }
+      }
+    });
   }
 
 }

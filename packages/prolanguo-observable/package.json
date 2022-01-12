@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/plugin-proposal-decorators": "^7.16.7",
+    "@babel/runtime": "7.0.0-beta.55",
     "mobx": "^6.3.12",
     "@prolanguo/prolanguo-common": "1.1.0"
   }
