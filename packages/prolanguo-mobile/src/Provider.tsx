@@ -4,6 +4,7 @@ import * as React from "react";
 import { assertExists } from "@prolanguo/prolanguo-common/assert";
 import { ServiceRegistry } from "./ServiceRegistry";
 
+
 // @observer
 export class Provider extends React.Component {
     public render(): React.ReactElement<any> {
