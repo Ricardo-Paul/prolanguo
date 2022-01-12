@@ -1,3 +1,16 @@
+// rootProject.name = 'ProlanguoMobile'
+// apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+// include ':app'
+
+
 rootProject.name = 'ProlanguoMobile'
+
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+
 include ':app'
+
+include ':react-native-navigation'
+project(':react-native-navigation').projectDir = new File(rootProject.projectDir, '../node_modules/@ulangi/react-native-navigation/lib/android/app/')
+
+include ':detox'
+project(':detox').projectDir = new File(rootProject.projectDir, '../e2e/node_modules/detox/android/detox')
