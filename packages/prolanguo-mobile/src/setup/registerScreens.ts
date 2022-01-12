@@ -1,10 +1,8 @@
 import { ScreenContainers } from "../constants/ScreenContainers";
 import * as _ from "lodash";
-import { Provider } from "../Provider";
 import { extendContainer } from "../decorators/extendContainer";
-import { Navigation } from "react-native-navigation"
-
-
+import { Navigation } from "react-native-navigation";
+import {Provider } from "../Provider";
 
 export function registerScreens(): void{
     _.forOwn(
@@ -12,7 +10,7 @@ export function registerScreens(): void{
         (container, screenName): void => {
             Navigation.registerComponentWithRedux(
                 screenName,
-                () => extendContainer(container),
+                () => container, //extend the container
                 Provider,
                 null
             )
