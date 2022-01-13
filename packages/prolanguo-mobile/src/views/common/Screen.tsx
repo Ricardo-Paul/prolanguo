@@ -56,9 +56,6 @@ export class Screen extends React.Component<ScreenProps> {
         }
     };
 
-    // the observableScreens props are passed in screenContainers
-    // there seems to be an issue with passing observable objects
-
     // bind the methods to the class
     private renderChildren(): React.ReactNode{
         console.log("Screen Height here: ", this.props.observableScreen.screenLayout.height )
