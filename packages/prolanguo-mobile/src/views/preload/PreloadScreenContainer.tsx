@@ -13,7 +13,10 @@ export class PreloadScreenContainer extends Container{
     public render(): React.ReactElement<any> {
         console.log("Observable screen", this.observableScreen)
         return(
-            <PreloadScreen observableScreen={this.observableScreen} />
+            <PreloadScreen 
+                observableScreen={this.observableScreen} 
+                shouldRenderMessage={false}
+                />
         )
     }
 }
