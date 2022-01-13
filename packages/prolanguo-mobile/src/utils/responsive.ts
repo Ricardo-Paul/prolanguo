@@ -41,6 +41,10 @@ export abstract class ResponsiveStyleSheet<T, o = {}>{
     options?: o
   ): Partial<T>
 
+  public compile(layout: Layout, theme: Theme, options?: o): T{
+    return this.memoizedCompile(layout.width, layout.height, theme, options);
+  }
+
   // compute and merge styles for screens
   @memoize((...args: any[]): string => JSON.stringify(args))
   protected memoizedCompile(

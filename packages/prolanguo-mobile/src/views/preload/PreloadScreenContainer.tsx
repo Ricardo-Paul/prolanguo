@@ -16,6 +16,7 @@ export class PreloadScreenContainer extends Container{
             <PreloadScreen 
                 observableScreen={this.observableScreen} 
                 shouldRenderMessage={false}
+                // themeStore={} //this.props.rootStore.themeStore
                 />
         )
     }
