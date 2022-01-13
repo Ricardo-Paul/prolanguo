@@ -2,7 +2,6 @@ import { ObservableScreen } from "@prolanguo/prolanguo-observable";
 import React from "react";
 import { GestureResponderEvent, Keyboard, LayoutChangeEvent, SafeAreaView, View, ViewProps } from "react-native";
 
-
 interface ScreenProps extends ViewProps {
     observableScreen: ObservableScreen; //values for the screen component
     useSafeAreaView?: boolean;
@@ -44,20 +43,26 @@ export class Screen extends React.Component<ScreenProps> {
 
         if(this.props.useSafeAreaView === true){
             return (
-                <SafeAreaView>
+                <SafeAreaView onLayout={this.onLayout.bind(this)} {...props}>
                     { this.renderChildren() }
                 </SafeAreaView>
             )
         } else {
             return (
-                <View  >
+                <View onLayout={this.onLayout.bind(this)} {...props} >
                     { this.renderChildren() }
                 </View>
             )
         }
     };
 
+    // the observableScreens props are passed in screenContainers
+    // there seems to be an issue with passing observable objects
+
+    // bind the methods to the class
     private renderChildren(): React.ReactNode{
+        console.log("Screen Height here: ", this.props.observableScreen.screenLayout.height )
+        console.log("Observable Screen type :", typeof this.props.observableScreen);
         if(
             this.props.observableScreen.screenLayout.height &&
             this.props.observableScreen.screenLayout.width
