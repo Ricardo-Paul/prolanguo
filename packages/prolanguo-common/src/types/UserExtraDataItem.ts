@@ -1,5 +1,5 @@
-import { UserExtraDataName } from "../enums/UserExtraDataName"
-
+import { UserExtraDataName } from "../enums/UserExtraDataName";
+import { GlobalTheme } from "../interfaces/general/GlobalTheme";
 
 // That's a UserExtraDataRow
 interface GlobalAutoArchive {
@@ -13,8 +13,10 @@ interface GlobalAutoArchive {
 
 // That's a UserExtraDataRow
 interface GlobalReminder {
-  readonly dataName: UserExtraDataName.GLOBAL_REMINDER
+  readonly dataName: UserExtraDataName.GLOBAL_REMINDER,
+  readonly dataValue: "" //will be a reminder settings
 }
 
+
 // An item can be one or many rows ==> extraData: ExtraDataItem[]
-export type UserExtraDataItem = GlobalAutoArchive | GlobalReminder
+export type UserExtraDataItem = GlobalAutoArchive | GlobalReminder | GlobalTheme
