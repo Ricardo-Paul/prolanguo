@@ -10,7 +10,7 @@ export function registerScreens(): void{
         (container, screenName): void => {
             Navigation.registerComponentWithRedux(
                 screenName,
-                () => container, //extend the container
+                () => extendContainer(container),
                 Provider,
                 null
             )

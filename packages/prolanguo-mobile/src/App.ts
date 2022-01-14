@@ -4,6 +4,7 @@ import { Navigation } from "react-native-navigation";
 import { HomeScreen } from "./HomeScreen";
 import { ScreenName } from "@prolanguo/prolanguo-common/enums";
 import { RootScreenDelegate } from './delegates/root/RootScreenDelegate';
+import { ServiceRegistry } from './ServiceRegistry';
 
 class App {
   private initialized: boolean;
@@ -28,7 +29,13 @@ class App {
   // register screens, services, run saga
   private init():void{
     registerScreens();
-    // Navigation.registerComponent('ProlanguoMobile.Home', () => HomeScreen);
+
+    ServiceRegistry.registerAll({
+      // register the rootstore here
+      // goal is to get the theme global state from the store
+      // to use in componentDidMount in extendContainer decorator
+      // in a mobx reaction that re-render the component when the theme changes
+    });
     this.initialized = true;
   };
 
