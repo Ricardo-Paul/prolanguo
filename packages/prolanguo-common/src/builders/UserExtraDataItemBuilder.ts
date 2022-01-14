@@ -14,7 +14,9 @@ export class UserExtraDataItemBuilder {
       firstSyncedAt: null,
       lastSyncedAt: null
     }, 
-    userExtraDataItem
+    userExtraDataItem as UserExtraDataItem
     );
   }
 };
+
+// add as UserExtraDataItem, the compiler was complaining for adding trigger in themeSettings for GlobalTheme extra data
