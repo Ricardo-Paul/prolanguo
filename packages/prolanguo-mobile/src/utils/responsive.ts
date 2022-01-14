@@ -2,7 +2,7 @@ import { memoize } from "lodash-decorators";
 import { StyleSheet } from "react-native";
 import * as _ from "lodash";
 
-enum Theme {
+export enum Theme {
   LIGHT = "LIGHT",
   DARK = "DARK"
 }
