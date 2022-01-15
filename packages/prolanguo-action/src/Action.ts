@@ -1,6 +1,6 @@
 import { ActionPayload } from "./ActionPayload";
 
 export interface Action<T extends keyof ActionPayload>{
-    type: T;
-    payload: ActionPayload[T];
+    readonly type: T;
+    readonly payload: ActionPayload[T];
 }

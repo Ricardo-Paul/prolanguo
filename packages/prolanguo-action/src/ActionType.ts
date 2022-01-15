@@ -1,0 +1,3 @@
+export enum ActionType {
+    THEME__SYSTEM_MODE_CHANGED = 'THEME__SYSTEM_MODE_CHANGED'
+}

@@ -13,3 +13,4 @@ export { VocabularyWriting } from './general/VocabularyWriting';
 export { LessonResult } from './general/LessonResult';
 export { ThemeSettings } from "./general/ThemeSettings";
 export { GlobalTheme } from "./general/GlobalTheme";
+export { ErroBag } from "./general/ErrorBag";
