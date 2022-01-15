@@ -6,7 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "dependencies": {
+    "redux": "^4.1.2",
+    "redux-logger": "^3.0.6",
+    "@prolanguo/prolanguo-observable": "1.0.0",
+    "@prolanguo/prolanguo-action": "1.0.0",
+    "@prolanguo/prolanguo-common": "1.1.0"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/redux-logger": "^3.0.9"
+  }
 }

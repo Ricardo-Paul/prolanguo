@@ -11,3 +11,4 @@ export class ServiceRegistry{
         return ServiceRegistry.registry
     }
 }
+
