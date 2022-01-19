@@ -1,6 +1,6 @@
 import { InferableAction } from "@prolanguo/prolanguo-action";
 
 export interface Event{
-    eventId: number;
+    eventId: string;
     action: InferableAction
 };

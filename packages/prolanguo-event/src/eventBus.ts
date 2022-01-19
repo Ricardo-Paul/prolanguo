@@ -3,7 +3,6 @@ import { EventListener } from "./types/EventListener";
 import { Store } from "redux";
 import { EventFacade } from "./eventFacade";
 
-
 export class EventBus{
     private store: Store;
     private eventFacade: EventFacade;
