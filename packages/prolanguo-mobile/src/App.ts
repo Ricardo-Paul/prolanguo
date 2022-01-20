@@ -50,7 +50,7 @@ class App {
       {
         enableLogging: env.ENABLE_REDUX_LOGGING
       },
-      [sagaFacade.getMiddleware(), eventFacade.getMiddleware()]
+      [sagaFacade.getMiddleware(), eventFacade.getMiddleware() ]
     );
 
     // we only consume the .getState() method
