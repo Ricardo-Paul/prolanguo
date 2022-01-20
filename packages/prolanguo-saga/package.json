@@ -1,5 +1,5 @@
 {
-  "name": "prolanguo-saga",
+  "name": "@prolanguo/prolanguo-saga",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",

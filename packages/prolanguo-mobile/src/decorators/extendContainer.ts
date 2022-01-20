@@ -1,4 +1,6 @@
+import { Theme } from "@prolanguo/prolanguo-common/enums";
 import { Container } from "../Container";
+
 
 type Constructor<T> = new(...args: any[]) => T
 
@@ -13,10 +15,19 @@ export function extendContainer(constructor: Constructor<Container>){
             if(typeof super.componentDidMount !== "undefined"){
                 super.componentDidMount();
             }
-            console.log("component mounted");
-            // this.observer.reaction(
-                // access the theme from the rootStore
-            // )
+
+            const { theme } = this.props.rootStore.themeStore;
+            console.log("Container mounted");
+            console.log("Mounted Screen Container extended by extendContainer :", constructor.name);
+            console.log("current theme pulled from rootStore(global state)", theme);
+            // onThemeChanged is defined in all screenContainers, to get autocompletion it is declared in 
+            // the Container base abstract class.
+            this.observer.reaction(
+                (): Theme => theme,
+                (theme): void => {
+                    this.onThemeChanged(theme);
+                }
+            )
         }
 
         public componentWillUnmount(){
