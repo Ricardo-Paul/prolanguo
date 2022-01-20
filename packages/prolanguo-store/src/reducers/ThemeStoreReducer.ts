@@ -1,7 +1,6 @@
 import { ObservableThemeStore } from "@prolanguo/prolanguo-observable";
 import { Reducer } from "./reducer";
 import { Action, InferableAction, ActionType } from "@prolanguo/prolanguo-action";
-import { Theme } from "@prolanguo/prolanguo-common/enums";
 
 export class ThemeStoreReducer extends Reducer{
     private themeStore: ObservableThemeStore;
@@ -19,13 +18,14 @@ export class ThemeStoreReducer extends Reducer{
         }
       }
 
-    // BUG: payload doesn't seem to be properly inferred
+    // BUG: payload shape doesn't seem to be properly inferred
+    // fix: the type predicate was (this is string) should be (this is Action<Type>)
     // bypassing it for now
     // Bypassing the BUG now by setting a theme directly
     
     private systemModeChanged(
         action: Action<ActionType.THEME__SYSTEM_MODE_CHANGED>
         ): void {
-            this.themeStore.systemMode = Theme.DARK; 
-        }
+            this.themeStore.systemMode = action.payload.systemMode; 
+        } 
 }

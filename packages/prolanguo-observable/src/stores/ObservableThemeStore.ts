@@ -33,8 +33,8 @@ export class ObservableThemeStore extends ObservableStore {
 
     public constructor(
         userStore: ObservableUserStore,
-        systemMode: undefined | Theme,
-        defaultThemeSettings: ThemeSettings
+        defaultThemeSettings: ThemeSettings,
+        systemMode: undefined | Theme
         ){
         super();
         this.userStore = userStore;

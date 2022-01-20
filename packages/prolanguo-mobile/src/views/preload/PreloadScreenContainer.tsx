@@ -3,9 +3,8 @@ import { PreloadScreen } from "./PreloadScreen";
 import { observer } from "mobx-react";
 import { Container } from "../../Container";
 import { ObservablePreloadScreen } from "@prolanguo/prolanguo-observable";
-import { ScreenName } from "@prolanguo/prolanguo-common/enums";
+import { ScreenName, Theme } from "@prolanguo/prolanguo-common/enums";
 import { PreloadScreenFactory } from "../../factories/preload/PreloadScreenFactory";
-import { Theme } from "../../utils/responsive";
 import { PreloadScreenStyle } from "./PreloadScreenContainer.style";
 
 @observer
@@ -18,7 +17,8 @@ export class PreloadScreenContainer extends Container {
         console.log("Preload screen container mounted")
     }
 
-    public onThemeChanged(theme: Theme): void{
+    // wrapped inside a mobx reaction, in extendContainer > ComponentDidMount
+    public onThemeChanged(theme: Theme): void{ 
         this.navigatorDelegate.mergeOptions(
             theme === Theme.LIGHT
             ? PreloadScreenStyle.SCREEN_LIGHT_STYLES_ONLY

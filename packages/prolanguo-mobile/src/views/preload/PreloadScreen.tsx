@@ -40,7 +40,7 @@ export class PreloadScreen extends React.Component<PreloadScreenProps>{
                 <DefaultText style={this.styles.message} >
                     { this.props.shouldRenderMessage === true ? 
                     this.props.observableScreen.message : "" }
-                    a message
+                    this text should show up
                 </DefaultText>
                 <Text> Height: {screenHeight} Width: {screenWidth} </Text>
             </Screen>
