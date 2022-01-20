@@ -1,5 +1,5 @@
 import { EventListener } from "./types/EventListener";
-import { Action, AnyAction, Dispatch, Middleware } from "redux";
+import { Action, Dispatch, Middleware } from "redux";
 import { Event } from "./interfaces/Event";
 import * as uuid from "uuid";
 import { InferableAction } from "@prolanguo/prolanguo-action";

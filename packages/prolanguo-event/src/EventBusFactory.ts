@@ -1,6 +1,6 @@
 import { Store } from "redux";
-import { EventBus } from "./eventBus";
-import { EventFacade } from "./eventFacade";
+import { EventBus } from "./EventBus";
+import { EventFacade } from "./EventFacade";
 
 export class EventBusFactory{
     store: Store;

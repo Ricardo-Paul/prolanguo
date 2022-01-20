@@ -1,7 +1,8 @@
 import { Action } from "@prolanguo/prolanguo-action";
 import { EventListener } from "./types/EventListener";
 import { Store } from "redux";
-import { EventFacade } from "./eventFacade";
+import { EventFacade } from "./EventFacade";
+
 
 export class EventBus{
     private store: Store;
