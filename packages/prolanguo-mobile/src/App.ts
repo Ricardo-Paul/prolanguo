@@ -53,7 +53,7 @@ class App {
       [sagaFacade.getMiddleware(), eventFacade.getMiddleware()]
     );
 
-    // we only consume the .getState() method
+    // we only consume the .getState() method 
     // we manage pub sub through the event bus
     const store = storeFactory.createStore(makeInitialState());
 
