@@ -3,6 +3,7 @@ import { fork } from "redux-saga/effects";
 
 export class RootSaga{
     *run(){
+        console.log("Root saga hit")
         yield fork([this, this.allowForkPublicSagas])
     }
 

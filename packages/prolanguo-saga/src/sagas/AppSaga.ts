@@ -7,6 +7,7 @@ export class AppSaga extends PublicSaga{
     }
 
     *allowInitializeApp(){
+        console.log("Waiting for APP__INITIALIZE", "APP SAGA");
         yield take("APP__INITIALIZE");
     }
 }

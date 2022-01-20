@@ -9,8 +9,7 @@ import { makeInitialState } from './setup/makeInitialState';
 import { SagaFacade } from "@prolanguo/prolanguo-saga";
 import { EventFacade, EventBusFactory } from "@prolanguo/prolanguo-event";
 
-//test
-import {Action, createAction } from "@prolanguo/prolanguo-action";
+import { createAction } from "@prolanguo/prolanguo-action";
 
 // put that in config
 const env = {
@@ -66,7 +65,7 @@ class App {
     });
     sagaFacade.run();
 
-    // trying to dispatch an action
+    // dispatch an action and run both middleware
     const eventBus = new EventBusFactory(store, eventFacade).createBus();
     eventBus.publish(createAction("APP__INITIALIZE_SUCCEEDED", null));
   

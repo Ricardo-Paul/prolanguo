@@ -9,11 +9,12 @@ export class SagaFacade{
     };
 
     public getMiddleware(){
-        return this.sagaMiddleware;
+        return this.sagaMiddleware
     };
 
     public run(){
+        console.log("run method in saga facade")
         const root = new RootSaga();
         this.sagaMiddleware.run(() => root.run());
     }
-}
+} 
