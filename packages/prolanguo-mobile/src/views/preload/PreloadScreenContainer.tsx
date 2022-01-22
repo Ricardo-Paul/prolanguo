@@ -11,7 +11,7 @@ import { View, Text } from "react-native";
 @observer
 export class PreloadScreenContainer extends Container {
     protected observableScreen = new ObservablePreloadScreen(
-        'changed ...', 
+        '', 
         this.props.componentId, 
         ScreenName.PRELOAD_SCREEN
     );

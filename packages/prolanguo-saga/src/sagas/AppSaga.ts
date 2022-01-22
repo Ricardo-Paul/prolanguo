@@ -1,5 +1,6 @@
 import { PublicSaga } from "./PublicSaga";
-import { take, fork } from "redux-saga/effects";
+import { take, fork, put } from "redux-saga/effects";
+import { ActionType, createAction } from "@prolanguo/prolanguo-action";
 
 export class AppSaga extends PublicSaga{
     public *run() {
@@ -7,7 +8,10 @@ export class AppSaga extends PublicSaga{
     }
 
     *allowInitializeApp(){
-        console.log("Waiting for APP__INITIALIZE", "APP SAGA");
-        yield take("APP__INITIALIZE");
+        // waiting on PreloadScreenDelegate to dispatch APP__INITITIALIZE
+        yield take(ActionType.APP__INITIALIZE);
+
+        // continue app flow
+        yield put(createAction(ActionType.APP__INITIALIZING, null));
     }
 }

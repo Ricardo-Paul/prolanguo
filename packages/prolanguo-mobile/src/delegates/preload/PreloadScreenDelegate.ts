@@ -36,9 +36,8 @@ export class PreloadScreenDelegate {
     this.initializeApp()
   }
 
-
   private initializeApp(){
-    this.eventBus.publish(createAction(ActionType.APP__INITIALIZING, null));
+    this.eventBus.publish(createAction(ActionType.APP__INITIALIZE, null));
   }
 
 }
