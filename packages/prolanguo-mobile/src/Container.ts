@@ -18,8 +18,10 @@ export interface ContainerProps<T extends object = {}> extends ContainerPassedPr
     passedProps: T
 }
 
-// 
 export abstract class Container<T extends object = {}> extends React.Component<ContainerProps<T>> {
     public observer = new Observer();
     public onThemeChanged(__: Theme): void{}
+
+    // access eventBusFactory through the Services interface
+    public eventBus = this.props.eventBusFactory.createBus();
 }

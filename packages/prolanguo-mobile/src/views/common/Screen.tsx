@@ -8,6 +8,7 @@ interface ScreenProps extends ViewProps {
     useDismissKeyBoardView?: boolean;
 }
 
+// make this an observer
 // screen is a wrapper around View/SafeAreaView
 export class Screen extends React.Component<ScreenProps> {
     private onLayout(event: LayoutChangeEvent):void {
@@ -61,8 +62,7 @@ export class Screen extends React.Component<ScreenProps> {
         console.log("Screen Height here: ", this.props.observableScreen.screenLayout.height )
         console.log("Observable Screen type :", typeof this.props.observableScreen);
         if(
-            this.props.observableScreen.screenLayout.height &&
-            this.props.observableScreen.screenLayout.width
+            true
         ){
             return this.props.children
         } else {

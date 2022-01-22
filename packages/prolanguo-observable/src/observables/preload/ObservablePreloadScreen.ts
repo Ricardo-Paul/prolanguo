@@ -3,6 +3,7 @@ import { observable } from "mobx";
 import { ScreenName } from "@prolanguo/prolanguo-common/enums";
 
 export class ObservablePreloadScreen extends ObservableScreen {
+    
     @observable
     public message: string;
 

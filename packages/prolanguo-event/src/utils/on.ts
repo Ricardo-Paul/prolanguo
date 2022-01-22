@@ -1,10 +1,10 @@
-import { Action, ActionPayload, ActionType, InferableAction } from "@prolanguo/prolanguo-action";
+import { ActionPayload } from "@prolanguo/prolanguo-action";
 import { Event } from "../interfaces/Event";
 import { EventListener } from "../types/EventListener";
 import * as _ from "lodash";
 
 export function on<T extends keyof ActionPayload>(
-    actionType: T[], 
+    actionType: T | T[], 
     callback: (args: ActionPayload[T]) => void
 ): EventListener {
     return (event: Event) => {

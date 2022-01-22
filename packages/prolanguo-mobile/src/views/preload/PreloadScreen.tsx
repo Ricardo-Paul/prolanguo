@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { ActivityIndicator, Text } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { Screen } from "../common/Screen";
 import { ObservableScreen, ObservablePreloadScreen } from "@prolanguo/prolanguo-observable";
 import { preloadScreenIds } from "../../constants/ids/PreloadScreenIds";
@@ -30,20 +30,9 @@ export class PreloadScreen extends React.Component<PreloadScreenProps>{
         const screenHeight = this.props.observableScreen.screenLayout.height;
         const screenWidth = this.props.observableScreen.screenLayout.width;
         return(
-            <Screen
-                testID={preloadScreenIds.SCREEN}
-                observableScreen={this.props.observableScreen} //pass this value
-                useSafeAreaView={true}
-                style={this.styles.screen}
-            >
-                <ActivityIndicator color="black" />
-                <DefaultText style={this.styles.message} >
-                    { this.props.shouldRenderMessage === true ? 
-                    this.props.observableScreen.message : "" }
-                    this text should show up
-                </DefaultText>
-                <Text> Height: {screenHeight} Width: {screenWidth} </Text>
-            </Screen>
+            <View>
+                <Text> { this.props.observableScreen.message } </Text>
+            </View>
         )
     }
 }

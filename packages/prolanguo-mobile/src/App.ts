@@ -9,7 +9,9 @@ import { makeInitialState } from './setup/makeInitialState';
 import { SagaFacade } from "@prolanguo/prolanguo-saga";
 import { EventFacade, EventBusFactory } from "@prolanguo/prolanguo-event";
 
+
 import { createAction } from "@prolanguo/prolanguo-action";
+import { WelcomeScreen } from './views/welcome/WelcomeScreen';
 
 // put that in config
 const env = {
@@ -57,7 +59,8 @@ class App {
     const store = storeFactory.createStore(makeInitialState());
 
     ServiceRegistry.registerAll({
-      rootStore: store.getState()
+      rootStore: store.getState(),
+      eventBusFactory: new EventBusFactory(store, eventFacade)
       // register the rootstore here
       // goal is to get the theme global state from the store
       // to use in componentDidMount in extendContainer decorator
@@ -85,6 +88,7 @@ class App {
       rootScreenDelegate.setRootToSingleScreen(ScreenName.WELCOME_SCREEN)
     }
   };
+
 
   private isPreloaded():boolean{
     return this.preloaded;

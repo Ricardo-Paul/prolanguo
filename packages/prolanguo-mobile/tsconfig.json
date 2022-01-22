@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "experimentalDecorators": true,
-    "target": "es2017",
+    "target": "es6",
+    "lib": ["es6"],
     "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./artifacts",
+    "moduleResolution": "node",
+    "jsx": "react",
     "rootDir": "src",
-    "sourceMap": true,
-    // generate dts declaration files
-    "declaration": true,
+    "strictNullChecks": true,
+    "strict": true,
+    "outDir": "./artifacts",
+    "noEmitOnError": true,
+    "noImplicitThis": true,
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./node_modules/@ulangi/ulangi-common/@types"],
+    "experimentalDecorators": true,
+    "incremental": true
   },
-  "compileOnSave": true,
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx"

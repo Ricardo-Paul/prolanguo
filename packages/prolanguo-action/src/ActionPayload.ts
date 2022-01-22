@@ -4,7 +4,7 @@ import { ErroBag } from "@prolanguo/prolanguo-common/interfaces";
 
 // payload for each type of action
 export interface ActionPayload {
-    // [P: string]: null | object;
+    [P: string]: null | object;
 
     readonly APP__ININTIALIZE: null;
     readonly APP__INITIALIZING: null;
