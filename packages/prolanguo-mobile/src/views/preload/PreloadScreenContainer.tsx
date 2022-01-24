@@ -1,15 +1,24 @@
 import * as React from "react";
 import { PreloadScreen } from "./PreloadScreen";
 import { observer, Observer } from "mobx-react";
-import { Container } from "../../Container";
+import { Container, ContainerProps } from "../../Container";
 import { ObservablePreloadScreen } from "@prolanguo/prolanguo-observable";
 import { ScreenName, Theme } from "@prolanguo/prolanguo-common/enums";
 import { PreloadScreenFactory } from "../../factories/preload/PreloadScreenFactory";
 import { PreloadScreenStyle } from "./PreloadScreenContainer.style";
 import { View, Text } from "react-native";
+import { Options } from "@ulangi/react-native-navigation";
+import { Navigation, NavigationComponent } from "react-native-navigation";
 
 @observer
-export class PreloadScreenContainer extends Container {
+export class PreloadScreenContainer extends Container{
+
+    // screen default styles
+    public static options(props: ContainerProps): Options{
+      return props.theme === Theme.LIGHT ? PreloadScreenStyle.SCREEN_FULL_LIGHT_STYLES
+        : PreloadScreenStyle.SCREEN_FULL_DARK_STYLES
+    }
+
   protected observableScreen = new ObservablePreloadScreen(
     '',
     this.props.componentId,
@@ -26,8 +35,6 @@ export class PreloadScreenContainer extends Container {
   );
 
   componentDidMount() {
-    console.log("access props from screen container :", this.props.eventBusFactory);
-    console.log("Preload screen initial message :", this.observableScreen.message);
     this.screenDelegate.autoUpdateMessage();
     this.screenDelegate.preload();
   }

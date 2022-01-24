@@ -20,7 +20,7 @@ export class RootScreenDelegate {
             {
               component: {
                 name: screenName,
-                passProps: { theme }
+                passProps: { theme },
               }
             }
           ]
