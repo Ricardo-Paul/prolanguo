@@ -19,6 +19,7 @@
     "react-native": "0.66.4",
     "react-native-get-random-values": "^1.7.2",
     "react-native-navigation": "^7.25.0",
+    "react-native-splash-screen": "^3.3.0",
     "@prolanguo/prolanguo-common": "1.1.0",
     "@prolanguo/prolanguo-saga": "1.0.0",
     "@prolanguo/prolanguo-observable": "1.0.0",

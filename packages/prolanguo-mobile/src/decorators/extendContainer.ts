@@ -1,6 +1,6 @@
 import { Theme } from "@prolanguo/prolanguo-common/enums";
 import { Container } from "../Container";
-
+import SplashScreen from 'react-native-splash-screen';
 
 type Constructor<T> = new(...args: any[]) => T
 
@@ -27,7 +27,12 @@ export function extendContainer(constructor: Constructor<Container>){
                 (theme): void => {
                     this.onThemeChanged(theme);
                 }
-            )
+            );
+
+            console.log("Splash screen API", SplashScreen)
+            setTimeout(() => {
+                SplashScreen.hide()
+            }, 2000)
         }
 
         public componentWillUnmount(){
