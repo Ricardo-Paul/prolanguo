@@ -15,8 +15,8 @@ export class EventBus{
     }
 
     public pubsub(action: Action<any>, listener: EventListener): () => void{
-        this.publish(action);
         const unsubscribe = this.subscribe(listener);
+        this.publish(action);
         return unsubscribe;
     };
 

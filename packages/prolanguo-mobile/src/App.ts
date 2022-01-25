@@ -69,8 +69,8 @@ class App {
     sagaFacade.run();
 
     // dispatch an action and run both middleware
-    const eventBus = new EventBusFactory(store, eventFacade).createBus();
-    eventBus.publish(createAction("APP__INITIALIZE_SUCCEEDED", null));
+    // const eventBus = new EventBusFactory(store, eventFacade).createBus();
+    // eventBus.publish(createAction("APP__INITIALIZE_SUCCEEDED", null));
   
     this.initialized = true;
   };

@@ -35,6 +35,7 @@ export class PreloadScreenContainer extends Container{
   );
 
   componentDidMount() {
+    console.log("Event facade :", this.props.eventBusFactory)
     this.screenDelegate.autoUpdateMessage();
     this.screenDelegate.preload();
   }

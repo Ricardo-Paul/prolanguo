@@ -6,7 +6,7 @@ import { InferableAction } from "@prolanguo/prolanguo-action";
 export class EventFacade {
     subscribeMap = new Map<number, EventListener>();
 
-    // uuid is breaking react-native current using hardcoded value for eventID
+    // uuid is breaking react-native, currently using hardcoded value for eventID
     public getMiddleware(): Middleware {
         return(): ReturnType<Middleware> => {
             return (next: Dispatch<Action>)=> {
@@ -42,9 +42,8 @@ export class EventFacade {
     }
 
     notifySubscribers(event: Event){
-        console.log("Notifying subscribers")
         for(const [ id, listener ] of this.subscribeMap.entries()){
-            listener(event, () => this.unsubscribe(id))
+            listener(event, () => this.unsubscribe(id));
         }
     }
 }

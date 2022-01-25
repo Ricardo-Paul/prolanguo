@@ -11,7 +11,16 @@ export class AppSaga extends PublicSaga{
         // waiting on PreloadScreenDelegate to dispatch APP__INITITIALIZE
         yield take(ActionType.APP__INITIALIZE);
 
-        // continue app flow
         yield put(createAction(ActionType.APP__INITIALIZING, null));
+        // TODO: check user connection
+        // TODO: observe user connection 
+        // TODO: do databse checks
+
+        yield put(createAction(ActionType.APP__INITIALIZE_SUCCEEDED, null));
+
+        while(true){
+            yield take(ActionType.APP__INITIALIZE);
+            yield put(createAction(ActionType.APP__ALREADY_INITIALIZED, null));
+        }
     }
 }
