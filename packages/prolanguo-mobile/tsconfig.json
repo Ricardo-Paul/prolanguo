@@ -12,9 +12,10 @@
     "noEmitOnError": true,
     "noImplicitThis": true,
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "./node_modules/@ulangi/ulangi-common/@types"],
+    "typeRoots": ["./node_modules/@types"],
     "experimentalDecorators": true,
-    "incremental": true
+    "incremental": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": [
     "src/**/*.ts",

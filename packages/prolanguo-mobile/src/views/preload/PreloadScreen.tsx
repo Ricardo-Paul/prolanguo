@@ -22,7 +22,7 @@ export class PreloadScreen extends React.Component<PreloadScreenProps>{
     private get styles(): PreloadScreenStyles{
         return preloadScreenResponsiveStyles.compile(
             this.props.observableScreen.screenLayout,
-            this.props.themeStore
+            // this.props.themeStore
         )
     };
 

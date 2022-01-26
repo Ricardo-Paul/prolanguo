@@ -1,4 +1,4 @@
-import { Layout, ResponsiveStyleSheet, ScaleByBreakpoints, ScaleByFactor } from "../../utils/responsive";
+import { ResponsiveStyleSheet, ScaleByFactor } from "../../utils/responsive";
 import { ViewStyle, TextStyle } from "react-native";
 
 export interface PreloadScreenStyles{
