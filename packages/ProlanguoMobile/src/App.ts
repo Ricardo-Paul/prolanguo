@@ -12,6 +12,7 @@ import { EventFacade, EventBusFactory } from "@prolanguo/prolanguo-event";
 
 import { createAction } from "@prolanguo/prolanguo-action";
 import { WelcomeScreen } from './views/welcome/WelcomeScreen';
+import { registerCustomViews } from './setup/registerCustomViews';
 
 // put that in config
 const env = {
@@ -41,6 +42,7 @@ class App {
   // register screens, services, run saga
   private init():void{
     registerScreens();
+    registerCustomViews();
 
     // make initial state to build the store
     // pass middleware for saga and event to the store.
