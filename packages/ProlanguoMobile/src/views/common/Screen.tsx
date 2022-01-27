@@ -1,4 +1,3 @@
-import { ObservableScreen } from "@prolanguo/prolanguo-observable";
 import React from "react";
 import { ViewProps, View } from "react-native";
 

@@ -21,7 +21,9 @@ export class WelcomeScreenContainer extends Container {
 
     public render(){
         return (
-            <WelcomeScreen observableScreen={this.observableScreen} />
+            <WelcomeScreen 
+                observableScreen={this.observableScreen} 
+                 />
         )
     }
 };

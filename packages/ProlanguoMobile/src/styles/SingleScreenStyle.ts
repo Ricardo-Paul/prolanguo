@@ -16,7 +16,7 @@ export class SingleScreenStyle {
         background: {
             color: primaryColor
         },
-        // elevation: 0,
+        elevation: 0, // remove topbar shadow for single screens
        },
        layout: {
            backgroundColor: primaryColor
