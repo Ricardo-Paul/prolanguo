@@ -1,10 +1,13 @@
 import { ObservableScreen } from "@prolanguo/prolanguo-observable";
 import React from "react";
-import { ViewProps } from "react-native";
+import { ViewProps, View } from "react-native";
 
-interface ScreenProps extends ViewProps {
-}
-
-export class Screen extends React.Component<ScreenProps> {
-   
+export class Screen extends React.Component<ViewProps> {
+   render(): React.ReactNode {
+       return(
+           <View {...this.props}>
+               {this.props.children}
+           </View>
+       )
+   }
 }
