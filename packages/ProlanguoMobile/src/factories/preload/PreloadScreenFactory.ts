@@ -1,6 +1,5 @@
 import { ScreenName } from "@prolanguo/prolanguo-common/dist/enums";
 import { ObservablePreloadScreen } from "@prolanguo/prolanguo-observable";
-import { NavigatorDelegate } from "../../delegates/navigator/NavigatorDelegate";
 import { PreloadScreenDelegate } from "../../delegates/preload/PreloadScreenDelegate";
 import { ScreenFactory } from "../ScreenFactory";
 

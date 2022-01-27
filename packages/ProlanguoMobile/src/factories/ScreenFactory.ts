@@ -1,8 +1,6 @@
 import { NavigatorDelegate } from "../delegates/navigator/NavigatorDelegate";
 import { ContainerProps } from "../Container";
 import { EventBus } from "@prolanguo/prolanguo-event/dist/EventBus";
-import { ObservableScreen } from "@prolanguo/prolanguo-observable";
-
 
 export class ScreenFactory{
     protected props: ContainerProps;

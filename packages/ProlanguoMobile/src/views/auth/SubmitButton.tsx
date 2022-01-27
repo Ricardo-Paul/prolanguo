@@ -8,7 +8,8 @@ interface SubmitButtonProps{
     buttonText: string,
     style?: ViewStyle,
     textStyle: TextStyle,
-    screenLayout: ObservableScreenLayout
+    screenLayout: ObservableScreenLayout,
+    onSubmit: () => void
 }
 
 export class SubmitButton extends React.Component<SubmitButtonProps> {
@@ -20,7 +21,7 @@ export class SubmitButton extends React.Component<SubmitButtonProps> {
 
     render(): React.ReactNode {
         return(
-            <TouchableOpacity {...this.props} style={[this.styles.button_touchable, this.props.style]}>
+            <TouchableOpacity onPress={this.props.onSubmit} {...this.props} style={[this.styles.button_touchable, this.props.style]}>
                 <DefaultText style={this.props.textStyle} >
                     {this.props.buttonText}
                 </DefaultText>
