@@ -15,7 +15,7 @@
     "typeRoots": ["./node_modules/@types"],
     "experimentalDecorators": true,
     "incremental": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
   },
   "include": [
     "src/**/*.ts",

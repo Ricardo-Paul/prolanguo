@@ -16,7 +16,7 @@ export class WelcomeScreen extends React.Component<WelcomeScreenProps>{
         return (
             <Text style={this.styles.welcome_text}> 
                 Welcome to prolanguo! 
-                Is this your first time here? what
+                Is this your first time here?
                 {this.props.observableScreen.screenLayout.height}
             </Text>
         )

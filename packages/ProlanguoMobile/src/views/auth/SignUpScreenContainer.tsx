@@ -1,6 +1,6 @@
 import { SignUpScreen } from "./SignUpScreen";
 import { ObservableSignUpScreen, ObservableTitleTopBar } from "@prolanguo/prolanguo-observable";
-import { Container } from "./../../Container";
+import { Container } from "../../Container";
 import { observer } from "mobx-react";
 import { ScreenName } from "@prolanguo/prolanguo-common/enums";
 import { Text } from "react-native";

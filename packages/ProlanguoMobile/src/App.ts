@@ -28,7 +28,7 @@ class App {
   }
 
   public start(): void{
-    console.log("App runs")
+    console.log("App has started >>>")
     Navigation.events().registerAppLaunchedListener(async () => { 
       if(!this.isInitialized()){
         this.init();
@@ -88,7 +88,6 @@ class App {
       rootScreenDelegate.setRootToSingleScreen(ScreenName.WELCOME_SCREEN)
     }
   };
-
 
   private isPreloaded():boolean{
     return this.preloaded;

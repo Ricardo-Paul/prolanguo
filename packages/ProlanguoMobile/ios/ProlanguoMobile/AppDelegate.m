@@ -1,8 +1,8 @@
 #import "AppDelegate.h"
-#import <ReactNativeNavigation/ReactNativeNavigation.h>
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTRootView.h>
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -11,9 +11,6 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
-
-// import for react-native-splash-screen
-#import "RNSplashScreen.h" 
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -35,16 +32,22 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-[ReactNativeNavigation bootstrapWithBridge:bridge];
-  
-  // for react-native-splash-screen
-  [RNSplashScreen show];
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
+                                                   moduleName:@"ProlanguoMobile"
+                                            initialProperties:nil];
 
+  if (@available(iOS 13.0, *)) {
+      rootView.backgroundColor = [UIColor systemBackgroundColor];
+  } else {
+      rootView.backgroundColor = [UIColor whiteColor];
+  }
+
+  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  UIViewController *rootViewController = [UIViewController new];
+  rootViewController.view = rootView;
+  self.window.rootViewController = rootViewController;
+  [self.window makeKeyAndVisible];
   return YES;
-}
-
-- (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge {
-  return [ReactNativeNavigation extraModulesForBridge:bridge];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/android.iml" filepath="$PROJECT_DIR$/.idea/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ProlanguoMobile.iml" filepath="$PROJECT_DIR$/.idea/modules/ProlanguoMobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ProlanguoMobile.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ProlanguoMobile.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2084150451/ProlanguoMobile.react-native-get-random-values.iml" filepath="$PROJECT_DIR$/.idea/modules/2084150451/ProlanguoMobile.react-native-get-random-values.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-45206370/ProlanguoMobile.react-native-navigation.iml" filepath="$PROJECT_DIR$/.idea/modules/-45206370/ProlanguoMobile.react-native-navigation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1694647792/ProlanguoMobile.react-native-splash-screen.iml" filepath="$PROJECT_DIR$/.idea/modules/-1694647792/ProlanguoMobile.react-native-splash-screen.iml" />
     </modules>
   </component>
 </project>
