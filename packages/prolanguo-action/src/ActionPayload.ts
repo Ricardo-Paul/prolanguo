@@ -12,5 +12,10 @@ export interface ActionPayload {
     readonly APP__INITIALIZE_FAILED: ErroBag;
     readonly APP__APP_ALREADY_INITIALED: null;
 
+    readonly USER__SIGN_IN_USER_AS_GUEST: null,
+    readonly USER__SIGNING_IN_USER_AS_GUEST: null,
+    readonly USER__SIGN_IN_SUCCEEDED_AS_GUEST: {}, // replace by user payload
+    readonly USER__SIGIN_IN_FAILED_AS_GUEST: ErroBag
+
     readonly THEME__SYSTEM_MODE_CHANGED: { systemMode: Theme }
 }
