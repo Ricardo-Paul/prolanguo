@@ -1,4 +1,5 @@
 import { AppSaga } from "../sagas/AppSaga";
+import { AuthSaga } from "../sagas/AuthSaga";
 import { PublicSaga } from "../sagas/PublicSaga";
 
 
@@ -7,8 +8,8 @@ export class PublicSagaFactory{
 
     public createPublicSagas(): PublicSaga[]{
         return [
-            new AppSaga()
-        ]
+            new AppSaga(),
+            new AuthSaga()
+        ];
     };
-
 }
