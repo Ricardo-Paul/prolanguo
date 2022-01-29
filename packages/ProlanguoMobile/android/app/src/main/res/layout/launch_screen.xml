@@ -2,12 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@drawable/ic_artboard_01"
     android:orientation="vertical">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-    />
+        android:scaleType="centerCrop" />
 </RelativeLayout>

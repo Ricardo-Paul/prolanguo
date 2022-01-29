@@ -2,8 +2,8 @@ import { darkStyles as topBarDefaultDarkStyles, lightStyles as topBarDefaultLigh
 import * as _ from "lodash";
 
 // TODO: move to config file
-const darkPrimaryColor = "#0092C7";
-const primaryColor = "#009dd6"
+const darkPrimaryColor = "#001d55"; // will be replaced by a darker alternative for the status bar
+const primaryColor = "#001d55"
 
 export class SingleScreenStyle {
    public static SCREEN_BASE_STYLES_ONLY = {
@@ -11,7 +11,7 @@ export class SingleScreenStyle {
            backgroundColor: darkPrimaryColor
        },
        topBar: {
-            visible: true,
+            visible: true, 
            noBorder: true,
         background: {
             color: primaryColor

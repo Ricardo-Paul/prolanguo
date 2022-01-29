@@ -33,8 +33,8 @@ export class WelcomeScreen extends React.Component<WelcomeScreenProps> {
           </DefaultText>
         </View>
         <View style={this.styles.buttons_container}>
-          <SubmitButton
-            buttonText={"Yes. I'm new "} 
+          <SubmitButton 
+            buttonText={"Yes. I'm new "}  
             style={this.styles.yes_btn} 
             textStyle={this.styles.yest_btn_text}
             screenLayout={this.props.observableScreen.screenLayout}

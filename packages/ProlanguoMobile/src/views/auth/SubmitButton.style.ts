@@ -6,7 +6,7 @@ export interface SubmitButtonStyles{
 }
 
 class SubmitButtonResponsiveStyles extends ResponsiveStyleSheet<SubmitButtonStyles>{
-    public baseStyles(
+    public baseStyles( 
         scaleByFacor: ScaleByFactor,
         scaleByBreakPoints: ScaleByBreakPoints
         ): SubmitButtonStyles {
@@ -21,7 +21,7 @@ class SubmitButtonResponsiveStyles extends ResponsiveStyleSheet<SubmitButtonStyl
                 marginHorizontal: scaleByBreakPoints(
                     defaultHorizontalMarginByBreakPoints
                 ),
-                backgroundColor: "#00c7fe",
+                backgroundColor: "#255584",
             }
         }
     }

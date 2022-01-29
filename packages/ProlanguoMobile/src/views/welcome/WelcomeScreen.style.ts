@@ -6,7 +6,7 @@ export interface WelcomeScreenStyles {
   welcome_text: TextStyle,
   yes_btn: ViewStyle,
   yest_btn_text: TextStyle,
-  no_btn: ViewStyle,
+  no_btn: TextStyle,
   no_btn_text: TextStyle,
   logo_container: ViewStyle,
   welcome_text_container: ViewStyle,
@@ -38,19 +38,20 @@ class WelcomeScreenResponsiveStyles extends ResponsiveStyleSheet<WelcomeScreenSt
         bottom: scaleByFacor(20),
       },
       yes_btn: {
-        backgroundColor: "#64d392",
+        backgroundColor: "#3BDEDA",
       },
       yest_btn_text: {
-        color: "#fff"
-        
+        color: "#000"
       },
       no_btn: {
-        marginTop: scaleByFacor(10)
+        marginTop: scaleByFacor(10),
       },
-      no_btn_text: {},
+      no_btn_text: {
+        color: "#fff"
+      },
       logo_container: {
         marginTop: scaleByFacor(20),
-        alignSelf: "center"
+        alignSelf: "center",
       }
     }
   };
