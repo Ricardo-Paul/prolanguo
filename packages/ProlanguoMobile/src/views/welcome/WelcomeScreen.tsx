@@ -1,11 +1,12 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { welcomeScreenResponsiveStyles } from "./WelcomeScreen.style";
 import { ObservableScreen } from "@prolanguo/prolanguo-observable";
 import { Screen } from "../common/Screen";
 import { DefaultText } from "../common/DefaultText";
 import { SubmitButton } from "../auth/SubmitButton";
 import { WelcomeScreenDelegate } from "../../delegates/welcome/WelcomeScreenDelegate";
+const logo = require("../../../assets/images/logo/prolanguo_60x60.png");
 
 interface WelcomeScreenProps {
   observableScreen: ObservableScreen,
@@ -22,14 +23,17 @@ export class WelcomeScreen extends React.Component<WelcomeScreenProps> {
     return (
       <Screen style={this.styles.screen}>
         <View style={this.styles.logo_container} >  
-          <Text> Logo </Text>
+          <Image source={logo} />
         </View>
         <View style={this.styles.welcome_text_container}>
-          <DefaultText style={this.styles.welcome_text} >
-            Welcome to prolanguo
+          <DefaultText style={this.styles.welcome_text}>
+            Hola
           </DefaultText>
           <DefaultText style={this.styles.welcome_text} >
-            Are you new here !
+            Welcome to prolanguo!
+          </DefaultText>
+          <DefaultText style={this.styles.welcome_text} >
+            Are you new here ?
           </DefaultText>
         </View>
         <View style={this.styles.buttons_container}>
