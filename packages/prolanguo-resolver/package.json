@@ -10,6 +10,8 @@
   "author": "Ricardo Paul <ricardopaul459@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/runtime": "^7.16.7",
     "joi": "^17.4.2"
   }
 }
