@@ -1,5 +1,0 @@
-{
-  "private": true,
-  "main": "../dist/extended-types/index.js",
-  "types": "../dist/extended-types/index.d.ts"
-}

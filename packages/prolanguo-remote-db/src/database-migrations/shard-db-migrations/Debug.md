@@ -1,1 +1,0 @@
-          const mSQL = `insert into ${TableName.VOCABULARY} (userId, setId, vocabularyId, vocabularyText, vocabularyStatus, level, lastLearnedAt, createdAt, updatedAt) values ('usr id', '00a64a41-165f-41ac-a140-a070e85e635f', 'other vocID', 'text', 'active', 1, '2017-06-15', '2017-06-15', '2017-06-15')`;

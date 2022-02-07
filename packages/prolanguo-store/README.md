@@ -1,1 +1,0 @@
-This is the global store for prolanguo, built with redux and observable states from mobx.

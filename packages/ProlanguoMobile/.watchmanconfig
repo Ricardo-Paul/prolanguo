@@ -1,1 +1,4 @@
-{}
+{
+    "fsevents_latency": "3.01",
+    "content_hash_max_items": 999999
+}

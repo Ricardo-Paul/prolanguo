@@ -9,8 +9,6 @@
 // AppRegistry.registerComponent(appName, () => App);
 
 
-
-   
 import App  from "./src/App";
 // polyfill for TextEncoder
 import * as encoding from 'text-encoding';
