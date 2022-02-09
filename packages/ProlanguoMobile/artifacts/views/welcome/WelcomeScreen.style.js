@@ -8,7 +8,7 @@ class WelcomeScreenResponsiveStyles extends responsive_1.ResponsiveStyleSheet {
             screen: {
                 flex: 1,
                 position: "relative",
-                // backgroundColor: "red"
+                backgroundColor: "#001d55"
             },
             welcome_text_container: {
                 marginTop: scaleByFacor(30),

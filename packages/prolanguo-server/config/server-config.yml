@@ -1,0 +1,3 @@
+user:
+  passwordMinLength: 6
+  passwordEncryptionSaltRounds: 10

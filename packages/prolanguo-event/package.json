@@ -1,0 +1,21 @@
+{
+  "name": "@prolanguo/prolanguo-event",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "redux": "^4.1.2",
+    "@prolanguo/prolanguo-action": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.178",
+    "@types/uuid": "^8.3.4"
+  }
+}
