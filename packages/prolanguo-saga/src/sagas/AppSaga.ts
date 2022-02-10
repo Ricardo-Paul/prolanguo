@@ -14,7 +14,9 @@ export class AppSaga extends PublicSaga{
         yield put(createAction(ActionType.APP__INITIALIZING, null));
         // TODO: check user connection
         // TODO: observe user connection 
-        // TODO: do databse checks
+
+        // TODO: connect to user database
+        yield put(createAction(ActionType.DATABASE__CONNECT_USER_DB, null));
 
         yield put(createAction(ActionType.APP__INITIALIZE_SUCCEEDED, null));
 
