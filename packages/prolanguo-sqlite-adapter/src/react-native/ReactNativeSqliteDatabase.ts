@@ -6,37 +6,48 @@ export interface ConnectionOptions {
   enable_foreign_key_support: boolean
 };
 
-
 export class ReactNativeSqliteDatabase extends SqliteDatabase {
   private db!: RNSqliteDatabase;
 
   constructor(
-    private engine: {
-      openDatabase: (
-        name: string,
-        location: string,
-        okCallback: () => void,
-        errorCallback: (errors?: any) => void
-      ) => RNSqliteDatabase
-    }
+    private engine: any
   ) {
     super()
   }
 
   public async open(name: string, options: ConnectionOptions): Promise<void> {
-    return new Promise<void>(async (resolve, reject) => {
-      this.db = this.engine.openDatabase(name, "default",
-       () => {
-         resolve();
-       },
-       (errors) => 
-        reject(errors)
-      )
-    }).then(async () => {
-      if(options.enable_foreign_key_support){
-        await this.executeSql('PRAGMA foreign_keys = ON')
-      }
-    })
+
+    const openCB = () => {console.log(`${name} DB successfully open`)};
+    const errorCB = () => {console.log(`Error while opeing ${name} DB`)}
+
+    // open the db in WebSQL style
+    var db = this.engine.openDatabase({name, createFromLocation : 1}, openCB, errorCB);
+
+    if(options.enable_foreign_key_support){
+      db.transaction((tx: any) => {
+        tx.executeSql('PRAGMA foreign_keys=ON;', [], (tx: any, results: any) => {
+          console.log("Foreign keys support is ON");
+        }, (error: any) => {
+          console.log("Failed to turn on foreign keys", error);
+        });
+      })
+    }
+
+    // making sure tables are loaded
+    db.transaction(function(tx: any){
+      tx.executeSql("SELECT * FROM prolanguo_app",[], (tx: any, results: any) => {
+        let len = results.rows.length;
+        let rows = []
+        for(let i = 0; i < len; i++){
+          const row = results.rows.item(i);
+          rows.push(row)
+        }
+        console.log('logging rows for testing:', rows)
+      }, (error: any) => {
+        console.log("failed to create table", error)
+      })
+    });
+
   }
 
   public async executeSql(statement: string, params?: any[]): Promise<Result> {

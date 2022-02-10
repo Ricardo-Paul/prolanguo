@@ -1,15 +1,15 @@
 import { SqliteDatabase } from "../core/SqliteDatabase";
 import { ReactNativeSqliteDatabase } from "../react-native/ReactNativeSqliteDatabase";
 
-
 export class SqliteDatabaseAdapter {
+  private engine: any
   constructor(
-    private engine: any
-  ){}
+    engine: any
+  ){
+    this.engine = engine
+  }
 
-  createDatabase(): SqliteDatabase | undefined {
-    if (this.engine.openDatabase !== "undefined") {
+  createDatabase(): SqliteDatabase{
       return new ReactNativeSqliteDatabase(this.engine)
-    }
   }
 }
