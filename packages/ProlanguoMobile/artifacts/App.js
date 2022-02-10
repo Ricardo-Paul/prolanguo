@@ -20,6 +20,7 @@ const makeInitialState_1 = require("./setup/makeInitialState");
 const prolanguo_saga_1 = require("@prolanguo/prolanguo-saga");
 const prolanguo_event_1 = require("@prolanguo/prolanguo-event");
 const registerCustomViews_1 = require("./setup/registerCustomViews");
+const AdapterFactory_1 = require("./factories/AdapterFactory");
 // put that in config
 const env = {
     ENABLE_REDUX_LOGGING: true
@@ -44,7 +45,9 @@ class App {
         (0, registerCustomViews_1.registerCustomViews)();
         // make initial state to build the store
         // pass middleware for saga and event to the store.
-        const sagaFacade = new prolanguo_saga_1.SagaFacade({});
+        const adapters = new AdapterFactory_1.AdapterFactory().createAdapters();
+        console.log("adapter in app.ts :", adapters.sqliteDatabase);
+        const sagaFacade = new prolanguo_saga_1.SagaFacade({}, adapters.sqliteDatabase);
         const eventFacade = new prolanguo_event_1.EventFacade();
         const storeFactory = new prolanguo_store_1.StoreFactory({
             enableLogging: env.ENABLE_REDUX_LOGGING

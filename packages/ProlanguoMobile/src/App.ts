@@ -13,6 +13,7 @@ import { EventFacade, EventBusFactory } from "@prolanguo/prolanguo-event";
 import { createAction } from "@prolanguo/prolanguo-action";
 import { WelcomeScreen } from './views/welcome/WelcomeScreen';
 import { registerCustomViews } from './setup/registerCustomViews';
+import { AdapterFactory } from './factories/AdapterFactory';
 
 // put that in config
 const env = {
@@ -46,7 +47,11 @@ class App {
 
     // make initial state to build the store
     // pass middleware for saga and event to the store.
-    const sagaFacade = new SagaFacade({});
+    const adapters = new AdapterFactory().createAdapters();
+    console.log("adapter in app.ts :", adapters.sqliteDatabase)
+    const sagaFacade = new SagaFacade({},
+      adapters.sqliteDatabase  
+    );
     const eventFacade = new EventFacade();
 
     const storeFactory = new StoreFactory(

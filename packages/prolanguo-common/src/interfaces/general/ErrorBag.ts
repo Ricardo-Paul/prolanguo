@@ -1,6 +1,6 @@
 import { ErrorCode } from "../../enums";
 
-export interface ErroBag {
+export interface ErrorBag {
     errorCode: ErrorCode;
     error: unknown;
 };

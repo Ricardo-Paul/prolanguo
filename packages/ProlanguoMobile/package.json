@@ -10,9 +10,8 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
-    "@babel/plugin-proposal-decorators": "^7.17.0",
+    "@babel/plugin-proposal-decorators": "^7.17.2",
     "@types/lodash": "^4.14.178",
-    "@ulangi/react-native-navigation": "^4.0.9-patch.1",
     "joi": "17.4.2",
     "lodash": "^4.17.21",
     "lodash-decorators": "^6.0.1",
@@ -22,14 +21,8 @@
     "react-native": "0.67.2",
     "react-native-navigation": "^7.25.0",
     "react-native-splash-screen": "^3.3.0",
-    "text-encoding": "^0.7.0",
-    "@prolanguo/prolanguo-common": "1.1.0",
-    "@prolanguo/prolanguo-saga": "1.0.0",
-    "@prolanguo/prolanguo-observable": "1.0.0",
-    "@prolanguo/prolanguo-store": "1.0.0",
-    "@prolanguo/prolanguo-event": "1.0.0",
-    "@prolanguo/prolanguo-action": "1.0.0",
-    "@prolanguo/prolanguo-resolver": "1.1.0"
+    "react-native-sqlite-storage": "^6.0.1",
+    "text-encoding": "^0.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -37,6 +30,7 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^26.0.23",
     "@types/react-native": "^0.66.15",
+    "@types/react-native-sqlite-storage": "^5.0.1",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",

@@ -7,7 +7,7 @@ import { ScreenName, Theme } from "@prolanguo/prolanguo-common/enums";
 import { PreloadScreenFactory } from "../../factories/preload/PreloadScreenFactory";
 import { PreloadScreenStyle } from "./PreloadScreenContainer.style";
 import { View, Text } from "react-native";
-import { Options } from "@ulangi/react-native-navigation";
+import { Options } from "react-native-navigation";
 import { Navigation, NavigationComponent } from "react-native-navigation";
 
 @observer
