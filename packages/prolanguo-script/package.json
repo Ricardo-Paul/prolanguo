@@ -8,7 +8,8 @@
     "clean": "rm -rf ./bin",
     "compile": "tsc",
     "build": "npm run compile && chmod -R +x ./bin/commands",
-    "prolanguo:create-shard-database": "node --trace-warnings ./bin/commands/prolanguo-database-create-shard-database.js"
+    "create-shard-database": "node --trace-warnings ./bin/commands/prolanguo-database-create-shard-database.js",
+    "create-auth-database": "node --trace-warnings ./bin/commands/prolanguo-database-create-auth-database.js"
   },
   "author": "Ricardo Paul",
   "license": "ISC",

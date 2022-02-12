@@ -7,7 +7,6 @@ import * as inquirer from "inquirer";
 import { loadConfig } from "../setup/loadConfig";
 
 
-
 async function exec() {
   program
     .option('-h, --host <host>', 'Database host')
@@ -18,6 +17,11 @@ async function exec() {
 
     const config = loadConfig();
     console.log(chalk.blue('Calling Load config'), config.shardDb.shardDatabaseNamePrefix,);
+    console.log(chalk.yellow(`Please comment "checkAllShardDatabaseTables" line at the bottom of the script
+    if this is your first time running it. 
+    Navigate to prolanguo-script package -> src -> commands -> prolanguo-database-create-shard-database
+    `)
+    )
 
   const answers = await inquirer.prompt([
     {
@@ -103,8 +107,11 @@ async function exec() {
   const shardDatabase = new ShardDatabaseFacade(allShardDbConfigs, shardDbPrefix);
   console.log('Random Shard ID :', shardDatabase.getRandomShardId());
 
-  // running sharded databases migrations
+  // now creating databases tables;
+  // please comment below line when running the script for the first time
+  // a little bug will cause shard_db not existed error
   shardDatabase.checkAllShardDatabaseTables();
+  // process.exit();
 }
 
 exec(); 
