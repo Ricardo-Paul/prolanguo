@@ -33,7 +33,7 @@ export class ReactNativeSqliteDatabase extends SqliteDatabase {
       })
     }
 
-    // making sure tables are loaded
+    // making sure tables are loaded / table with dummy data
     db.transaction(function(tx: any){
       tx.executeSql("SELECT * FROM prolanguo_app",[], (tx: any, results: any) => {
         let len = results.rows.length;
@@ -47,7 +47,6 @@ export class ReactNativeSqliteDatabase extends SqliteDatabase {
         console.log("failed to create table", error)
       })
     });
-
   }
 
   public async executeSql(statement: string, params?: any[]): Promise<Result> {

@@ -4,3 +4,6 @@ by commenting migrations that have already run and created tables to allow other
 
 Currently a weird bug, just beware.
 See package.json in `prolanguo-script` package for migration commands.
+
+Feb 11, 2022
+UPDATE: I strongly advice against using the script now, plan is to re-write. Bugs may be related to the order of shard db migrations

@@ -26,7 +26,7 @@ export class AuthDatabaseMigrationRunner {
 
   public async run(){
     console.log('Running Auth Database Premigration');
-    await this.preMigration();
+    // await this.preMigration();
 
     const currentVersion = await this.getDatabaseVersion();
     console.log("Current version :", currentVersion, "(AuthDbMigrationRunner)")
@@ -35,7 +35,7 @@ export class AuthDatabaseMigrationRunner {
     for (const [version, migrationScript] of this.migrations){
       if(currentVersion < version){
         await this.authDb.transaction(async (tx): Promise<void> => {
-          await migrationScript(tx)
+          migrationScript(tx);
           await this.updateDatabaseVersion(tx, version)
           // update the db for each migration run
           // the last version number will be the db version

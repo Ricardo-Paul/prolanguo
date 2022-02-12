@@ -64,15 +64,15 @@ export class ShardDatabaseFacade {
   };
 
   public checkAllShardDatabaseTables(){
-    console.log(`Checking all shard databases`)
+    console.log(`Checking all shard databases`);
 
     // get shardIds from config to retrieve dbs
     this.allShardDbConfig.map((config) => {
       const {shardId} = config;
       this.checkShardDatabaseTables(shardId);
-    })
+    });
   }
-
+ 
   private async checkShardDatabaseTables(shardId: number){
     console.log(`About to run shard db migrations for shardId : ${shardId}`)
     const db = this.getDb(shardId);

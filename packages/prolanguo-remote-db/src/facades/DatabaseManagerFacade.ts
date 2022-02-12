@@ -1,4 +1,5 @@
 import knex, { Knex } from "knex";
+import { AuthDbConfig } from "..";
 import { ShardDbConfig } from "../interfaces/ShardDbConfig";
 
 export class DatabaseManagerFacade {
@@ -35,6 +36,32 @@ export class DatabaseManagerFacade {
     );
   }
 
+  public async createAuthDatabaseIfNotExists(config: AuthDbConfig): Promise<void>{
+    return new Promise<void>(async (resolve, reject) => {
+      try{
+        const db = knex({
+          client: "mysql",
+          connection: {
+            host: config.host,
+            port: config.port,
+            user: config.user,
+            password: config.password
+          }
+        });
+
+        await db.transaction((tx): Knex.Raw => {
+          return tx.raw(
+            `CREATE DATABASE IF NOT EXISTS ${config.databaseName}`
+          )
+        });
+        await db.destroy();
+        resolve()
+      }catch(error){
+        reject(error)
+      }
+    })
+  }
+
   public async createShardDatabaseIfNotExists(config: ShardDbConfig, shardDatabaseNamePrefix: string): Promise<void>{
     return new Promise(
       async (resolve, reject): Promise<void> => {
@@ -47,8 +74,9 @@ export class DatabaseManagerFacade {
               user: config.user,
               password: config.password
             }
-          })
+          });
 
+          console.log("Actually creating", shardDatabaseNamePrefix, config.shardId);
           await db.transaction((tx): Knex.Raw => {
             return tx.raw(
               `CREATE DATABASE IF NOT EXISTS ${shardDatabaseNamePrefix}${config.shardId}`

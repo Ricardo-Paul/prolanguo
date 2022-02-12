@@ -11,9 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prolanguo/prolanguo-common": "^1.1.0",
-    "@prolanguo/prolanguo-remote-db": "1.0.0",
-    "@prolanguo/prolanguo-resolver": "^1.1.0",
     "app-root-path": "^3.0.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
@@ -26,9 +23,13 @@
     "knex": "^0.95.11",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "@prolanguo/prolanguo-common": "^1.1.0",
+    "@prolanguo/prolanguo-remote-db": "1.0.0",
+    "@prolanguo/prolanguo-resolver": "^1.1.0"
   },
   "devDependencies": {
+    "@types/app-root-path": "^1.2.4",
     "@types/bcrypt": "^5.0.0",
     "@types/express": "^4.17.13",
     "@types/js-yaml": "^4.0.3",
