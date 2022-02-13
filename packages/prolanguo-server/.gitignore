@@ -6,6 +6,9 @@ dist/
 
 gather.ts
 
+# prolanguo firebase service account
+prolanguo-firebase-*.json
+
 .env
 # Logs
 logs

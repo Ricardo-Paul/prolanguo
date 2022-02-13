@@ -7,7 +7,8 @@ import { resolveEnv } from "./setup/resolveEnv";
 import { loadConfig } from "./setup/loadConfig";
 import { AuthenticatorFacade } from "./facades/AuthenticatorFacace";
 import { Config } from "./interfaces/Config";
-
+import { FirebaseFacade } from "./facades/FirebaseFacade";
+import { assertExists } from "./utils/assertExists";
 
 export class Server{
   // class used as Interface
@@ -18,6 +19,7 @@ export class Server{
   private env;
   private config: Config;
   private authenticator: AuthenticatorFacade;
+  private firebase: FirebaseFacade;
 
   constructor(){
     this.env = resolveEnv();
@@ -48,6 +50,11 @@ export class Server{
       this.authenticator
     );
     this.apiRouterFactory = new ApiRouterFactory();
+    this.firebase = new FirebaseFacade(
+      assertExists(process.env.SERVICE_ACCOUNT_CREDENTIAL_PATH),
+      assertExists(process.env.DATABASE_URL),
+      this.userModel
+    )
   }
 
   private displayMessage(message: string): void{
@@ -57,9 +64,9 @@ export class Server{
   public setup(){
     return new Promise(async (resolve, reject): Promise<void> => {
       try{
-        this.displayMessage("Setting up database services (server) :");
-        await this.database.checkAuthDatabaseTables();
-        this.database.checkShardDatabaseTables();
+        // this.displayMessage("Setting up database services (server) :");
+        // await this.database.checkAuthDatabaseTables();
+        // this.database.checkShardDatabaseTables();
 
         resolve("")
       }catch(error){
