@@ -10,7 +10,6 @@ import { ControllerOptions } from "./../../interfaces/ControllerOptions";
 import { RequestResolver } from "@prolanguo/prolanguo-common/dist/resolvers";
 import Joi = require("joi");
 
-
 interface SignInResponse{
   currentUser: {
 

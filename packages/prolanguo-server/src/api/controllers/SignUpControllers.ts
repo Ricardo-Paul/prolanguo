@@ -140,7 +140,7 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
       );
       console.log('JUST SIGNUP USER :', currentUser);
 
-      const accessToken = this.authenticator.createAccessToken(currentUser.userId, accessKey);
+      const accessToken = this.authenticator.createAccessToken(currentUser.user.userId, accessKey);
       res.json({
         accessToken,
         currentUser
