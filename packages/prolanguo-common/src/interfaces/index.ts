@@ -4,6 +4,10 @@
 export { Request } from './request/Request';
 export { SignUpRequest } from './request/SignUpRequest';
 export { SignInRequest } from './request/SignInRequest';
+export { UploadSetsRequest } from "./request/UploadSetsRequest";
+
+export { UploadSetsResponse } from "./response/UploadSetsResponse";
+
 export { User } from './general/User';
 export { Set } from './general/Set';
 export { Vocabulary } from './general/Vocabulary';

@@ -1,9 +1,6 @@
 import * as Joi from "joi";
+import { Resolver } from "./Resolver";
 
-interface Resolver<T> {
-  resolve(data: any, stripUnknown: boolean): T;
-  resolveArray(data: any, stripUnknown: boolean): ReadonlyArray<T>;
-}
 
 export abstract class AbstractResolver<T extends object> implements Resolver<T> {
 
