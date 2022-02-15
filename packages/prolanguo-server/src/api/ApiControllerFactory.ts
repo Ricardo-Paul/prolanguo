@@ -1,8 +1,10 @@
 import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
-import { SignUpController } from "./controllers/SignUpControllers";
-import { SignInController } from "./controllers/SignInController";
 import { Config } from "../interfaces/Config";
 import { AuthenticatorFacade } from "../facades/AuthenticatorFacace";
+
+import { SignUpController } from "./controllers/SignUpControllers";
+import { SignInController } from "./controllers/SignInController";
+import { UploadSetsController } from "./controllers/UploadSetsController";
 
 export class ApiControllerFactory {
   private database: DatabaseFacade;
@@ -41,7 +43,8 @@ export class ApiControllerFactory {
         this.database,
         this.userModel,
         this.authenticator
-      )
+      ),
+      new UploadSetsController()
     ]
     return controllers
   }

@@ -37,8 +37,14 @@ export class AuthenticatorFacade {
     passport.use(
       AuthenticationStrategy.ACCESS_TOKEN,
       this.authenticateViaAccessTokenStrategy()
-    )
+    );
+
+    return passport.initialize();
   }
+
+  public createAuthenticationMiddleware(authStrategies: AuthenticationStrategy[]){
+    return passport.authenticate(authStrategies.slice(), { session: false });
+  };
 
   private authenticateViaAccessTokenStrategy(): passport.Strategy {
     const options = {
@@ -47,6 +53,8 @@ export class AuthenticatorFacade {
     }
     return new JWTpassport.Strategy(options, async (payload, done) => {
       const decodedUser = await this.getAuthenticatedUserViaAccessTokenPayload(payload);
+      console.log("Token sent from client :", payload);
+      console.log("Decoded user :", decodedUser);
 
       if(decodedUser){
         done(null, decodedUser)

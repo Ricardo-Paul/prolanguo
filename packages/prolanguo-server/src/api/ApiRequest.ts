@@ -4,35 +4,31 @@ import * as express from "express";
 import { RequestResolver } from "@prolanguo/prolanguo-common/resolvers";
 
 
-//RequestResolver extends Abstract resolver (now has the resolve() method)
 
-// SignUpResolver in between
 export class ApiRequest<T extends Request> {
-  private req: express.Request; //type for express
+  private req: express.Request; 
   requestResolver: null | RequestResolver<T>
 
-  // TODO: add type annotation for requestResolver
   constructor(req: express.Request, requestResolver: null | RequestResolver<T>){
     this.req = req;
     this.requestResolver = requestResolver;
   }
 
+  public isAuthenticated():boolean{
+    return typeof this.req.user !== "undefined" && this.req.user !== null
+  }
+
   public getResolver(): any{
     if(this.requestResolver !== null){
       this.requestResolver.resolve(this.req, true).body;
-      console.log("BODY AND QUERY :", this.req.body, this.req.query )
-      // this.requestResolver.testAbstractResolver();
     }
   }
 
   public get body(): T["body"]{
     if(this.requestResolver !== null){
-      // return body explicitly
       return this.requestResolver.resolve(this.req, true).body
     } else {
-      throw new Error(`Oops, we need a request resolver
-        with strict rules
-       to validate the request body`)
+      throw new Error(`Error: Request resolver required for req.body validation`)
     }
   }
 }

@@ -148,6 +148,3 @@ export class SignUpController extends ApiController<SignUpRequest, SignUpRespons
     };
   }
 };
-
-// logger
-// some formal tests
