@@ -1,4 +1,4 @@
-import { DatabaseFacade, UserModel } from "@prolanguo/prolanguo-remote-db";
+import { DatabaseFacade, SetModel, UserModel } from "@prolanguo/prolanguo-remote-db";
 import { Config } from "../interfaces/Config";
 import { AuthenticatorFacade } from "../facades/AuthenticatorFacace";
 
@@ -11,17 +11,20 @@ export class ApiControllerFactory {
   private userModel: UserModel;
   private config: Config;
   private authenticator: AuthenticatorFacade;
+  private setModel: SetModel;
 
   constructor(
     database: DatabaseFacade, 
     userModel: UserModel, 
     config: Config,
-    authenticator: AuthenticatorFacade
+    authenticator: AuthenticatorFacade,
+    setModel: SetModel
     ){
     this.database = database;
     this.userModel = userModel;
     this.config = config;
     this.authenticator = authenticator;
+    this.setModel = setModel
   } 
 
   public makeControllers(): any[]{
@@ -44,7 +47,10 @@ export class ApiControllerFactory {
         this.userModel,
         this.authenticator
       ),
-      new UploadSetsController()
+      new UploadSetsController(
+        this.database,
+        this.setModel
+      )
     ]
     return controllers
   }

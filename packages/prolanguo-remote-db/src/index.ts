@@ -7,3 +7,6 @@ export { AuthDatabaseFacade } from "./facades/AuthDatabaseFacade";
 // interfaces
 export { AuthDbConfig } from "./interfaces/AuthDbConfig";
 export { ShardDbConfig } from "./interfaces/ShardDbConfig";
+
+// models
+export { SetModel } from "./models/SetModel";

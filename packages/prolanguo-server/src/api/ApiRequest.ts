@@ -1,8 +1,8 @@
-import { Request } from "@prolanguo/prolanguo-common/interfaces";
 import * as express from "express";
-
+import { Request, User } from "@prolanguo/prolanguo-common/interfaces";
 import { RequestResolver } from "@prolanguo/prolanguo-common/resolvers";
-
+import {  } from "@prolanguo/prolanguo-common/resolvers";
+import { assertExists } from "@prolanguo/prolanguo-remote-db/dist/models/UserModel";
 
 
 export class ApiRequest<T extends Request> {
@@ -29,6 +29,14 @@ export class ApiRequest<T extends Request> {
       return this.requestResolver.resolve(this.req, true).body
     } else {
       throw new Error(`Error: Request resolver required for req.body validation`)
+    }
+  }
+
+  public get user(): User{
+    if(this.isAuthenticated()){
+      return assertExists(this.req.user) //TODO: write a userResolver 
+    } else {
+      throw new Error(`User is not authenticated`);
     }
   }
 }

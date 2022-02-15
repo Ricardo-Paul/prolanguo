@@ -21,7 +21,7 @@ export class AuthenticatorFacade {
     this.database = database;
   }
 
-  public encryptPassword(password: string, saltRouds: number): Promise<string>{
+  public encryptPassword(password: string, saltRouds: number): Promise<string> {
     return bcrypt.hash(password, saltRouds);
   };
 
@@ -57,6 +57,7 @@ export class AuthenticatorFacade {
       console.log("Decoded user :", decodedUser);
 
       if(decodedUser){
+        // auth succeeds, auth user is added to req.user
         done(null, decodedUser)
       } else {
         done(null, false)

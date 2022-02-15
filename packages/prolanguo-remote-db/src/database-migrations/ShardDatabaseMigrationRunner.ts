@@ -23,12 +23,12 @@ export class ShardDatabaseMigrationRunner{
     const databaseVersion = await this.getDatabaseVersion();
     for(const [version, migration] of this.migrations){
       console.log(`databaseVersion: ${databaseVersion}, migrationVersion: ${version}`);
-      // if(databaseVersion < version){ // comment if statement if migrations aren't running and re-run command
+      if(databaseVersion < version){ // comment if statement if migrations aren't running and re-run command
         this.shardDb.transaction(async (tx) => {
           migration(tx);
           await this.updateDatabaseVersion(tx, version);
         })
-      // } //
+      } //
     }
   }
 

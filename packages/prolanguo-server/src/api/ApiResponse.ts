@@ -12,7 +12,7 @@ export class ApiResponse<T>{
     this.res = res;
   }
 
-  json(obj: SignUpResponse){
+  json(obj: T){
     return this.res.json(obj)
   }
 
