@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 export function resolveEnv(){
 
+  console.log("finding auth config :", process.env.AUTH_DATABASE_CONFIG)
   const AUTH_DATABASE_CONFIG = preprocessAuthDbConfig(
     assertExists(process.env.AUTH_DATABASE_CONFIG)
   );

@@ -12,3 +12,4 @@ export { ScreenName } from "./ScreenName";
 export { ScreenState } from "./ScreenState";
 export { ThemeTrigger } from "./ThemeTrigger";
 export { Theme} from "./Theme";
+export { AuthenticationStrategy } from "./AuthenticationStrategy";

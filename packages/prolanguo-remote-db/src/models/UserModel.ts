@@ -15,7 +15,7 @@ export function assertExists<T>(value: T, message?: string): NonNullable<T>{
     return value as NonNullable<T>
   } else {
     throw Error(
-      message? message : "Assert value exits but is actually null/undefined"
+      message? message : "Assert (user model) value exits but is actually null/undefined"
     );
   }
 };

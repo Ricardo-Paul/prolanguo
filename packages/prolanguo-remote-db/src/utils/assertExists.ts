@@ -3,7 +3,7 @@ export function assertExists<V>(value: V, message?: string): NonNullable<V>{
     return value as NonNullable<V>
   } else {
     throw new Error(
-      message || `Assertion failed, value is in fact null/undefined`
+      message || `(utils )Assertion failed, value is in fact null/undefined`
     )
   }
 };
