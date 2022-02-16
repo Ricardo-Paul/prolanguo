@@ -1,9 +1,5 @@
 import { Response } from "express";
 
-interface SignUpResponse {
-  currentUser: object,
-  accessToken: string
-}
 
 export class ApiResponse<T>{
   private res: Response;

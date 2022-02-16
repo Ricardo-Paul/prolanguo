@@ -14,7 +14,8 @@ export interface ControllerOptions<T extends Request> {
   allowedMethod: T["method"];
   authStrategies: T["authRequired"] extends true? readonly AuthenticationStrategy[] : null;
   // type should be a RequestResolver if query or body is present
-  requestResolver: T extends BodyQueryNull? null:
+  // making requestResolver optional for now.
+  requestResolver?: T extends BodyQueryNull? null:
   T extends { query: object } | { body: object } ?
    RequestResolver<T> :
    null | RequestResolver<T>

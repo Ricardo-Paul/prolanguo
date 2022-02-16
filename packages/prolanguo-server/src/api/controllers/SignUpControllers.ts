@@ -28,7 +28,7 @@ interface User {
 }
 
 interface SignUpResponse {
-  readonly currentUser: User;
+  readonly currentUser: User; //should a streamlined version of User interface
   readonly accessToken: string;
 }
 

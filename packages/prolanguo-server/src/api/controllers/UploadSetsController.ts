@@ -37,7 +37,7 @@ export class UploadSetsController extends ApiController<UploadSetsRequest, Uploa
             const userId = req.user.userId;
 
             //use userResolver in ApiRequest to remove warning
-            const shardDb = this.database.getDb(req.user.shardId);
+            const shardDb = this.database.getDb(req.userShardId);
             await shardDb.transaction(tx => {
                 return this.setModel.upsertSets(tx, userId, setList)
             });

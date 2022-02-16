@@ -1,6 +1,6 @@
 import chalk = require("chalk");
 import * as express from "express";
-import { AuthDbConfig, DatabaseFacade, UserModel, SetModel } from "@prolanguo/prolanguo-remote-db";
+import { AuthDbConfig, DatabaseFacade, UserModel, SetModel, VocabularyModel } from "@prolanguo/prolanguo-remote-db";
 import { ApiControllerFactory } from "./api/ApiControllerFactory";
 import { ApiRouterFactory } from "./api/ApiRouterFactory";
 import { resolveEnv } from "./setup/resolveEnv";
@@ -16,6 +16,7 @@ export class Server{
   private database: DatabaseFacade;
   private userModel: UserModel;
   private setModel: SetModel;
+  private vocabularyModel: VocabularyModel;
   private env;
   private config: Config;
   private authenticator: AuthenticatorFacade;
@@ -26,6 +27,7 @@ export class Server{
     this.config = loadConfig();
     this.userModel = new UserModel;
     this.setModel = new SetModel;
+    this.vocabularyModel = new VocabularyModel;
 
     // TODO: remove hard coded details to .env file
     this.database = new DatabaseFacade(
@@ -52,7 +54,8 @@ export class Server{
       this.userModel,
       this.config,
       this.authenticator,
-      this.setModel
+      this.setModel,
+      this.vocabularyModel
     );
 
     this.apiRouterFactory = new ApiRouterFactory(

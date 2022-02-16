@@ -32,11 +32,19 @@ export class ApiRequest<T extends Request> {
     }
   }
 
+  public get userShardId(){
+    if(this.isAuthenticated()){
+      return assertExists(this.req.user).shardId
+    } else {
+      throw new Error(`Can't get userShardId, not authenticated`)
+    }
+  }
+
   public get user(): User{
     if(this.isAuthenticated()){
       return assertExists(this.req.user) //TODO: write a userResolver 
     } else {
-      throw new Error(`User is not authenticated`);
+      throw new Error(`Can't get User, not authenticated`);
     }
   }
 }
