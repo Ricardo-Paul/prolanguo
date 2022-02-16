@@ -10,6 +10,6 @@ export interface UploadVocabulariesRequest extends Request{
     query: null;
     body: {
         vocabularyList: readonly DeepPartial<Vocabulary>[], 
-        vocabularySetIdPairs: ReadonlyTuplerOrNot<string, string>
+        vocabularySetIdPairs: readonly [string, string][]
     }
 }

@@ -5,13 +5,13 @@ import { SetResolver } from "../general/SetResolver";
 
 
 export class UploadSetsRequestResolver extends RequestResolver<UploadSetsRequest>{
-    protected rules: any = {
-        query: Joi.object().strip(),
-        body: {
-            setList: Joi.array().items(new SetResolver().getRules())
-                    .options({
-                        presence: "optional"
-                    })
-        }
+  protected rules: any = {
+    query: Joi.object().strip(),
+    body: {
+      setList: Joi.array().items(new SetResolver().getRules())
+        .options({
+          presence: "optional"
+        })
     }
+  }
 }

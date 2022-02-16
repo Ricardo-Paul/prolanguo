@@ -10,3 +10,4 @@ export { ShardDbConfig } from "./interfaces/ShardDbConfig";
 
 // models
 export { SetModel } from "./models/SetModel";
+export { VocabularyModel } from "./models/VocabularyModel";

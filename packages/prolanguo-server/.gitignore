@@ -8,6 +8,7 @@ gather.ts
 
 # prolanguo firebase service account
 prolanguo-firebase-*.json
+manual_test_input.json
 
 .env
 # Logs

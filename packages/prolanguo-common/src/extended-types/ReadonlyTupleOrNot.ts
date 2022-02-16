@@ -1,0 +1,1 @@
+export type ReadonlyTuplerOrNot<T, U> = Readonly<[T, U]> & [T, U]

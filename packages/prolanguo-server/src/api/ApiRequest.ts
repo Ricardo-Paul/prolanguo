@@ -3,11 +3,12 @@ import { Request, User } from "@prolanguo/prolanguo-common/interfaces";
 import { RequestResolver } from "@prolanguo/prolanguo-common/resolvers";
 import {  } from "@prolanguo/prolanguo-common/resolvers";
 import { assertExists } from "@prolanguo/prolanguo-remote-db/dist/models/UserModel";
+import { RequestResolverStatus } from "../enums/RequestResolverStatus";
 
 
 export class ApiRequest<T extends Request> {
   private req: express.Request; 
-  requestResolver: null | RequestResolver<T>
+  requestResolver: null | RequestResolver<T> | RequestResolverStatus.OMITTED;
 
   constructor(req: express.Request, requestResolver: null | RequestResolver<T>){
     this.req = req;
@@ -20,15 +21,20 @@ export class ApiRequest<T extends Request> {
 
   public getResolver(): any{
     if(this.requestResolver !== null){
-      this.requestResolver.resolve(this.req, true).body;
+      this.requestResolver.resolve(this.req, true).body; 
     }
   }
 
   public get body(): T["body"]{
     if(this.requestResolver !== null){
+      if(this.requestResolver === RequestResolverStatus.OMITTED){
+        return this.req.body
+      }
       return this.requestResolver.resolve(this.req, true).body
     } else {
-      throw new Error(`Error: Request resolver required for req.body validation`)
+      throw new Error(
+        `Error: Request resolver required for req.body validation
+      `)
     }
   }
 

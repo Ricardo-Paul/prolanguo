@@ -115,11 +115,12 @@ export class SetModel{
     );
   }
 
-  public getExistingSetIds(
+  public async getExistingSetIds(
     db: Knex,
     userId: string,
     setIds: string[]
   ): Promise<{ existingSetIds: string[] }>{
+    console.log("Request hits getExistingSetIds")
     return new Promise(
       async (resolve, reject): Promise<void> => {
         try{
@@ -135,12 +136,13 @@ export class SetModel{
             return set.setId
           })
 
+
         resolve({
           existingSetIds
         })
         }catch(error){
           reject(error)
-        }
+        } 
       }
     );
   }
@@ -155,7 +157,6 @@ export class SetModel{
             .whereIn('setId', setIds)
         );
 
-        console.log("result value :", result);
          
         const setRow = this.setRowResolver.resolveArray(result, true);
         const { setList } = await this.getCompleteSetByRows(

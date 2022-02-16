@@ -37,7 +37,7 @@ export class Server{
         host: 'localhost',
         port: 3306,
         user: 'root',
-        password: 'ricardo00',
+        password: process.env.PASSWORD as string,
         connectionLimit: 20
       }],
       'prolanguo_shard_db_'

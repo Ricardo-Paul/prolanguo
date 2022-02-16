@@ -58,7 +58,9 @@ describe("Set Model", () => {
       });
 
       test("insert multiple vocabularies", async () => {
-        const vocabularySetIdPairs = new Array(1).fill(null).map(
+        const vocabularySetIdPairs = new Array(1)
+         .fill(null)
+         .map(
             (index, _): [Vocabulary, string] => {
               return [
                 new VocabularyBuilder().build({

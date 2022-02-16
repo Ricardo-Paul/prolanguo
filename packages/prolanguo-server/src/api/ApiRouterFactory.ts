@@ -28,7 +28,7 @@ export class ApiRouterFactory{
         const requestHandler = function(_req: express.Request, _res: express.Response): Promise<void>{
           const req = new ApiRequest<any>(_req, options.requestResolver); //create a wrapper around express req object
           const res = new ApiResponse<any>(_res); // create a wrapper around express res object
-          req.getResolver();
+          // req.getResolver();
           return new Promise(async (resolve, reject) => {
             try{
               await controller.handleRequest(req, res);
