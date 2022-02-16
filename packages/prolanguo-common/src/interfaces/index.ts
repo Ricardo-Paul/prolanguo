@@ -5,8 +5,12 @@ export { Request } from './request/Request';
 export { SignUpRequest } from './request/SignUpRequest';
 export { SignInRequest } from './request/SignInRequest';
 export { UploadSetsRequest } from "./request/UploadSetsRequest";
+export { UploadVocabulariesRequest } from "./request/UploadVocabulariesRequest";
+
 
 export { UploadSetsResponse } from "./response/UploadSetsResponse";
+export { UploadVocabulariesResponse } from "./response/UploadVocabulariesResponse";
+
 
 export { User } from './general/User';
 export { Set } from './general/Set';
