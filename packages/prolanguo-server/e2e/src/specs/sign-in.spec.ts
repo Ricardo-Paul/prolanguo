@@ -5,7 +5,7 @@ import { Signin } from "../utils/sign-in";
 import { Signup } from "../utils/sign-up";
 
 
-describe ('Test sign-in controller', ():void => {
+describe ('tests sign-in controller, /sigin-in', ():void => {
   let email = "";
   let password  = "";
   describe('test starts after signin up', () => {
