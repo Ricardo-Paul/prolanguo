@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon -r dotenv/config dist/index.js",
     "start-dev": "nodemon -r dotenv/config dist/index.js",
-    "pack-local": "./scripts/pack-local.sh"
+    "pack-local": "./scripts/pack-local.sh",
+    "install-packed-local": "./scripts/install-packed-local.sh"
   },
   "author": "",
   "license": "ISC",
